@@ -1,0 +1,54 @@
+﻿@model IEnumerable<StaffFrontend.Models.Product>
+
+@{
+    ViewData["Title"] = "View";
+}
+
+<h1>View</h1>
+
+<p>
+    <a href="/products/new">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.price)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr onclick="window.location='/products/view/@item.id'" style="cursor: pointer">
+                <td>
+                    @Html.DisplayFor(modelItem => item.name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.price)
+                </td>
+                <td>
+                    @{
+                        /* ofcourse this doesnt work its a microsoft product */
+                        /* @Html.ActionLink("Edit", "Edit", new { id=item.id }) |
+                        @Html.ActionLink("Details", "view", "products", new { id=item.id }) |
+                        @Html.ActionLink("Delete", "Delete", new { id=item.id })
+                        <a href="/products/edit/@item.id">Edit</a> |
+                        <a href="/products/view/@item.id">View</a> |
+                        <a href="/products/delete/@item.id">Delete</a>
+                        */
+                    }
+
+
+                    <input type="button" value="Edit" class="btn btn-primary" onclick="event.stopPropagation(); window.location = '/products/edit/@item.id'"/>
+                    <input type="button" value="View" class="btn btn-primary" onclick="event.stopPropagation(); window.location='/products/view/@item.id'"/>
+                    <input type="button" value="Delete" class="btn btn-danger" onclick="event.stopPropagation(); window.location='/products/delete/@item.id'"/>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
