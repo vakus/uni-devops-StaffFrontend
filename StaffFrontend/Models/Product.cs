@@ -20,5 +20,7 @@ namespace StaffFrontend.Models
         [Display(Name = "Price")]
         [DisplayFormat(DataFormatString ="{0:C}")]
         public double price { get; set; }
+
+        public bool visible { get; set; }
     }
 }

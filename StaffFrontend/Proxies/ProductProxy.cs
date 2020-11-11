@@ -10,7 +10,7 @@ namespace StaffFrontend.Data
 
     public interface IProductProxy
     {
-        List<Product> GetProducts();
+        List<Product> GetProducts(string? name, bool? visible, double? minprice, double? maxprice);
 
         Product GetProduct(int itemid);
 
@@ -30,14 +30,19 @@ namespace StaffFrontend.Data
         {
             products = new List<Product>();
 
-            products.Add(new Product() { id = 1, name = "Lorem Ipsum", description = "Lorem Ipsum", price = 5.99 });
-            products.Add(new Product() { id = 2, name = "Duck", description = "Sometimes makes quack sound", price = 99.99 });
-            products.Add(new Product() { id = 3, name = "IPhone 13 pro max ultra plus 6G no screen edition", description = "New Revolutionary IPhone. This year we managed to remove screen. Weights only 69g.", price = 1399.99 });
+            products.Add(new Product() { id = 1, name = "Lorem Ipsum", description = "Lorem Ipsum", price = 5.99, visible = false});
+            products.Add(new Product() { id = 2, name = "Duck", description = "Sometimes makes quack sound", price = 99.99, visible = true});
+            products.Add(new Product() { id = 3, name = "IPhone 13 pro max ultra plus 6G no screen edition", description = "New Revolutionary IPhone. This year we managed to remove screen. Weights only 69g.", price = 1399.99, visible = true});
         }
 
-        public List<Product> GetProducts()
+        public ProductProxyLocal(List<Product> products)
         {
-            return products;
+            this.products = products;
+        }
+
+        public List<Product> GetProducts(string? name, bool? visible, double? minprice, double? maxprice)
+        {
+            return products.FindAll(product => (name == null || product.name.Contains(name)) && (visible == null || product.visible == visible) && (minprice == null || product.price >= minprice) && (maxprice == null || product.price <= maxprice));
         }
 
         public Product GetProduct(int itemid)
@@ -88,7 +93,7 @@ namespace StaffFrontend.Data
             throw new NotImplementedException();
         }
 
-        public List<Product> GetProducts()
+        public List<Product> GetProducts(string? name, bool? visible, double? minprice, double? maxprice)
         {
             throw new NotImplementedException();
         }

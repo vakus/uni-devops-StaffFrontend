@@ -1,6 +1,8 @@
 D:\projects\StaffFrontend\StaffFrontend\StaffFrontend\bin\Debug\netcoreapp2.2\appsettings.Development.json
 D:\projects\StaffFrontend\StaffFrontend\StaffFrontend\bin\Debug\netcoreapp2.2\appsettings.json
 D:\projects\StaffFrontend\StaffFrontend\StaffFrontend\bin\Debug\netcoreapp2.2\Properties\launchSettings.json
+D:\projects\StaffFrontend\StaffFrontend\StaffFrontend\bin\Debug\netcoreapp2.2\Properties\serviceDependencies.json
+D:\projects\StaffFrontend\StaffFrontend\StaffFrontend\bin\Debug\netcoreapp2.2\Properties\serviceDependencies.local.json
 D:\projects\StaffFrontend\StaffFrontend\StaffFrontend\bin\Debug\netcoreapp2.2\StaffFrontend.deps.json
 D:\projects\StaffFrontend\StaffFrontend\StaffFrontend\bin\Debug\netcoreapp2.2\StaffFrontend.runtimeconfig.json
 D:\projects\StaffFrontend\StaffFrontend\StaffFrontend\bin\Debug\netcoreapp2.2\StaffFrontend.runtimeconfig.dev.json
@@ -8,9 +10,9 @@ D:\projects\StaffFrontend\StaffFrontend\StaffFrontend\bin\Debug\netcoreapp2.2\St
 D:\projects\StaffFrontend\StaffFrontend\StaffFrontend\bin\Debug\netcoreapp2.2\StaffFrontend.pdb
 D:\projects\StaffFrontend\StaffFrontend\StaffFrontend\bin\Debug\netcoreapp2.2\StaffFrontend.Views.dll
 D:\projects\StaffFrontend\StaffFrontend\StaffFrontend\bin\Debug\netcoreapp2.2\StaffFrontend.Views.pdb
-D:\projects\StaffFrontend\StaffFrontend\StaffFrontend\obj\Debug\netcoreapp2.2\StaffFrontend.csprojAssemblyReference.cache
 D:\projects\StaffFrontend\StaffFrontend\StaffFrontend\obj\Debug\netcoreapp2.2\StaffFrontend.AssemblyInfoInputs.cache
 D:\projects\StaffFrontend\StaffFrontend\StaffFrontend\obj\Debug\netcoreapp2.2\StaffFrontend.AssemblyInfo.cs
+D:\projects\StaffFrontend\StaffFrontend\StaffFrontend\obj\Debug\netcoreapp2.2\StaffFrontend.csproj.CoreCompileInputs.cache
 D:\projects\StaffFrontend\StaffFrontend\StaffFrontend\obj\Debug\netcoreapp2.2\StaffFrontend.RazorAssemblyInfo.cache
 D:\projects\StaffFrontend\StaffFrontend\StaffFrontend\obj\Debug\netcoreapp2.2\StaffFrontend.RazorAssemblyInfo.cs
 D:\projects\StaffFrontend\StaffFrontend\StaffFrontend\obj\Debug\netcoreapp2.2\StaffFrontend.TagHelpers.input.cache
@@ -18,6 +20,11 @@ D:\projects\StaffFrontend\StaffFrontend\StaffFrontend\obj\Debug\netcoreapp2.2\St
 D:\projects\StaffFrontend\StaffFrontend\StaffFrontend\obj\Debug\netcoreapp2.2\StaffFrontend.RazorCoreGenerate.cache
 D:\projects\StaffFrontend\StaffFrontend\StaffFrontend\obj\Debug\netcoreapp2.2\Razor\Views\Home\Index.cshtml.g.cs
 D:\projects\StaffFrontend\StaffFrontend\StaffFrontend\obj\Debug\netcoreapp2.2\Razor\Views\Home\Privacy.cshtml.g.cs
+D:\projects\StaffFrontend\StaffFrontend\StaffFrontend\obj\Debug\netcoreapp2.2\Razor\Views\Product\Create.cshtml.g.cs
+D:\projects\StaffFrontend\StaffFrontend\StaffFrontend\obj\Debug\netcoreapp2.2\Razor\Views\Product\Delete.cshtml.g.cs
+D:\projects\StaffFrontend\StaffFrontend\StaffFrontend\obj\Debug\netcoreapp2.2\Razor\Views\Product\Details.cshtml.g.cs
+D:\projects\StaffFrontend\StaffFrontend\StaffFrontend\obj\Debug\netcoreapp2.2\Razor\Views\Product\Edit.cshtml.g.cs
+D:\projects\StaffFrontend\StaffFrontend\StaffFrontend\obj\Debug\netcoreapp2.2\Razor\Views\Product\Index.cshtml.g.cs
 D:\projects\StaffFrontend\StaffFrontend\StaffFrontend\obj\Debug\netcoreapp2.2\Razor\Views\Shared\Error.cshtml.g.cs
 D:\projects\StaffFrontend\StaffFrontend\StaffFrontend\obj\Debug\netcoreapp2.2\Razor\Views\Shared\_CookieConsentPartial.cshtml.g.cs
 D:\projects\StaffFrontend\StaffFrontend\StaffFrontend\obj\Debug\netcoreapp2.2\Razor\Views\Shared\_Layout.cshtml.g.cs
@@ -31,11 +38,4 @@ D:\projects\StaffFrontend\StaffFrontend\StaffFrontend\obj\Debug\netcoreapp2.2\St
 D:\projects\StaffFrontend\StaffFrontend\StaffFrontend\obj\Debug\netcoreapp2.2\StaffFrontend.pdb
 D:\projects\StaffFrontend\StaffFrontend\StaffFrontend\obj\Debug\netcoreapp2.2\StaffFrontend.genruntimeconfig.cache
 D:\projects\StaffFrontend\StaffFrontend\StaffFrontend\obj\Debug\netcoreapp2.2\StaffFrontend.csproj.CopyComplete
-D:\projects\StaffFrontend\StaffFrontend\StaffFrontend\obj\Debug\netcoreapp2.2\StaffFrontend.csproj.CoreCompileInputs.cache
-D:\projects\StaffFrontend\StaffFrontend\StaffFrontend\bin\Debug\netcoreapp2.2\Properties\serviceDependencies.json
-D:\projects\StaffFrontend\StaffFrontend\StaffFrontend\bin\Debug\netcoreapp2.2\Properties\serviceDependencies.local.json
-D:\projects\StaffFrontend\StaffFrontend\StaffFrontend\obj\Debug\netcoreapp2.2\Razor\Views\Product\Index.cshtml.g.cs
-D:\projects\StaffFrontend\StaffFrontend\StaffFrontend\obj\Debug\netcoreapp2.2\Razor\Views\Product\Details.cshtml.g.cs
-D:\projects\StaffFrontend\StaffFrontend\StaffFrontend\obj\Debug\netcoreapp2.2\Razor\Views\Product\Create.cshtml.g.cs
-D:\projects\StaffFrontend\StaffFrontend\StaffFrontend\obj\Debug\netcoreapp2.2\Razor\Views\Product\Delete.cshtml.g.cs
-D:\projects\StaffFrontend\StaffFrontend\StaffFrontend\obj\Debug\netcoreapp2.2\Razor\Views\Product\Edit.cshtml.g.cs
+D:\projects\StaffFrontend\StaffFrontend\StaffFrontend\obj\Debug\netcoreapp2.2\StaffFrontend.csprojAssemblyReference.cache

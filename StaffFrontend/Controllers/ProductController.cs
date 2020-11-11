@@ -18,12 +18,11 @@ namespace StaffFrontend.Controllers
         {
             _productProxy = productProxy;
         }
-
         [HttpGet("/products")]
         // GET: /products
-        public ActionResult Index()
+        public ActionResult Index(string? name, bool? visible, double? minprice, double? maxprice)
         {
-            return View(_productProxy.GetProducts());
+            return View(_productProxy.GetProducts(name, visible, minprice, maxprice));
         }
 
         [HttpGet("/products/view/{itemid}")]
