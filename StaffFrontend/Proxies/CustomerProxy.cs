@@ -8,11 +8,11 @@ namespace StaffFrontend.Proxies
 {
     public interface ICustomerProxy
     {
-        List<Customer> GetCustomers();
+        Task<List<Customer>> GetCustomers();
 
-        Customer GetCustomer(int customerid);
+        Task<Customer> GetCustomer(int customerid);
 
-        void UpdateCustomer(Customer customer);
+        Task UpdateCustomer(Customer customer);
     }
 
     public class CustomerProxyLocal : ICustomerProxy
@@ -31,36 +31,44 @@ namespace StaffFrontend.Proxies
             customers.Add(new Customer() { id = 5, firstname = "Denni", surname = "Eccersley", address = "7 Grim Point", contact = "589-699-8186", canPurchase = true });
         }
 
-        public Customer GetCustomer(int customerid)
+        public CustomerProxyLocal(List<Customer> customers)
         {
-            return customers.Find(customer => customer.id == customerid);
+            this.customers = customers;
         }
 
-        public List<Customer> GetCustomers()
+        public Task<Customer> GetCustomer(int customerid)
         {
-            return customers;
+            return Task.FromResult(customers.Find(customer => customer.id == customerid));
         }
 
-        public void UpdateCustomer(Customer customer)
+        public Task<List<Customer>> GetCustomers()
         {
-            customers.RemoveAll(cust => cust.id == customer.id);
-            customers.Add(customer);
+            return Task.FromResult(customers);
+        }
+
+        public Task UpdateCustomer(Customer customer)
+        {
+            return Task.Run(() =>
+            {
+                customers.RemoveAll(cust => cust.id == customer.id);
+                customers.Add(customer);
+            });
         }
     }
 
     public class CustomerProxyRemote : ICustomerProxy
     {
-        public Customer GetCustomer(int customerid)
+        public async Task<Customer> GetCustomer(int customerid)
         {
             throw new NotImplementedException();
         }
 
-        public List<Customer> GetCustomers()
+        public async Task<List<Customer>> GetCustomers()
         {
             throw new NotImplementedException();
         }
 
-        public void UpdateCustomer(Customer customer)
+        public Task UpdateCustomer(Customer customer)
         {
             throw new NotImplementedException();
         }

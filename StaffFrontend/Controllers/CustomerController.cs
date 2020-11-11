@@ -4,11 +4,19 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using StaffFrontend.Proxies;
 
 namespace StaffFrontend.Controllers
 {
     public class CustomerController : Controller
     {
+        private readonly ICustomerProxy _customer;
+
+        public CustomerController(ICustomerProxy _proxy)
+        {
+            _customer = _proxy;
+        }
+
         // GET: CustomerController
         public ActionResult Index()
         {
