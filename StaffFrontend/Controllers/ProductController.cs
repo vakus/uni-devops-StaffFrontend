@@ -36,7 +36,7 @@ namespace StaffFrontend.Controllers
                 return NotFound();
             }
 
-            return View(_product.GetProduct(itemid));
+            return View(prod);
         }
 
         [HttpGet("/products/new")]
