@@ -13,6 +13,8 @@ namespace StaffFrontend.Proxies
         Task<Customer> GetCustomer(int customerid);
 
         Task UpdateCustomer(Customer customer);
+
+        Task DeleteCustomer(int customerid);
     }
 
     public class CustomerProxyLocal : ICustomerProxy
@@ -34,6 +36,20 @@ namespace StaffFrontend.Proxies
         public CustomerProxyLocal(List<Customer> customers)
         {
             this.customers = customers;
+        }
+
+        public Task DeleteCustomer(int customerid)
+        {
+            return Task.Run(() => {
+                Customer customer = GetCustomer(customerid).Result;
+
+                customer.surname = "REDACTED";
+                customer.firstname = "REDACTED";
+                customer.address = "REDACTED";
+                customer.contact = "REDACTED";
+
+                UpdateCustomer(customer);
+            });
         }
 
         public Task<Customer> GetCustomer(int customerid)
@@ -58,6 +74,11 @@ namespace StaffFrontend.Proxies
 
     public class CustomerProxyRemote : ICustomerProxy
     {
+        public Task DeleteCustomer(int customerid)
+        {
+            throw new NotImplementedException();
+        }
+
         public async Task<Customer> GetCustomer(int customerid)
         {
             throw new NotImplementedException();

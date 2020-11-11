@@ -11,6 +11,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
 using StaffFrontend.Data;
+using StaffFrontend.Proxies;
 
 namespace StaffFrontend
 {
@@ -50,10 +51,12 @@ namespace StaffFrontend
             if (_env.IsDevelopment())
             {
                 services.AddSingleton<IProductProxy, ProductProxyLocal>();
+                services.AddSingleton<ICustomerProxy, CustomerProxyLocal>();
             }
             else
             {
                 services.AddSingleton<IProductProxy, ProductProxyRemote>();
+                services.AddSingleton<ICustomerProxy, CustomerProxyRemote>();
             }
         }
 

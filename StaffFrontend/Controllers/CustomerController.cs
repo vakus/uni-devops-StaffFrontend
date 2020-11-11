@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using StaffFrontend.Models;
 using StaffFrontend.Proxies;
 
 namespace StaffFrontend.Controllers
@@ -17,79 +18,56 @@ namespace StaffFrontend.Controllers
             _customer = _proxy;
         }
 
-        // GET: CustomerController
-        public ActionResult Index()
+        [HttpGet("/customers")]
+        // GET: /customers
+        public async Task<ActionResult> Index()
         {
-            return View();
+            return View(await _customer.GetCustomers());
         }
 
-        // GET: CustomerController/Details/5
-        public ActionResult Details(int id)
+        [HttpGet("/customers/view/{userid}")]
+        // GET: /customers/view/5
+        public async Task<ActionResult> Details(int userid)
         {
-            return View();
+            Customer cust = await _customer.GetCustomer(userid);
+
+            if(cust == null)
+            {
+                return NotFound();
+            }
+            return View(cust);
         }
 
-        // GET: CustomerController/Create
-        public ActionResult Create()
+        [HttpGet("/customers/edit/{userid}")]
+        // GET: /customers/edit/5
+        public async Task<ActionResult> Edit(int userid)
         {
-            return View();
+            return View(await _customer.GetCustomer(userid));
         }
 
-        // POST: CustomerController/Create
-        [HttpPost]
+        [HttpPost("/customers/edit/{userid}")]
+        // POST: /customers/edit/5
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public async Task<ActionResult> Edit([Bind("id,firstname,surname,address,contact,canPurchase")] Customer cust)
         {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
+            await _customer.UpdateCustomer(cust);
+            return RedirectToAction(nameof(Index));
         }
 
-        // GET: CustomerController/Edit/5
-        public ActionResult Edit(int id)
+        [HttpGet("/customers/delete/{userid}")]
+        // GET: /customers/delete/5
+        public async Task<ActionResult> Delete(int userid)
         {
-            return View();
+            return View(await _customer.GetCustomer(userid));
         }
 
-        // POST: CustomerController/Edit/5
-        [HttpPost]
+        [HttpPost("/customers/delete/{userid}")]
+        // POST: /customers/delete/5
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public async Task<ActionResult> Delete(int userid, IFormCollection collection)
         {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
-
-        // GET: CustomerController/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
-
-        // POST: CustomerController/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
+            await _customer.DeleteCustomer(userid);
+            return RedirectToAction(nameof(Index));
         }
     }
 }
