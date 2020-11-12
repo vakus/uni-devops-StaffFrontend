@@ -51,11 +51,13 @@ namespace StaffFrontend
             {
                 services.AddSingleton<IProductProxy, ProductProxyLocal>();
                 services.AddSingleton<ICustomerProxy, CustomerProxyLocal>();
+                services.AddSingleton<IReviewProxy, ReviewProxyLocal>();
             }
             else
             {
                 services.AddSingleton<IProductProxy, ProductProxyRemote>();
                 services.AddSingleton<ICustomerProxy, CustomerProxyRemote>();
+                services.AddSingleton<IReviewProxy, ReviewProxyRemote>();
             }
         }
 

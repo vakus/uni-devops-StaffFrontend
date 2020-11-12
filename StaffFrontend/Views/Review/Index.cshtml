@@ -1,0 +1,56 @@
+﻿@model IEnumerable<StaffFrontend.Models.Review>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.content)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.rating)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.hidden)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.createTime)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.content)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.rating)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.hidden)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.createTime)
+                </td>
+                <td>
+                    @{ /*
+                           @Html.ActionLink("Edit", "Edit", new { id=item.PrimaryKey }) |
+                           @Html.ActionLink("Details", "Details", new {  id=item.PrimaryKey }) |
+                           @Html.ActionLink("Delete", "Delete", new {  id=item.PrimaryKey })
+                          */
+                    }
+                    <a href="/reviews/edit/@item.reviewid">Edit</a> |
+                    <a href="/reviews/view/@item.reviewid">Details</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
