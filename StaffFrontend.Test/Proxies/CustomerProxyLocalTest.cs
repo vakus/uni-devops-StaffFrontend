@@ -12,41 +12,33 @@ namespace StaffFrontend.Test
     [TestClass]
     public class CustomerProxyLocalTest
     {
+        private List<Customer> customers;
+        private CustomerProxyLocal cpl;
+
+        [TestInitialize]
+        public void initTest()
+        {
+            customers = new List<Customer>() {
+                new Customer() { id = 1, firstname = "John", surname = "Smith", address = "0 Manufacturers Circle", contact = "999-250-6512", canPurchase = false, isDeleted=false },
+                new Customer() { id = 2, firstname = "Bethany", surname = "Hulkes", address = "0 Annamark Pass", contact = "893-699-2769", canPurchase = true, isDeleted=false },
+                new Customer() { id = 3, firstname = "Brigid", surname = "Streak", address = "2 Ruskin Crossing", contact = "295-119-1574", canPurchase = true, isDeleted=false },
+                new Customer() { id = 4, firstname = "Dottie", surname = "Kristoffersen", address = "696 Kedzie Circle", contact = "426-882-2642", canPurchase = false, isDeleted=false },
+                new Customer() { id = 5, firstname = "Denni", surname = "Eccersley", address = "7 Grim Point", contact = "589-699-8186", canPurchase = true, isDeleted=false }
+            };
+
+            cpl = new CustomerProxyLocal(customers);
+        }
+
         [TestMethod]
         public async Task CustomerProxy_GetCustomers()
         {
-            //create the data
-            List<Customer> customers = new List<Customer>() {
-                new Customer() { id = 1, firstname = "John", surname = "Smith", address = "0 Manufacturers Circle", contact = "999-250-6512", canPurchase = false },
-                new Customer() { id = 2, firstname = "Bethany", surname = "Hulkes", address = "0 Annamark Pass", contact = "893-699-2769", canPurchase = true },
-                new Customer() { id = 3, firstname = "Brigid", surname = "Streak", address = "2 Ruskin Crossing", contact = "295-119-1574", canPurchase = true },
-                new Customer() { id = 4, firstname = "Dottie", surname = "Kristoffersen", address = "696 Kedzie Circle", contact = "426-882-2642", canPurchase = false },
-                new Customer() { id = 5, firstname = "Denni", surname = "Eccersley", address = "7 Grim Point", contact = "589-699-8186", canPurchase = true }
-            };
-
-            //setup the proxy
-            CustomerProxyLocal cpl = new CustomerProxyLocal(customers);
-
             //check data
-            Assert.AreEqual(await cpl.GetCustomers(), customers);
+            Assert.IsTrue(customers.SequenceEqual(await cpl.GetCustomers(true)));
         }
 
         [TestMethod]
         public async Task CustomerProxy_GetCustomer_ValidID()
         {
-            //create the data
-            List<Customer> customers = new List<Customer>() {
-                new Customer() { id = 1, firstname = "John", surname = "Smith", address = "0 Manufacturers Circle", contact = "999-250-6512", canPurchase = false },
-                new Customer() { id = 2, firstname = "Bethany", surname = "Hulkes", address = "0 Annamark Pass", contact = "893-699-2769", canPurchase = true },
-                new Customer() { id = 3, firstname = "Brigid", surname = "Streak", address = "2 Ruskin Crossing", contact = "295-119-1574", canPurchase = true },
-                new Customer() { id = 4, firstname = "Dottie", surname = "Kristoffersen", address = "696 Kedzie Circle", contact = "426-882-2642", canPurchase = false },
-                new Customer() { id = 5, firstname = "Denni", surname = "Eccersley", address = "7 Grim Point", contact = "589-699-8186", canPurchase = true }
-            };
-
-            //setup the proxy
-
-            CustomerProxyLocal cpl = new CustomerProxyLocal(customers);
-
             //check data
 
             Assert.AreEqual(customers.First(p => p.id == 1), await cpl.GetCustomer(1));
@@ -59,21 +51,7 @@ namespace StaffFrontend.Test
         [TestMethod]
         public async Task CustomerProxy_GetCustomer_InvalidID()
         {
-            //create the data
-            List<Customer> customers = new List<Customer>() {
-                new Customer() { id = 1, firstname = "John", surname = "Smith", address = "0 Manufacturers Circle", contact = "999-250-6512", canPurchase = false },
-                new Customer() { id = 2, firstname = "Bethany", surname = "Hulkes", address = "0 Annamark Pass", contact = "893-699-2769", canPurchase = true },
-                new Customer() { id = 3, firstname = "Brigid", surname = "Streak", address = "2 Ruskin Crossing", contact = "295-119-1574", canPurchase = true },
-                new Customer() { id = 4, firstname = "Dottie", surname = "Kristoffersen", address = "696 Kedzie Circle", contact = "426-882-2642", canPurchase = false },
-                new Customer() { id = 5, firstname = "Denni", surname = "Eccersley", address = "7 Grim Point", contact = "589-699-8186", canPurchase = true }
-            };
-
-            //setup the proxy
-
-            CustomerProxyLocal cpl = new CustomerProxyLocal(customers);
-
             //check data
-
             Assert.IsNull(await cpl.GetCustomer(0));
             Assert.IsNull(await cpl.GetCustomer(6));
             Assert.IsNull(await cpl.GetCustomer(-3));
@@ -82,19 +60,6 @@ namespace StaffFrontend.Test
         [TestMethod]
         public async Task CustomerProxy_UpdateCustomer_ValidData()
         {
-            //create the data
-            List<Customer> customers = new List<Customer>() {
-                new Customer() { id = 1, firstname = "John", surname = "Smith", address = "0 Manufacturers Circle", contact = "999-250-6512", canPurchase = false },
-                new Customer() { id = 2, firstname = "Bethany", surname = "Hulkes", address = "0 Annamark Pass", contact = "893-699-2769", canPurchase = true },
-                new Customer() { id = 3, firstname = "Brigid", surname = "Streak", address = "2 Ruskin Crossing", contact = "295-119-1574", canPurchase = true },
-                new Customer() { id = 4, firstname = "Dottie", surname = "Kristoffersen", address = "696 Kedzie Circle", contact = "426-882-2642", canPurchase = false },
-                new Customer() { id = 5, firstname = "Denni", surname = "Eccersley", address = "7 Grim Point", contact = "589-699-8186", canPurchase = true }
-            };
-
-            //setup the proxy
-
-            CustomerProxyLocal cpl = new CustomerProxyLocal(customers);
-
             //update data
 
             Customer customer = customers.FirstOrDefault(c => c.id == 1);
@@ -115,19 +80,6 @@ namespace StaffFrontend.Test
         [TestMethod]
         public async Task CustomerProxy_UpdateCustomer_MaliciousData()
         {
-            //create the data
-            List<Customer> customers = new List<Customer>() {
-                new Customer() { id = 1, firstname = "John", surname = "Smith", address = "0 Manufacturers Circle", contact = "999-250-6512", canPurchase = false },
-                new Customer() { id = 2, firstname = "Bethany", surname = "Hulkes", address = "0 Annamark Pass", contact = "893-699-2769", canPurchase = true },
-                new Customer() { id = 3, firstname = "Brigid", surname = "Streak", address = "2 Ruskin Crossing", contact = "295-119-1574", canPurchase = true },
-                new Customer() { id = 4, firstname = "Dottie", surname = "Kristoffersen", address = "696 Kedzie Circle", contact = "426-882-2642", canPurchase = false },
-                new Customer() { id = 5, firstname = "Denni", surname = "Eccersley", address = "7 Grim Point", contact = "589-699-8186", canPurchase = true }
-            };
-
-            //setup the proxy
-
-            CustomerProxyLocal cpl = new CustomerProxyLocal(customers);
-
             //update data
 
             Customer customer = customers.FirstOrDefault(c => c.id == 1);

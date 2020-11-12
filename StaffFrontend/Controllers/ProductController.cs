@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using StaffFrontend.Data;
+using StaffFrontend.Proxies;
 using StaffFrontend.Models;
 
 namespace StaffFrontend.Controllers
@@ -20,9 +20,14 @@ namespace StaffFrontend.Controllers
         }
         [HttpGet("/products")]
         // GET: /products
-        public async Task<ActionResult> Index(string? name, bool? visible, double? minprice, double? maxprice)
+        public async Task<ActionResult> Index(string name, bool? visible, double? minprice, double? maxprice)
         {
             return View(await _product.GetProducts(name, visible, minprice, maxprice));
+        }
+
+        public ActionResult Index()
+        {
+            return View();
         }
 
         [HttpGet("/products/view/{itemid}")]

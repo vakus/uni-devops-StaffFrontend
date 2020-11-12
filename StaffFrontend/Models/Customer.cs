@@ -18,5 +18,7 @@ namespace StaffFrontend.Models
         public string contact { get; set; }
 
         public bool canPurchase { get; set; }
+
+        public bool isDeleted { get; set; }
     }
 }

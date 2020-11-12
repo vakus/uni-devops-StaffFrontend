@@ -1,0 +1,81 @@
+﻿@model IEnumerable<StaffFrontend.Models.Customer>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+<p>
+    @if (Context.Request.Query["excludeDeleted"] == "true" || Context.Request.Query["excludeDeleted"] == Microsoft.Extensions.Primitives.StringValues.Empty)
+    {
+        <a href="?excludeDeleted=false">Include deleted accounts</a>
+    }
+    else
+    {
+        <a href="?excludeDeleted=true">Exclude deleted accounts</a>
+    }
+</p>
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.id)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.firstname)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.surname)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.address)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.contact)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.canPurchase)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.id)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.firstname)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.surname)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.address)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.contact)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.canPurchase)
+            </td>
+            <td>
+                @{ 
+                    /*
+                        @Html.ActionLink("Edit", "Edit", new { }) |
+                        @Html.ActionLink("Details", "Details", new { }) |
+                        @Html.ActionLink("Delete", "Delete", new {  })
+                    */
+                }
+                <a href="/customers/edit/@item.id">Edit</a> |
+                <a href="/customers/view/@item.id">View</a> |
+                <a href="/customers/delete/@item.id">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

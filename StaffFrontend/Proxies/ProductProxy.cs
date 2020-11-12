@@ -5,12 +5,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace StaffFrontend.Data
+namespace StaffFrontend.Proxies
 {
 
     public interface IProductProxy
     {
-        Task<List<Product>> GetProducts(string? name, bool? visible, double? minprice, double? maxprice);
+        Task<List<Product>> GetProducts(string name, bool? visible, double? minprice, double? maxprice);
 
         Task<Product> GetProduct(int itemid);
 
@@ -40,9 +40,13 @@ namespace StaffFrontend.Data
             this.products = products;
         }
 
-        public Task<List<Product>> GetProducts(string? name, bool? visible, double? minprice, double? maxprice)
+        public Task<List<Product>> GetProducts(string name, bool? visible, double? minprice, double? maxprice)
         {
-            return Task.FromResult(products.FindAll(product => (name == null || product.name.Contains(name)) && (visible == null || product.visible == visible) && (minprice == null || product.price >= minprice) && (maxprice == null || product.price <= maxprice)));
+            return Task.FromResult(products.FindAll(product => 
+            (name == null || product.name.Contains(name))
+            && (!visible.HasValue || product.visible == visible.Value)
+            && (!minprice.HasValue || product.price >= minprice.Value)
+            && (!maxprice.HasValue || product.price <= maxprice.Value)));
         }
 
         public Task<Product> GetProduct(int itemid)

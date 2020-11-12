@@ -8,7 +8,7 @@ namespace StaffFrontend.Proxies
 {
     public interface ICustomerProxy
     {
-        Task<List<Customer>> GetCustomers();
+        Task<List<Customer>> GetCustomers(bool excludeDeleted);
 
         Task<Customer> GetCustomer(int customerid);
 
@@ -26,11 +26,11 @@ namespace StaffFrontend.Proxies
         {
             customers = new List<Customer>();
 
-            customers.Add(new Customer() { id = 1, firstname = "John", surname = "Smith", address = "0 Manufacturers Circle", contact = "999-250-6512", canPurchase = false });
-            customers.Add(new Customer() { id = 2, firstname = "Bethany", surname = "Hulkes", address = "0 Annamark Pass", contact = "893-699-2769", canPurchase = true });
-            customers.Add(new Customer() { id = 3, firstname = "Brigid", surname = "Streak", address = "2 Ruskin Crossing", contact = "295-119-1574", canPurchase = true });
-            customers.Add(new Customer() { id = 4, firstname = "Dottie", surname = "Kristoffersen", address = "696 Kedzie Circle", contact = "426-882-2642", canPurchase = false });
-            customers.Add(new Customer() { id = 5, firstname = "Denni", surname = "Eccersley", address = "7 Grim Point", contact = "589-699-8186", canPurchase = true });
+            customers.Add(new Customer() { id = 1, firstname = "John", surname = "Smith", address = "0 Manufacturers Circle", contact = "999-250-6512", canPurchase = false, isDeleted=false });
+            customers.Add(new Customer() { id = 2, firstname = "Bethany", surname = "Hulkes", address = "0 Annamark Pass", contact = "893-699-2769", canPurchase = true, isDeleted = false });
+            customers.Add(new Customer() { id = 3, firstname = "Brigid", surname = "Streak", address = "2 Ruskin Crossing", contact = "295-119-1574", canPurchase = true, isDeleted = false });
+            customers.Add(new Customer() { id = 4, firstname = "Dottie", surname = "Kristoffersen", address = "696 Kedzie Circle", contact = "426-882-2642", canPurchase = false, isDeleted = false });
+            customers.Add(new Customer() { id = 5, firstname = "Denni", surname = "Eccersley", address = "7 Grim Point", contact = "589-699-8186", canPurchase = true, isDeleted = false });
         }
 
         public CustomerProxyLocal(List<Customer> customers)
@@ -47,6 +47,8 @@ namespace StaffFrontend.Proxies
                 customer.firstname = "REDACTED";
                 customer.address = "REDACTED";
                 customer.contact = "REDACTED";
+                customer.canPurchase = false;
+                customer.isDeleted = true;
 
                 UpdateCustomer(customer);
             });
@@ -57,9 +59,9 @@ namespace StaffFrontend.Proxies
             return Task.FromResult(customers.Find(customer => customer.id == customerid));
         }
 
-        public Task<List<Customer>> GetCustomers()
+        public Task<List<Customer>> GetCustomers(bool excludeDeleted)
         {
-            return Task.FromResult(customers);
+            return Task.FromResult(customers.FindAll(c => !c.isDeleted || !excludeDeleted));
         }
 
         public Task UpdateCustomer(Customer customer)
@@ -84,7 +86,7 @@ namespace StaffFrontend.Proxies
             throw new NotImplementedException();
         }
 
-        public async Task<List<Customer>> GetCustomers()
+        public async Task<List<Customer>> GetCustomers(bool excludeDeleted)
         {
             throw new NotImplementedException();
         }

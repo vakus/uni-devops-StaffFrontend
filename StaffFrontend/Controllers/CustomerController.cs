@@ -20,9 +20,9 @@ namespace StaffFrontend.Controllers
 
         [HttpGet("/customers")]
         // GET: /customers
-        public async Task<ActionResult> Index()
+        public async Task<ActionResult> Index(bool? excludeDeleted)
         {
-            return View(await _customer.GetCustomers());
+            return View(await _customer.GetCustomers(excludeDeleted.GetValueOrDefault(true)));
         }
 
         [HttpGet("/customers/view/{userid}")]
