@@ -1,8 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore.Internal;
+using Microsoft.Extensions.Configuration;
 using StaffFrontend.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Threading.Tasks;
 
 namespace StaffFrontend.Proxies
@@ -42,7 +44,7 @@ namespace StaffFrontend.Proxies
 
         public Task<List<Product>> GetProducts(string name, bool? visible, double? minprice, double? maxprice)
         {
-            return Task.FromResult(products.FindAll(product => 
+            return Task.FromResult(products.FindAll(product =>
             (name == null || product.name.Contains(name))
             && (!visible.HasValue || product.visible == visible.Value)
             && (!minprice.HasValue || product.price >= minprice.Value)
@@ -90,6 +92,15 @@ namespace StaffFrontend.Proxies
 
     public class ProductProxyRemote : IProductProxy
     {
+
+        IHttpClientFactory _clientFactory;
+        IConfigurationSection _config;
+
+        public ProductProxyRemote(IHttpClientFactory clientFactory, IConfiguration config)
+        {
+            _clientFactory = clientFactory;
+            _config = config.GetSection("ProductMicroservice");
+        }
         public Task AddProduct(Product product)
         {
             throw new NotImplementedException();
@@ -100,14 +111,61 @@ namespace StaffFrontend.Proxies
             throw new NotImplementedException();
         }
 
-        public Task<Product> GetProduct(int itemid)
+        public async Task<Product> GetProduct(int itemid)
         {
-            throw new NotImplementedException();
+            Dictionary<string, object> values = new Dictionary<string, object>
+            {
+                { "item-id", itemid }
+            };
+
+            string url = Utils.createUriBuilder(_config.GetSection("GetProduct"), values).ToString();
+
+            var client = _clientFactory.CreateClient();
+
+            client.DefaultRequestHeaders.Accept.ParseAdd("application/json");
+
+
+            var response = await client.GetAsync(url);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                //error occured can not receive information
+                throw new SystemException("Could not receive data from remote service");
+            }
+            else
+            {
+                return await response.Content.ReadAsAsync<Product>();
+            }
         }
 
-        public Task<List<Product>> GetProducts(string name, bool? visible, double? minprice, double? maxprice)
+        public async Task<List<Product>> GetProducts(string name, bool? visible, double? minprice, double? maxprice)
         {
-            throw new NotImplementedException();
+            Dictionary<string, object> values = new Dictionary<string, object>
+            {
+                { "product-name", name },
+                { "product-visible", visible },
+                { "price-min", minprice },
+                { "price-max", maxprice }
+            };
+
+            string url = Utils.createUriBuilder(_config.GetSection("GetProducts"), values).ToString();
+
+            var client = _clientFactory.CreateClient();
+
+
+            client.DefaultRequestHeaders.Accept.ParseAdd("application/json");
+
+            var response = await client.GetAsync(url);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                //error occured can not receive information
+                throw new SystemException("Could not receive data from remote service");
+            }
+            else
+            {
+                return await response.Content.ReadAsAsync<List<Product>>();
+            }
         }
 
         public Task UpdateProduct(Product product)
