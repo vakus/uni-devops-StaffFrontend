@@ -1,8 +1,11 @@
-﻿using StaffFrontend.Models;
+﻿using Microsoft.Extensions.Configuration;
+using StaffFrontend.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Threading.Tasks;
+using System.Web;
 
 namespace StaffFrontend.Proxies
 {
@@ -26,7 +29,7 @@ namespace StaffFrontend.Proxies
         {
             customers = new List<Customer>();
 
-            customers.Add(new Customer() { id = 1, firstname = "John", surname = "Smith", address = "0 Manufacturers Circle", contact = "999-250-6512", canPurchase = false, isDeleted=false });
+            customers.Add(new Customer() { id = 1, firstname = "John", surname = "Smith", address = "0 Manufacturers Circle", contact = "999-250-6512", canPurchase = false, isDeleted = false });
             customers.Add(new Customer() { id = 2, firstname = "Bethany", surname = "Hulkes", address = "0 Annamark Pass", contact = "893-699-2769", canPurchase = true, isDeleted = false });
             customers.Add(new Customer() { id = 3, firstname = "Brigid", surname = "Streak", address = "2 Ruskin Crossing", contact = "295-119-1574", canPurchase = true, isDeleted = false });
             customers.Add(new Customer() { id = 4, firstname = "Dottie", surname = "Kristoffersen", address = "696 Kedzie Circle", contact = "426-882-2642", canPurchase = false, isDeleted = false });
@@ -40,7 +43,8 @@ namespace StaffFrontend.Proxies
 
         public Task DeleteCustomer(int customerid)
         {
-            return Task.Run(() => {
+            return Task.Run(() =>
+            {
                 Customer customer = GetCustomer(customerid).Result;
 
                 customer.surname = "REDACTED";
@@ -76,6 +80,15 @@ namespace StaffFrontend.Proxies
 
     public class CustomerProxyRemote : ICustomerProxy
     {
+
+        IHttpClientFactory _clientFactory;
+        IConfigurationSection _config;
+
+        public CustomerProxyRemote(IHttpClientFactory clientFactory, IConfiguration config)
+        {
+            _config = config.GetSection("CustomerMicroservice");
+            _clientFactory = clientFactory;
+        }
         public Task DeleteCustomer(int customerid)
         {
             throw new NotImplementedException();
@@ -83,12 +96,49 @@ namespace StaffFrontend.Proxies
 
         public async Task<Customer> GetCustomer(int customerid)
         {
-            throw new NotImplementedException();
+            Dictionary<string, object> values = new Dictionary<string, object> { { "customer-id", customerid } };
+
+            string url = Utils.createUriBuilder(_config.GetSection("GetCustomers"), values).ToString();
+
+            var client = _clientFactory.CreateClient();
+
+            client.DefaultRequestHeaders.Accept.ParseAdd("application/json");
+
+            var response = await client.GetAsync(url);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                //error occured can not receive information
+                throw new SystemException("Could not receive data from remote service");
+            }
+            else
+            {
+                return await response.Content.ReadAsAsync<Customer>();
+            }
+
         }
 
         public async Task<List<Customer>> GetCustomers(bool excludeDeleted)
         {
-            throw new NotImplementedException();
+            Dictionary<string, object> values = new Dictionary<string, object> { { "exclude-deleted", excludeDeleted } };
+
+            string url = Utils.createUriBuilder(_config.GetSection("GetCustomers"), values).ToString();
+
+            var client = _clientFactory.CreateClient();
+
+            client.DefaultRequestHeaders.Accept.ParseAdd("application/json");
+
+            var response = await client.GetAsync(url);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                //error occured can not receive information
+                throw new SystemException("Could not receive data from remote service");
+            }
+            else
+            {
+                return await response.Content.ReadAsAsync<List<Customer>>();
+            }
         }
 
         public Task UpdateCustomer(Customer customer)

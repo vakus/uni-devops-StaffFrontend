@@ -24,11 +24,13 @@ namespace StaffFrontend
 
         public IConfiguration Configuration { get; }
 
-        private IHostingEnvironment _env { get; set; }
+        private IHostingEnvironment _env { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddHttpClient();
+
             services.Configure<CookiePolicyOptions>(options =>
             {
                 // This lambda determines whether user consent for non-essential cookies is needed for a given request.
@@ -52,6 +54,12 @@ namespace StaffFrontend
                 services.AddSingleton<IProductProxy, ProductProxyLocal>();
                 services.AddSingleton<ICustomerProxy, CustomerProxyLocal>();
                 services.AddSingleton<IReviewProxy, ReviewProxyLocal>();
+            }
+            else if(_env.IsStaging())
+            {
+                services.AddSingleton<IProductProxy, ProductProxyRemote>();
+                services.AddSingleton<ICustomerProxy, CustomerProxyRemote>();
+                services.AddSingleton<IReviewProxy, ReviewProxyRemote>();
             }
             else
             {
