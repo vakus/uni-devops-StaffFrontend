@@ -1,7 +1,9 @@
-﻿using StaffFrontend.Models;
+﻿using Microsoft.Extensions.Configuration;
+using StaffFrontend.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Threading.Tasks;
 
 namespace StaffFrontend.Proxies
@@ -13,6 +15,8 @@ namespace StaffFrontend.Proxies
         Task<Review> GetReview(int reviewid);
 
         Task UpdateReview(Review review);
+
+        Task<double> GetRating(int itemid);
     }
 
     public class ReviewProxyLocal : IReviewProxy
@@ -35,6 +39,23 @@ namespace StaffFrontend.Proxies
             this.reviews = reviews;
         }
 
+        public Task<double> GetRating(int itemid)
+        {
+
+
+            return Task.Run(() =>
+            {
+
+                List<Review> applicable = reviews.FindAll(r => r.itemid == itemid);
+                int total = 0;
+                foreach (var review in applicable)
+                {
+                    total += review.rating;
+                }
+                return (double)(total / applicable.Count());
+            });
+        }
+
         public Task<Review> GetReview(int reviewid)
         {
             return Task.FromResult(reviews.Find(r => r.reviewid == reviewid));
@@ -47,7 +68,8 @@ namespace StaffFrontend.Proxies
 
         public Task UpdateReview(Review review)
         {
-            return Task.Run(() => {
+            return Task.Run(() =>
+            {
                 reviews.RemoveAll(r => r.reviewid == review.reviewid);
                 reviews.Add(review);
             });
@@ -56,14 +78,95 @@ namespace StaffFrontend.Proxies
 
     public class ReviewProxyRemote : IReviewProxy
     {
-        public Task<Review> GetReview(int reviewid)
+
+        IHttpClientFactory _clientFactory;
+        IConfigurationSection _config;
+
+        public ReviewProxyRemote(IHttpClientFactory clientFactory, IConfiguration config)
         {
-            throw new NotImplementedException();
+            _clientFactory = clientFactory;
+            _config = config.GetSection("ReviewMicroservice");
         }
 
-        public Task<List<Review>> GetReviews(int itemid)
+        public async Task<double> GetRating(int itemid)
         {
-            throw new NotImplementedException();
+            Dictionary<string, object> values = new Dictionary<string, object>
+            {
+                { "item-id", itemid }
+            };
+
+            string url = Utils.createUriBuilder(_config.GetSection("GetRating"), values).ToString();
+
+            var client = _clientFactory.CreateClient();
+
+            client.DefaultRequestHeaders.Accept.ParseAdd("application/json");
+
+
+            var response = await client.GetAsync(url);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                //error occured can not receive information
+                throw new SystemException("Could not receive data from remote service");
+            }
+            else
+            {
+                return await response.Content.ReadAsAsync<double>();
+            }
+        }
+
+        public async Task<Review> GetReview(int reviewid)
+        {
+            Dictionary<string, object> values = new Dictionary<string, object>
+            {
+                { "review-id", reviewid }
+            };
+
+            string url = Utils.createUriBuilder(_config.GetSection("GetReview"), values).ToString();
+
+            var client = _clientFactory.CreateClient();
+
+            client.DefaultRequestHeaders.Accept.ParseAdd("application/json");
+
+
+            var response = await client.GetAsync(url);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                //error occured can not receive information
+                throw new SystemException("Could not receive data from remote service");
+            }
+            else
+            {
+                return await response.Content.ReadAsAsync<Review>();
+            }
+        }
+
+        public async Task<List<Review>> GetReviews(int itemid)
+        {
+            Dictionary<string, object> values = new Dictionary<string, object>
+            {
+                { "item-id", itemid }
+            };
+
+            string url = Utils.createUriBuilder(_config.GetSection("GetReviews"), values).ToString();
+
+            var client = _clientFactory.CreateClient();
+
+            client.DefaultRequestHeaders.Accept.ParseAdd("application/json");
+
+
+            var response = await client.GetAsync(url);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                //error occured can not receive information
+                throw new SystemException("Could not receive data from remote service");
+            }
+            else
+            {
+                return await response.Content.ReadAsAsync<List<Review>>();
+            }
         }
 
         public Task UpdateReview(Review review)
