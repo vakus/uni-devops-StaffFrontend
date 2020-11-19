@@ -4,6 +4,7 @@
     ViewData["Title"] = "Index";
 }
 
+<div asp-validation-summary="ModelOnly" class="text-danger"></div>
 <h1>Index</h1>
 
 <table class="table">
@@ -42,10 +43,10 @@
                 </td>
                 <td>
                     @{ /*
-                           @Html.ActionLink("Edit", "Edit", new { id=item.PrimaryKey }) |
-                           @Html.ActionLink("Details", "Details", new {  id=item.PrimaryKey }) |
-                           @Html.ActionLink("Delete", "Delete", new {  id=item.PrimaryKey })
-                          */
+                            @Html.ActionLink("Edit", "Edit", new { id=item.PrimaryKey }) |
+                            @Html.ActionLink("Details", "Details", new {  id=item.PrimaryKey }) |
+                            @Html.ActionLink("Delete", "Delete", new {  id=item.PrimaryKey })
+                           */
                     }
                     <a href="/reviews/edit/@item.reviewid">Edit</a> |
                     <a href="/reviews/view/@item.reviewid">Details</a>

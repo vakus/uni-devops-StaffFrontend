@@ -4,6 +4,7 @@
     ViewData["Title"] = "View";
 }
 
+<div asp-validation-summary="ModelOnly" class="text-danger"></div>
 <h1>View</h1>
 
 <p>
@@ -44,9 +45,9 @@
                     }
 
 
-                    <input type="button" value="Edit" class="btn btn-primary" onclick="event.stopPropagation(); window.location = '/products/edit/@item.id'"/>
-                    <input type="button" value="View" class="btn btn-primary" onclick="event.stopPropagation(); window.location='/products/view/@item.id'"/>
-                    <input type="button" value="Delete" class="btn btn-danger" onclick="event.stopPropagation(); window.location='/products/delete/@item.id'"/>
+                    <input type="button" value="Edit" class="btn btn-primary" onclick="event.stopPropagation(); window.location = '/products/edit/@item.id'" />
+                    <input type="button" value="View" class="btn btn-primary" onclick="event.stopPropagation(); window.location='/products/view/@item.id'" />
+                    <input type="button" value="Delete" class="btn btn-danger" onclick="event.stopPropagation(); window.location='/products/delete/@item.id'" />
                 </td>
             </tr>
         }

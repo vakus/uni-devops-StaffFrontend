@@ -4,6 +4,7 @@
     ViewData["Title"] = "Edit";
 }
 
+<div asp-validation-summary="ModelOnly" class="text-danger"></div>
 <h1>Edit</h1>
 
 <h4>Review</h4>
@@ -19,12 +20,12 @@
             </div>
             <div class="form-group">
                 <label asp-for="content" class="control-label"></label>
-                <input asp-for="content" class="form-control" readonly/>
+                <input asp-for="content" class="form-control" readonly />
                 <span asp-validation-for="content" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="rating" class="control-label"></label>
-                <input asp-for="rating" class="form-control" readonly/>
+                <input asp-for="rating" class="form-control" readonly />
                 <span asp-validation-for="rating" class="text-danger"></span>
             </div>
             <div class="form-group form-check">
@@ -34,12 +35,12 @@
             </div>
             <div class="form-group">
                 <label asp-for="itemid" class="control-label"></label>
-                <input asp-for="itemid" class="form-control" readonly/>
+                <input asp-for="itemid" class="form-control" readonly />
                 <span asp-validation-for="itemid" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="createTime" class="control-label"></label>
-                <input asp-for="createTime" class="form-control" readonly/>
+                <input asp-for="createTime" class="form-control" readonly />
                 <span asp-validation-for="createTime" class="text-danger"></span>
             </div>
             <div class="form-group">

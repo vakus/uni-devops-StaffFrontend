@@ -21,21 +21,61 @@ namespace StaffFrontend.Controllers
         // GET: /reviews/5
         public async Task<ActionResult> Index(int itemid)
         {
-            return View(await _review.GetReviews(itemid));
+            List<Review> reviews;
+            try
+            {
+                reviews = await _review.GetReviews(itemid);
+            }
+            catch (SystemException)
+            {
+                reviews = new List<Review>();
+                ModelState.AddModelError("", "Unable to load data from remote service. Please try again.");
+            }
+            return View(reviews);
         }
 
         [HttpGet("/reviews/view/{reviewid}")]
         // GET: /reviews/view/5
         public async Task<ActionResult> Details(int reviewid)
         {
-            return View(await _review.GetReview(reviewid));
+            Review review;
+            try
+            {
+                review = await _review.GetReview(reviewid);
+
+                if (review == null)
+                {
+                    return NotFound();
+                }
+            }
+            catch (SystemException)
+            {
+                ModelState.AddModelError("", "Unable to load data from remote service. Please try again.");
+                review = new Review();
+            }
+            return View(review);
         }
 
         [HttpGet("/reviews/edit/{reviewid}")]
         // GET: /reviews/edit/5
         public async Task<ActionResult> Edit(int reviewid)
         {
-            return View(await _review.GetReview(reviewid));
+            Review review;
+            try
+            {
+                review = await _review.GetReview(reviewid);
+
+                if (review == null)
+                {
+                    return NotFound();
+                }
+            }
+            catch (SystemException)
+            {
+                ModelState.AddModelError("", "Unable to load data from remote service. Please try again.");
+                review = new Review();
+            }
+            return View(review);
         }
 
         [HttpPost("/reviews/edit/{reviewid}")]
@@ -43,9 +83,17 @@ namespace StaffFrontend.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Edit([Bind("reviewid,content,rating,hidden,itemid,createTime")] Review review)
         {
-            Review rev = await _review.GetReview(review.reviewid);
-            rev.hidden = review.hidden;
-            await _review.UpdateReview(rev);
+            try
+            {
+                Review rev = await _review.GetReview(review.reviewid);
+                rev.hidden = review.hidden;
+                await _review.UpdateReview(rev);
+            }
+            catch (SystemException)
+            {
+                ModelState.AddModelError("", "Unable to send data to remote service. Please try again.");
+                return View(new Review());
+            }
             return RedirectToAction(nameof(Index), new { itemid = review.itemid });
         }
     }

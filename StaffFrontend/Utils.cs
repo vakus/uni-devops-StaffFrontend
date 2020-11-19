@@ -43,8 +43,10 @@ namespace StaffFrontend
             {
                 //Parse all get parameters
 
+                Dictionary<string, string> entries = new Dictionary<string, string>();
+                parameters.Bind(entries);
 
-                foreach (KeyValuePair<string, string> entry in parameters.AsEnumerable())
+                foreach (KeyValuePair<string, string> entry in entries)
                 {
                     //we want only to add non-empty/non-null parameters
                     string processedValue = processString(entry.Value, values);
@@ -75,12 +77,18 @@ namespace StaffFrontend
             string processed = str;
             foreach(KeyValuePair<string, object> entry in values)
             {
-                if (entry.Value == null && processed.Equals("{" + entry.Key + "}"))
+                if (entry.Value == null)
                 {
-                    //the value was nullable and contains no value, and the string is equal to the key
-                    return null;
+                    if (processed.Equals("{" + entry.Key + "}"))
+                    {
+                        //the value was nullable and contains no value, and the string is equal to the key
+                        return null;
+                    }
                 }
-                processed = processed.Replace(("{" + entry.Key + "}"), entry.Value.ToString());
+                else
+                {
+                    processed = processed.Replace(("{" + entry.Key + "}"), entry.Value.ToString());
+                }
             }
             return processed;
         }

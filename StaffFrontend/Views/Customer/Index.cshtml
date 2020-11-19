@@ -4,6 +4,7 @@
     ViewData["Title"] = "Index";
 }
 
+<div asp-validation-summary="ModelOnly" class="text-danger"></div>
 <h1>Index</h1>
 <p>
     @if (Context.Request.Query["excludeDeleted"] == "true" || Context.Request.Query["excludeDeleted"] == Microsoft.Extensions.Primitives.StringValues.Empty)
@@ -43,39 +44,40 @@
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.id)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.firstname)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.surname)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.address)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.contact)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.canPurchase)
-            </td>
-            <td>
-                @{ 
-                    /*
-                        @Html.ActionLink("Edit", "Edit", new { }) |
-                        @Html.ActionLink("Details", "Details", new { }) |
-                        @Html.ActionLink("Delete", "Delete", new {  })
-                    */
-                }
-                <a href="/customers/edit/@item.id">Edit</a> |
-                <a href="/customers/view/@item.id">View</a> |
-                <a href="/customers/delete/@item.id">Delete</a>
-            </td>
-        </tr>
-}
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.id)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.firstname)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.surname)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.address)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.contact)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.canPurchase)
+                </td>
+                <td>
+                    @{
+                        /*
+                            @Html.ActionLink("Edit", "Edit", new { }) |
+                            @Html.ActionLink("Details", "Details", new { }) |
+                            @Html.ActionLink("Delete", "Delete", new {  })
+                        */
+                    }
+                    <a href="/customers/edit/@item.id">Edit</a> |
+                    <a href="/customers/view/@item.id">View</a> |
+                    <a href="/customers/delete/@item.id">Delete</a>
+                </td>
+            </tr>
+        }
     </tbody>
 </table>

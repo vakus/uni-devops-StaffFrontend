@@ -22,25 +22,38 @@ namespace StaffFrontend.Controllers
         // GET: /products
         public async Task<ActionResult> Index(string name, bool? visible, double? minprice, double? maxprice)
         {
-            return View(await _product.GetProducts(name, visible, minprice, maxprice));
-        }
-
-        public ActionResult Index()
-        {
-            return View();
+            List<Product> products;
+            try
+            {
+                products = await _product.GetProducts(name, visible, minprice, maxprice);
+            }
+            catch (SystemException)
+            {
+                products = new List<Product>();
+                ModelState.AddModelError("", "Unable to load data from remote service. Please try again.");
+            }
+            return View(products);
         }
 
         [HttpGet("/products/view/{itemid}")]
         // GET: /products/view/5
         public async Task<ActionResult> Details(int itemid)
         {
-            Product prod = await _product.GetProduct(itemid);
-
-            if (prod == null)
+            Product prod;
+            try
             {
-                return NotFound();
-            }
+                prod = await _product.GetProduct(itemid);
 
+                if (prod == null)
+                {
+                    return NotFound();
+                }
+            }
+            catch (SystemException)
+            {
+                ModelState.AddModelError("", "Unable to load data from remote service. Please try again.");
+                prod = new Product();
+            }
             return View(prod);
         }
 
@@ -57,7 +70,15 @@ namespace StaffFrontend.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Create([Bind("name,description,price")] Product prod)
         {
-            await _product.AddProduct(prod);
+            try
+            {
+                await _product.AddProduct(prod);
+            }
+            catch (SystemException)
+            {
+                ModelState.AddModelError("", "Unable to send data to remote service. Please try again.");
+                return View();
+            }
             return RedirectToAction(nameof(Index));
         }
 
@@ -65,11 +86,20 @@ namespace StaffFrontend.Controllers
         // GET: /products/edit/5
         public async Task<ActionResult> Edit(int itemid)
         {
-            Product prod = await _product.GetProduct(itemid);
-
-            if (prod == null)
+            Product prod;
+            try
             {
-                return NotFound();
+                prod = await _product.GetProduct(itemid);
+
+                if (prod == null)
+                {
+                    return NotFound();
+                }
+            }
+            catch (SystemException)
+            {
+                ModelState.AddModelError("", "Unable to load data from remote service. Please try again.");
+                prod = new Product();
             }
 
             return View(prod);
@@ -80,7 +110,15 @@ namespace StaffFrontend.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Edit([Bind("id,name,description,price")] Product prod)
         {
-            await _product.UpdateProduct(prod);
+            try
+            {
+                await _product.UpdateProduct(prod);
+            }
+            catch (SystemException)
+            {
+                ModelState.AddModelError("", "Unable to send data to remote service. Please try again.");
+                return View(prod);
+            }
             return RedirectToAction(nameof(Index));
         }
 
@@ -88,7 +126,23 @@ namespace StaffFrontend.Controllers
         // GET: products/delete/5
         public async Task<ActionResult> Delete(int itemid)
         {
-            return View(await _product.GetProduct(itemid));
+            Product prod;
+            try
+            {
+                prod = await _product.GetProduct(itemid);
+
+                if (prod == null)
+                {
+                    return NotFound();
+                }
+            }
+            catch (SystemException)
+            {
+                ModelState.AddModelError("", "Unable to load data from remote service. Please try again.");
+                prod = new Product();
+            }
+
+            return View(prod);
         }
 
         // POST: products/delete/5
@@ -96,7 +150,14 @@ namespace StaffFrontend.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Delete(int itemid, IFormCollection collection)
         {
-            await _product.DeleteProduct(itemid);
+            try
+            {
+                await _product.DeleteProduct(itemid);
+            }catch(SystemException)
+            {
+                ModelState.AddModelError("", "Unable to send data to remote service. Please try again.");
+                return View(new Product());
+            }
             return RedirectToAction(nameof(Index));
         }
     }
