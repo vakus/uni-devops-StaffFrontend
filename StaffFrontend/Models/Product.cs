@@ -9,18 +9,20 @@ namespace StaffFrontend.Models
     public class Product
     {
         [Display(Name = "Product ID")]
-        public int id { get; set; }
+        public int ID { get; set; }
 
         [Display(Name = "Name")]
-        public string name { get; set; }
+        public string Name { get; set; }
 
         [Display(Name = "Description")]
-        public string description { get; set; }
+        public string Description { get; set; }
+
+        public int Supply { get; set; }
 
         [Display(Name = "Price")]
         [DisplayFormat(DataFormatString ="{0:C}")]
-        public double price { get; set; }
+        public double Price { get; set; }
 
-        public bool visible { get; set; }
+        public bool Available { get; set; }
     }
 }

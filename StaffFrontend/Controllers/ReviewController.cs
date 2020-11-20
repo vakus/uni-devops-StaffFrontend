@@ -85,7 +85,7 @@ namespace StaffFrontend.Controllers
         {
             try
             {
-                Review rev = await _review.GetReview(review.reviewid);
+                Review rev = await _review.GetReview(review.reviewId);
                 rev.hidden = review.hidden;
                 await _review.UpdateReview(rev);
             }
@@ -94,7 +94,7 @@ namespace StaffFrontend.Controllers
                 ModelState.AddModelError("", "Unable to send data to remote service. Please try again.");
                 return View(new Review());
             }
-            return RedirectToAction(nameof(Index), new { itemid = review.itemid });
+            return RedirectToAction(nameof(Index), new { itemid = review.productId });
         }
     }
 }

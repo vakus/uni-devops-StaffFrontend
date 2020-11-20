@@ -14,10 +14,10 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.name)
+                @Html.DisplayNameFor(model => model.Name)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.price)
+                @Html.DisplayNameFor(model => model.Price)
             </th>
             <th></th>
         </tr>
@@ -25,12 +25,12 @@
     <tbody>
         @foreach (var item in Model)
         {
-            <tr onclick="window.location='/products/view/@item.id'" style="cursor: pointer">
+            <tr onclick="window.location='/products/view/@item.ID'" style="cursor: pointer">
                 <td>
-                    @Html.DisplayFor(modelItem => item.name)
+                    @Html.DisplayFor(modelItem => item.Name)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.price)
+                    @Html.DisplayFor(modelItem => item.Price)
                 </td>
                 <td>
                     @{
@@ -45,9 +45,9 @@
                     }
 
 
-                    <input type="button" value="Edit" class="btn btn-primary" onclick="event.stopPropagation(); window.location = '/products/edit/@item.id'" />
-                    <input type="button" value="View" class="btn btn-primary" onclick="event.stopPropagation(); window.location='/products/view/@item.id'" />
-                    <input type="button" value="Delete" class="btn btn-danger" onclick="event.stopPropagation(); window.location='/products/delete/@item.id'" />
+                    <input type="button" value="Edit" class="btn btn-primary" onclick="event.stopPropagation(); window.location = '/products/edit/@item.ID'" />
+                    <input type="button" value="View" class="btn btn-primary" onclick="event.stopPropagation(); window.location='/products/view/@item.ID'" />
+                    <input type="button" value="Delete" class="btn btn-danger" onclick="event.stopPropagation(); window.location='/products/delete/@item.ID'" />
                 </td>
             </tr>
         }

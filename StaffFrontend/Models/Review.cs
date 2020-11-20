@@ -7,15 +7,19 @@ namespace StaffFrontend.Models
 {
     public class Review
     {
-        public int reviewid { set; get; }
+        public int reviewId { set; get; }
 
-        public string content { get; set; }
+        public int userId { get; set; }
 
-        public int rating { get; set; }
+        public string userName { get; set; }
+
+        public string reviewContent { get; set; }
+
+        public int reviewRating { get; set; }
 
         public bool hidden { get; set; }
 
-        public int itemid { get; set; }
+        public int productId { get; set; }
 
         public DateTime createTime { get; set; }
     }

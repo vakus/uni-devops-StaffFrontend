@@ -26,11 +26,11 @@ namespace StaffFrontend.Proxies
         public ReviewProxyLocal()
         {
             reviews = new List<Review>() {
-                new Review() { reviewid=1, content="Love this! Especially when it suddenly goes *quack*!", rating=5, itemid=2, hidden=false, createTime=new DateTime(2020, 11, 12, 1, 9, 52)},
-                new Review() { reviewid=2, content="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam arcu leo, porta quis suscipit id, varius sed urna. Nulla ut. ", rating=3, itemid=1, hidden=false, createTime=new DateTime(1980, 1, 1, 0, 0, 0)},
-                new Review() { reviewid=3, content="dont like", rating=1, itemid=3, hidden=false, createTime=new DateTime(2020, 11, 6, 12, 32, 52)},
-                new Review() { reviewid=4, content="Adorable!", rating=4, itemid=2, hidden=false, createTime=new DateTime(2020, 11, 7, 15, 42, 23)},
-                new Review() { reviewid=5, content="", rating=1, itemid=1, hidden=true, createTime=new DateTime(2020, 10, 12, 13, 24, 42)}
+                new Review() { reviewId=1, reviewContent="Love this! Especially when it suddenly goes *quack*!", reviewRating=5, productId=2, hidden=false, createTime=new DateTime(2020, 11, 12, 1, 9, 52)},
+                new Review() { reviewId=2, reviewContent="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam arcu leo, porta quis suscipit id, varius sed urna. Nulla ut. ", reviewRating=3, productId=1, hidden=false, createTime=new DateTime(1980, 1, 1, 0, 0, 0)},
+                new Review() { reviewId=3, reviewContent="dont like", reviewRating=1, productId=3, hidden=false, createTime=new DateTime(2020, 11, 6, 12, 32, 52)},
+                new Review() { reviewId=4, reviewContent="Adorable!", reviewRating=4, productId=2, hidden=false, createTime=new DateTime(2020, 11, 7, 15, 42, 23)},
+                new Review() { reviewId=5, reviewContent="", reviewRating=1, productId=1, hidden=true, createTime=new DateTime(2020, 10, 12, 13, 24, 42)}
             };
         }
 
@@ -46,11 +46,11 @@ namespace StaffFrontend.Proxies
             return Task.Run(() =>
             {
 
-                List<Review> applicable = reviews.FindAll(r => r.itemid == itemid);
+                List<Review> applicable = reviews.FindAll(r => r.productId == itemid);
                 int total = 0;
                 foreach (var review in applicable)
                 {
-                    total += review.rating;
+                    total += review.reviewRating;
                 }
                 return (double)(total / applicable.Count());
             });
@@ -58,19 +58,19 @@ namespace StaffFrontend.Proxies
 
         public Task<Review> GetReview(int reviewid)
         {
-            return Task.FromResult(reviews.Find(r => r.reviewid == reviewid));
+            return Task.FromResult(reviews.Find(r => r.reviewId == reviewid));
         }
 
         public Task<List<Review>> GetReviews(int itemid)
         {
-            return Task.FromResult(reviews.FindAll(r => r.itemid == itemid));
+            return Task.FromResult(reviews.FindAll(r => r.productId == itemid));
         }
 
         public Task UpdateReview(Review review)
         {
             return Task.Run(() =>
             {
-                reviews.RemoveAll(r => r.reviewid == review.reviewid);
+                reviews.RemoveAll(r => r.reviewId == review.reviewId);
                 reviews.Add(review);
             });
         }

@@ -24,9 +24,9 @@ namespace StaffFrontend.Test.Controllers
         public void initTest()
         {
             products = new List<Product>() {
-                new Product() { id = 1, name = "Lorem Ipsum", description = "Lorem Ipsum", price = 5.99, visible = false},
-                new Product() { id = 2, name = "Duck", description = "Sometimes makes quack sound", price = 99.99, visible = true },
-                new Product() { id = 3, name = "IPhone 13 pro max ultra plus 6G no screen edition", description = "New Revolutionary IPhone. This year we managed to remove screen. Weights only 69g.", price = 1399.99, visible = true }
+                new Product() { ID = 1, Name = "Lorem Ipsum", Description = "Lorem Ipsum", Price = 5.99, Available = false},
+                new Product() { ID = 2, Name = "Duck", Description = "Sometimes makes quack sound", Price = 99.99, Available = true },
+                new Product() { ID = 3, Name = "IPhone 13 pro max ultra plus 6G no screen edition", Description = "New Revolutionary IPhone. This year we managed to remove screen. Weights only 69g.", Price = 1399.99, Available = true }
             };
 
             mock = new Mock<IProductProxy>(MockBehavior.Strict);
@@ -144,16 +144,16 @@ namespace StaffFrontend.Test.Controllers
         public async Task EditProductInitial()
         {
             var mock = new Mock<IProductProxy>(MockBehavior.Strict);
-            mock.Setup(m => m.GetProduct(products[0].id)).ReturnsAsync(products[0]);
+            mock.Setup(m => m.GetProduct(products[0].ID)).ReturnsAsync(products[0]);
 
             var productController = new ProductController(mock.Object);
 
-            var result = await productController.Edit(products[0].id);
+            var result = await productController.Edit(products[0].ID);
 
             Assert.IsNotNull(result);
 
             mock.Verify();
-            mock.Verify(m => m.GetProduct(products[0].id), Times.Once);
+            mock.Verify(m => m.GetProduct(products[0].ID), Times.Once);
         }
 
         [TestMethod]
@@ -176,32 +176,32 @@ namespace StaffFrontend.Test.Controllers
         public async Task DeleteProductInitial()
         {
             var mock = new Mock<IProductProxy>(MockBehavior.Strict);
-            mock.Setup(m => m.GetProduct(products[0].id)).ReturnsAsync(products[0]);
+            mock.Setup(m => m.GetProduct(products[0].ID)).ReturnsAsync(products[0]);
 
             var productController = new ProductController(mock.Object);
 
-            var result = await productController.Delete(products[0].id);
+            var result = await productController.Delete(products[0].ID);
 
             Assert.IsNotNull(result);
 
             mock.Verify();
-            mock.Verify(m => m.GetProduct(products[0].id), Times.Once);
+            mock.Verify(m => m.GetProduct(products[0].ID), Times.Once);
         }
 
         [TestMethod]
         public async Task DeleteProductPost()
         {
             var mock = new Mock<IProductProxy>(MockBehavior.Strict);
-            mock.Setup(m => m.DeleteProduct(products[0].id)).Returns(Task.Run(() => { }));
+            mock.Setup(m => m.DeleteProduct(products[0].ID)).Returns(Task.Run(() => { }));
 
             var productController = new ProductController(mock.Object);
 
-            var result = await productController.Delete(products[0].id, null);
+            var result = await productController.Delete(products[0].ID, null);
 
             Assert.IsNotNull(result);
 
             mock.Verify();
-            mock.Verify(m => m.DeleteProduct(products[0].id), Times.Once);
+            mock.Verify(m => m.DeleteProduct(products[0].ID), Times.Once);
         }
 
 

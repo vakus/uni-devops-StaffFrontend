@@ -32,9 +32,9 @@ namespace StaffFrontend.Proxies
         {
             products = new List<Product>();
 
-            products.Add(new Product() { id = 1, name = "Lorem Ipsum", description = "Lorem Ipsum", price = 5.99, visible = false });
-            products.Add(new Product() { id = 2, name = "Duck", description = "Sometimes makes quack sound", price = 99.99, visible = true });
-            products.Add(new Product() { id = 3, name = "IPhone 13 pro max ultra plus 6G no screen edition", description = "New Revolutionary IPhone. This year we managed to remove screen. Weights only 69g.", price = 1399.99, visible = true });
+            products.Add(new Product() { ID = 1, Name = "Lorem Ipsum", Description = "Lorem Ipsum", Price = 5.99, Available = false, Supply = 2});
+            products.Add(new Product() { ID = 2, Name = "Duck", Description = "Sometimes makes quack sound", Price = 99.99, Available = true, Supply = 20 });
+            products.Add(new Product() { ID = 3, Name = "IPhone 13 pro max ultra plus 6G no screen edition", Description = "New Revolutionary IPhone. This year we managed to remove screen. Weights only 69g.", Price = 1399.99, Available = true, Supply = 13 });
         }
 
         public ProductProxyLocal(List<Product> products)
@@ -45,15 +45,15 @@ namespace StaffFrontend.Proxies
         public Task<List<Product>> GetProducts(string name, bool? visible, double? minprice, double? maxprice)
         {
             return Task.FromResult(products.FindAll(product =>
-            (name == null || product.name.Contains(name))
-            && (!visible.HasValue || product.visible == visible.Value)
-            && (!minprice.HasValue || product.price >= minprice.Value)
-            && (!maxprice.HasValue || product.price <= maxprice.Value)));
+            (name == null || product.Name.Contains(name))
+            && (!visible.HasValue || product.Available == visible.Value)
+            && (!minprice.HasValue || product.Price >= minprice.Value)
+            && (!maxprice.HasValue || product.Price <= maxprice.Value)));
         }
 
         public Task<Product> GetProduct(int itemid)
         {
-            return Task.FromResult(products.Find(p => p.id == itemid));
+            return Task.FromResult(products.Find(p => p.ID == itemid));
         }
 
         public Task AddProduct(Product product)
@@ -62,9 +62,9 @@ namespace StaffFrontend.Proxies
             {
                 foreach (Product prod in products)
                 {
-                    if (prod.id >= product.id)
+                    if (prod.ID >= product.ID)
                     {
-                        product.id = prod.id + 1;
+                        product.ID = prod.ID + 1;
                     }
                 }
                 products.Add(product);
@@ -75,7 +75,7 @@ namespace StaffFrontend.Proxies
         {
             return Task.Run(() =>
             {
-                DeleteProduct(product.id);
+                DeleteProduct(product.ID);
                 products.Add(product);
             });
 
@@ -85,7 +85,7 @@ namespace StaffFrontend.Proxies
         {
             return Task.Run(() =>
             {
-                products.Remove(products.Find(p => p.id == itemid));
+                products.Remove(products.Find(p => p.ID == itemid));
             });
         }
     }

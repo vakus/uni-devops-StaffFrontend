@@ -11,10 +11,10 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.content)
+                @Html.DisplayNameFor(model => model.reviewContent)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.rating)
+                @Html.DisplayNameFor(model => model.reviewRating)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.hidden)
@@ -30,10 +30,10 @@
         {
             <tr>
                 <td>
-                    @Html.DisplayFor(modelItem => item.content)
+                    @Html.DisplayFor(modelItem => item.reviewContent)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.rating)
+                    @Html.DisplayFor(modelItem => item.reviewRating)
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.hidden)
@@ -48,8 +48,8 @@
                             @Html.ActionLink("Delete", "Delete", new {  id=item.PrimaryKey })
                            */
                     }
-                    <a href="/reviews/edit/@item.reviewid">Edit</a> |
-                    <a href="/reviews/view/@item.reviewid">Details</a>
+                    <a href="/reviews/edit/@item.reviewId">Edit</a> |
+                    <a href="/reviews/view/@item.reviewId">Details</a>
                 </td>
             </tr>
         }
