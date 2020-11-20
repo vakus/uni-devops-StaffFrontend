@@ -24,7 +24,7 @@ namespace StaffFrontend.Controllers
             List<Review> reviews;
             try
             {
-                reviews = await _review.GetReviews(itemid);
+                reviews = await _review.GetReviews(itemid, null);
             }
             catch (SystemException)
             {

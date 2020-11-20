@@ -10,7 +10,7 @@ namespace StaffFrontend.Proxies
 {
     public interface IReviewProxy
     {
-        Task<List<Review>> GetReviews(int itemid);
+        Task<List<Review>> GetReviews(int? itemId, int? customerId);
 
         Task<Review> GetReview(int reviewid);
 
@@ -61,9 +61,9 @@ namespace StaffFrontend.Proxies
             return Task.FromResult(reviews.Find(r => r.reviewId == reviewid));
         }
 
-        public Task<List<Review>> GetReviews(int itemid)
+        public Task<List<Review>> GetReviews(int? itemId, int? customerId)
         {
-            return Task.FromResult(reviews.FindAll(r => r.productId == itemid));
+            return Task.FromResult(reviews.FindAll(r => (itemId.HasValue && r.productId == itemId) || (customerId.HasValue && r.userId == customerId.Value)));
         }
 
         public Task UpdateReview(Review review)
@@ -142,11 +142,12 @@ namespace StaffFrontend.Proxies
             }
         }
 
-        public async Task<List<Review>> GetReviews(int itemid)
+        public async Task<List<Review>> GetReviews(int? itemid, int? customerid)
         {
             Dictionary<string, object> values = new Dictionary<string, object>
             {
-                { "item-id", itemid }
+                { "item-id", itemid },
+                { "customer-id", customerid }
             };
 
             string url = Utils.createUriBuilder(_config.GetSection("GetReviews"), values).ToString();
