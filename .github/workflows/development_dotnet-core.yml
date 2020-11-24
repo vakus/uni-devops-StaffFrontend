@@ -1,4 +1,4 @@
-name: Build & Test - Development
+name: Build & Test PR - Development
 
 on:
   pull_request:
