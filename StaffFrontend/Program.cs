@@ -7,7 +7,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
-namespace StaffFrontend3._1
+namespace StaffFrontend
 {
     public class Program
     {

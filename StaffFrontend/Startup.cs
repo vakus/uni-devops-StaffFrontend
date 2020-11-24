@@ -10,7 +10,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using StaffFrontend.Proxies;
 
-namespace StaffFrontend3._1
+namespace StaffFrontend
 {
     public class Startup
     {

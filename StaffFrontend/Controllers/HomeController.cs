@@ -5,9 +5,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using StaffFrontend3._1.Models;
+using StaffFrontend.Models;
 
-namespace StaffFrontend3._1.Controllers
+namespace StaffFrontend.Controllers
 {
     public class HomeController : Controller
     {
