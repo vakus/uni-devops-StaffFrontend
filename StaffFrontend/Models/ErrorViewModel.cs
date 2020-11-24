@@ -1,6 +1,6 @@
 using System;
 
-namespace StaffFrontend.Models
+namespace StaffFrontend3._1.Models
 {
     public class ErrorViewModel
     {

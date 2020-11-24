@@ -1,9 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using StaffFrontend.Controllers;
-using StaffFrontend.Proxies;
 using StaffFrontend.Models;
+using StaffFrontend.Proxies;
 using System;
 using System.Collections.Generic;
 using System.Linq;

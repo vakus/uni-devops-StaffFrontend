@@ -12,7 +12,7 @@ namespace StaffFrontend.Test
     public class CustomerControllerTest
     {
         [TestMethod]
-        public async Task Customer()
+        public void Customer()
         {
 
             List<Customer> customers = new List<Customer>() {
