@@ -27,7 +27,7 @@ namespace StaffFrontend
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
-
+            services.AddHttpClient();
 
             //Use preloading, HSTS for 360 days
             services.AddHsts(options =>
