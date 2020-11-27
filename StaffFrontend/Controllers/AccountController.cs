@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using StaffFrontend.Models;
+using StaffFrontend.Proxies.AuthorizationProxy;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,10 +16,10 @@ namespace StaffFrontend.Controllers
     public class AccountController : Controller
     {
 
-        private IHttpClientFactory _client { get; }
-        public AccountController(IHttpClientFactory client)
+        private IAuthorizationProxy authProxy { get; }
+        public AccountController(IAuthorizationProxy authProxy)
         {
-            this._client = client;
+            this.authProxy = authProxy;
         }
 
         [HttpGet]
@@ -35,50 +36,18 @@ namespace StaffFrontend.Controllers
         {
             if (ModelState.IsValid)
             {
-                var client = _client.CreateClient();
-
-                var discoveryServer = await client.GetDiscoveryDocumentAsync("https://localhost:44373/");
-                var token = await client.RequestPasswordTokenAsync(new PasswordTokenRequest
+                try
                 {
-                    Address = discoveryServer.TokenEndpoint,
-                    ClientId = "staff_frontend",
-                    ClientSecret = "steff_frontand_vrey_secret_hopefuly_nobody_figuras_this_crep_out_or_at_laest_its_long_enough",
-                    UserName = login.Email,
-                    Password = login.Password
-                });
+                    AuthorizationLoginResult loginResult = await authProxy.Login(login.Email, login.Password);
+                    await HttpContext.SignInAsync("Cookies", loginResult.claimsPrincipal, loginResult.authProperties);
 
-                if (token.IsError)
+                    return LocalRedirect(returnUrl ?? "/");
+                }
+                catch (SystemException)
                 {
-                    ModelState.AddModelError("", "Invalid credentials.");
+                    ModelState.AddModelError("", "Invalid Username or Password.");
                     return View(login);
                 }
-
-                var userInfo = await client.GetUserInfoAsync(new UserInfoRequest
-                {
-                    Address = discoveryServer.UserInfoEndpoint,
-                    Token = token.AccessToken
-                });
-
-                if (userInfo.IsError)
-                {
-                    ModelState.AddModelError("", "Invalid credentials.");
-                    return View(login);
-                }
-
-                var claimsIdentity = new ClaimsIdentity(userInfo.Claims, "Cookies");
-                var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
-
-                var tokensToStore = new AuthenticationToken[]
-                {
-                    new AuthenticationToken{Name = "access_token", Value=token.AccessToken}
-                };
-
-                var authProperties = new AuthenticationProperties();
-                authProperties.StoreTokens(tokensToStore);
-
-                await HttpContext.SignInAsync("Cookies", claimsPrincipal, authProperties);
-
-                return LocalRedirect(returnUrl ?? "/");
             }
             return View(login);
         }
