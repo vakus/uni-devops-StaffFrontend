@@ -6,9 +6,11 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using StaffFrontend.Proxies;
 using StaffFrontend.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace StaffFrontend.Controllers
 {
+    [Authorize(Policy = "StaffOnly")]
     public class ProductController : Controller
     {
 

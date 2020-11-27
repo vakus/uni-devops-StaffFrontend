@@ -9,6 +9,10 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using StaffFrontend.Proxies;
+using StaffFrontend.Proxies.AuthorizationProxy;
+using StaffFrontend.Proxies.CustomerProxy;
+using StaffFrontend.Proxies.ProductProxy;
+using StaffFrontend.Proxies.ReviewProxy;
 
 namespace StaffFrontend
 {
@@ -29,6 +33,16 @@ namespace StaffFrontend
             services.AddControllersWithViews();
             services.AddHttpClient();
 
+            services.AddAuthentication("Cookies").AddCookie("Cookies");
+
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("StaffOnly", builder =>
+                {
+                    builder.RequireClaim("role", "Staff");
+                });
+            });
+
             //Use preloading, HSTS for 360 days
             services.AddHsts(options =>
             {
@@ -37,7 +51,7 @@ namespace StaffFrontend
                 options.MaxAge = TimeSpan.FromDays(360);
             });
 
-            if (_env.IsDevelopment())
+            /*if (_env.IsDevelopment())
             {
                 services.AddSingleton<IProductProxy, ProductProxyLocal>();
                 services.AddSingleton<ICustomerProxy, CustomerProxyLocal>();
@@ -54,6 +68,49 @@ namespace StaffFrontend
                 services.AddSingleton<IProductProxy, ProductProxyRemote>();
                 services.AddSingleton<ICustomerProxy, CustomerProxyRemote>();
                 services.AddSingleton<IReviewProxy, ReviewProxyRemote>();
+            }*/
+
+
+            if (_env.IsProduction())
+            {
+                // in production we dont want to allow fakes
+                services.AddSingleton<IProductProxy, ProductProxyRemote>();
+                services.AddSingleton<ICustomerProxy, CustomerProxyRemote>();
+                services.AddSingleton<IReviewProxy, ReviewProxyRemote>();
+                services.AddSingleton<IAuthorizationProxy, AuthorizationProxyRemote>();
+            }
+            else
+            {
+                //anywhere else fakes are ok
+                if (Configuration.GetValue<bool>("ProductMicroservice:useFake"))
+                {
+                    services.AddSingleton<IProductProxy, ProductProxyLocal>();
+                }
+                else
+                {
+                    services.AddSingleton<IProductProxy, ProductProxyRemote>();
+                }
+
+                if (Configuration.GetValue<bool>("CustomerMicroservice:useFake"))
+                {
+                    services.AddSingleton<ICustomerProxy, CustomerProxyLocal>();
+                }
+                else
+                {
+                    services.AddSingleton<ICustomerProxy, CustomerProxyRemote>();
+                }
+
+                if (Configuration.GetValue<bool>("ReviewMicroservice:useFake"))
+                {
+                    services.AddSingleton<IReviewProxy, ReviewProxyLocal>();
+                }
+                else
+                {
+                    services.AddSingleton<IReviewProxy, ReviewProxyRemote>();
+                }
+
+                //Authorization Proxy doesnt have fake
+                services.AddSingleton<IAuthorizationProxy, AuthorizationProxyRemote>();
             }
         }
 
@@ -74,6 +131,7 @@ namespace StaffFrontend
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

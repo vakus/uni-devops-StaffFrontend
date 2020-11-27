@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using StaffFrontend.Models;
@@ -9,6 +10,7 @@ using StaffFrontend.Proxies;
 
 namespace StaffFrontend.Controllers
 {
+    [Authorize(Policy = "StaffOnly")]
     public class ReviewController : Controller
     {
         private readonly IReviewProxy _review;

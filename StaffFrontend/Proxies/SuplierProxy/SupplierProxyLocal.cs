@@ -4,25 +4,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace StaffFrontend.Proxies
+namespace StaffFrontend.Proxies.SuplierProxy
 {
-    public interface ISuppliersProxy
-    {
 
-        Task<List<Supplier>> GetSuppliers();
-
-        Task<Supplier> GetSupplier(int supplierid);
-
-        Task UpdateSupplier(Supplier supplier);
-
-        Task DeleteSupplier(Supplier supplier);
-    }
-
-    public class SuppliersProxyLocal : ISuppliersProxy
+    public class SupplierProxyLocal : ISupplierProxy
     {
         List<Supplier> suppliers;
 
-        public SuppliersProxyLocal()
+        public SupplierProxyLocal()
         {
             suppliers = new List<Supplier>(){
                 new Supplier(){ id=1, name="Teesside", items=new List<int>(){ 1, 2, 3} },
@@ -30,7 +19,7 @@ namespace StaffFrontend.Proxies
             };
         }
 
-        public SuppliersProxyLocal(List<Supplier> suppliers)
+        public SupplierProxyLocal(List<Supplier> suppliers)
         {
             this.suppliers = suppliers;
         }
@@ -60,28 +49,4 @@ namespace StaffFrontend.Proxies
             });
         }
     }
-
-    public class SuppliersProxyRemote : ISuppliersProxy
-    {
-        public Task DeleteSupplier(Supplier supplier)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<Supplier> GetSupplier(int supplierid)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<List<Supplier>> GetSuppliers()
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task UpdateSupplier(Supplier supplier)
-        {
-            throw new NotImplementedException();
-        }
-    }
-
 }
