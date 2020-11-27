@@ -45,7 +45,10 @@
             @Html.DisplayNameFor(model => model.canPurchase)
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.canPurchase)
+            <div class="custom-control custom-switch">
+                <input id="customSwitch1" type="checkbox" class="custom-control-input" asp-for="@Model.canPurchase" disabled />
+                <label for="customSwitch1" class="custom-control-label"></label>
+            </div>
         </dd>
     </dl>
 </div>
