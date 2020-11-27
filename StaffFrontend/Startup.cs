@@ -9,6 +9,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using StaffFrontend.Proxies;
+using StaffFrontend.Proxies.CustomerProxy;
+using StaffFrontend.Proxies.ProductProxy;
+using StaffFrontend.Proxies.ReviewProxy;
 
 namespace StaffFrontend
 {
@@ -28,6 +31,16 @@ namespace StaffFrontend
         {
             services.AddControllersWithViews();
             services.AddHttpClient();
+
+            services.AddAuthentication("Cookies").AddCookie("Cookies");
+
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("StaffOnly", builder =>
+                {
+                    builder.RequireClaim("role", "Staff");
+                });
+            });
 
             //Use preloading, HSTS for 360 days
             services.AddHsts(options =>
@@ -74,6 +87,7 @@ namespace StaffFrontend
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
