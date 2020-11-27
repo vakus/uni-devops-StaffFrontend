@@ -52,7 +52,7 @@ namespace StaffFrontend.Controllers
             return View(login);
         }
 
-        [HttpPost]
+        [HttpGet]
         [Authorize]
         public async Task<IActionResult> Logout([FromQuery] string returnUrl = null)
         {

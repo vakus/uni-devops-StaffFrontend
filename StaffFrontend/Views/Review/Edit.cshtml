@@ -29,9 +29,10 @@
                 <span asp-validation-for="reviewRating" class="text-danger"></span>
             </div>
             <div class="form-group form-check">
-                <label class="form-check-label">
-                    <input class="form-check-input" asp-for="hidden" /> @Html.DisplayNameFor(model => model.hidden)
-                </label>
+                <div class="custom-control custom-switch">
+                    <input id="customSwitch1" type="checkbox" class="custom-control-input" asp-for="@Model.hidden" disabled />
+                    <label for="customSwitch1" class="custom-control-label"></label>
+                </div>
             </div>
             <div class="form-group">
                 <label asp-for="productId" class="control-label"></label>

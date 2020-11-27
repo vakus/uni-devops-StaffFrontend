@@ -37,10 +37,11 @@
                 <input asp-for="contact" class="form-control" />
                 <span asp-validation-for="contact" class="text-danger"></span>
             </div>
-            <div class="form-group form-check">
-                <label class="form-check-label">
-                    <input class="form-check-input" asp-for="canPurchase" /> @Html.DisplayNameFor(model => model.canPurchase)
-                </label>
+            <div class="form-group">
+                <div class="custom-control custom-switch">
+                    <input id="customSwitch1" type="checkbox" class="custom-control-input" asp-for="canPurchase" /> 
+                    <label for="customSwitch1" class="custom-control-label">@Html.DisplayNameFor(model => model.canPurchase)</label>
+                </div>
             </div>
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />

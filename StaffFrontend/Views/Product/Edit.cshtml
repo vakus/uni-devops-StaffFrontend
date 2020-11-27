@@ -33,10 +33,11 @@
                 <input asp-for="Price" class="form-control" />
                 <span asp-validation-for="Price" class="text-danger"></span>
             </div>
-            <div class="form-group form-check">
-                <label class="form-check-label">
-                    <input class="form-check-input" asp-for="Available" /> @Html.DisplayNameFor(model => model.Available)
-                </label>
+            <div class="form-group custom-switch">
+                <div class="custom-control custom-switch">
+                    <input id="customSwitch1" type="checkbox" class="custom-control-input" asp-for="@Model.Available"/>
+                    <label for="customSwitch1" class="custom-control-label">@Html.DisplayNameFor(model => model.Available)</label>
+                </div>
             </div>
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />
