@@ -1,7 +1,7 @@
 # Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
 # More GitHub Actions for Azure: https://github.com/Azure/actions
 
-name: Build and deploy ASP.Net Core app to Azure Web App - thamco-staff(staging)
+name: Build and deploy ASP.Net Core app to Azure Web App - thamco-staff-staging
 
 on:
   push:
@@ -29,7 +29,7 @@ jobs:
     - name: Deploy to Azure Web App
       uses: azure/webapps-deploy@v2
       with:
-        app-name: 'thamco-staff'
-        slot-name: 'staging'
-        publish-profile: ${{ secrets.AzureAppService_PublishProfile_bc1ddf71e9634d56895c79387d7a5c74 }}
-        package: ${{env.DOTNET_ROOT}}/myapp 
+        app-name: 'thamco-staff-staging'
+        slot-name: 'production'
+        publish-profile: ${{ secrets.AzureAppService_PublishProfile_9e714b30d7fd43a5909adcb343149fd5 }}
+        package: ${{env.DOTNET_ROOT}}/myapp
