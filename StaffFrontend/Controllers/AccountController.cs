@@ -64,11 +64,13 @@ namespace StaffFrontend.Controllers
         [Authorize]
         public async Task<IActionResult> Passwd([FromForm] PasswordChangeForm passwd)
         {
+            return NotFound();
             if (ModelState.IsValid)
             {
                 try
                 {
-
+                    List<string> claims = User.Claims.Where(c => c.Type == ClaimTypes.Role).Select(c => c.Value).ToList();
+                    await authProxy.UpdatePassword(User, passwd.Password, claims);
                 }
                 catch (SystemException)
                 {

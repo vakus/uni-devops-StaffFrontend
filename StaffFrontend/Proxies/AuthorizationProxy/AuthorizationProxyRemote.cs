@@ -70,12 +70,14 @@ namespace StaffFrontend.Proxies.AuthorizationProxy
             };
         }
 
-        public async Task UpdatePassword(string userid, string password, IList<string> roles)
+        public async Task UpdatePassword(ClaimsPrincipal User, string password, IList<string> roles)
         {
             Dictionary<string, object> values = new Dictionary<string, object>
             {
-                { "user-id", userid }
+                { "user-id", User.Identity.Name }
             };
+
+            
 
             string url = Utils.createUriBuilder(_config.GetSection("UpdatePassword"), values).ToString();
 
@@ -84,8 +86,8 @@ namespace StaffFrontend.Proxies.AuthorizationProxy
             client.DefaultRequestHeaders.Accept.ParseAdd("application/json");
 
             UserUpdateForm uuf = new UserUpdateForm() {
-                Email = "",
-                FullName = "",
+                Email = User.Claims.First(s => s.Type == "email").Value,
+                FullName = User.Claims.First(s => s.Type == "name").Value,
                 Password = password,
                 Roles = roles
             };
