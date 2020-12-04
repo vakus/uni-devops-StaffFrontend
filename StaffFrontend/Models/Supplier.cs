@@ -7,10 +7,14 @@ namespace StaffFrontend.Models
 {
     public class Supplier
     {
-        public int id { get; set; }
+        public int SupplierId { get; set; }
 
-        public string name { get; set; }
+        public string SupplierName { get; set; }
 
-        public List<int> items { get; set; }
+        public string SupplierAddress { get; set; }
+
+        public string SupplierEmail { get; set; }
+
+        public string SupplierContactNumber { get; set; }
     }
 }

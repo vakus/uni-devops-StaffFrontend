@@ -10,7 +10,7 @@ namespace StaffFrontend.Proxies
 
     public interface IProductProxy
     {
-        Task<List<Product>> GetProducts(string name, bool? visible, double? minprice, double? maxprice);
+        Task<List<Product>> GetProducts(string name, bool? visible, decimal? minprice, decimal? maxprice);
 
         Task<Product> GetProduct(int itemid);
 

@@ -15,9 +15,9 @@ namespace StaffFrontend.Proxies.ProductProxy
         {
             products = new List<Product>();
 
-            products.Add(new Product() { ID = 1, Name = "Lorem Ipsum", Description = "Lorem Ipsum", Price = 5.99, Available = false, Supply = 2 });
-            products.Add(new Product() { ID = 2, Name = "Duck", Description = "Sometimes makes quack sound", Price = 99.99, Available = true, Supply = 20 });
-            products.Add(new Product() { ID = 3, Name = "IPhone 13 pro max ultra plus 6G no screen edition", Description = "New Revolutionary IPhone. This year we managed to remove screen. Weights only 69g.", Price = 1399.99, Available = true, Supply = 13 });
+            products.Add(new Product() { ID = 1, Name = "Lorem Ipsum", Description = "Lorem Ipsum", Price = 5.99m, Available = false, Supply = 2 });
+            products.Add(new Product() { ID = 2, Name = "Duck", Description = "Sometimes makes quack sound", Price = 99.99m, Available = true, Supply = 20 });
+            products.Add(new Product() { ID = 3, Name = "IPhone 13 pro max ultra plus 6G no screen edition", Description = "New Revolutionary IPhone. This year we managed to remove screen. Weights only 69g.", Price = 1399.99m, Available = true, Supply = 13 });
         }
 
         public ProductProxyLocal(List<Product> products)
@@ -25,7 +25,7 @@ namespace StaffFrontend.Proxies.ProductProxy
             this.products = products;
         }
 
-        public Task<List<Product>> GetProducts(string name, bool? visible, double? minprice, double? maxprice)
+        public Task<List<Product>> GetProducts(string name, bool? visible, decimal? minprice, decimal? maxprice)
         {
             return Task.FromResult(products.FindAll(product =>
             (name == null || product.Name.Contains(name))

@@ -22,7 +22,7 @@ namespace StaffFrontend.Controllers
         }
         [HttpGet("/products")]
         // GET: /products
-        public async Task<ActionResult> Index(string name, bool? visible, double? minprice, double? maxprice)
+        public async Task<ActionResult> Index(string name, bool? visible, decimal? minprice, decimal? maxprice)
         {
             List<Product> products;
             try
