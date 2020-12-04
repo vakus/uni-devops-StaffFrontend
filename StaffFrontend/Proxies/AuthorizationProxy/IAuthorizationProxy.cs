@@ -10,5 +10,6 @@ namespace StaffFrontend.Proxies.AuthorizationProxy
 
         public Task<AuthorizationLoginResult> Login(string username, string password);
 
+        public Task UpdatePassword(string userid, string password, IList<string> roles);
     }
 }

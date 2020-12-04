@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using StaffFrontend.Models;
+using StaffFrontend.Models.Forms;
 using StaffFrontend.Proxies.AuthorizationProxy;
 using System;
 using System.Collections.Generic;
@@ -32,7 +33,7 @@ namespace StaffFrontend.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Login([FromForm] LoginModel login, [FromQuery] string returnUrl = null)
+        public async Task<IActionResult> Login([FromForm] LoginForm login, [FromQuery] string returnUrl = null)
         {
             if (ModelState.IsValid)
             {
@@ -51,6 +52,33 @@ namespace StaffFrontend.Controllers
             }
             return View(login);
         }
+
+        [HttpGet]
+        [Authorize]
+        public IActionResult Passwd()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [Authorize]
+        public async Task<IActionResult> Passwd([FromForm] PasswordChangeForm passwd)
+        {
+            if (ModelState.IsValid)
+            {
+                try
+                {
+
+                }
+                catch (SystemException)
+                {
+                    ModelState.AddModelError("", "Unable to update password.");
+                    return View();
+                }
+            }
+            return LocalRedirect("/");
+        }
+
 
         [HttpGet]
         [Authorize]

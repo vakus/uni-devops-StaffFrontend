@@ -1,6 +1,7 @@
 ﻿using IdentityModel.Client;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.Extensions.Configuration;
+using StaffFrontend.Proxies.AuthorizationProxy.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,25 +14,25 @@ namespace StaffFrontend.Proxies.AuthorizationProxy
     public class AuthorizationProxyRemote : IAuthorizationProxy
     {
         private IHttpClientFactory _client { get; }
-        private IConfigurationSection config { get; }
+        private IConfigurationSection _config { get; }
         public AuthorizationProxyRemote(IHttpClientFactory client, IConfiguration config)
         {
             this._client = client;
-            this.config = config.GetSection("AuthorizationMicroservice");
+            this._config = config.GetSection("AuthorizationMicroservice");
         }
 
         public async Task<AuthorizationLoginResult> Login(string username, string password)
         {
             var client = _client.CreateClient();
 
-            string domain = config.GetValue<string>("domain");
+            string domain = _config.GetValue<string>("domain");
 
             var discoveryServer = await client.GetDiscoveryDocumentAsync(domain);
             var token = await client.RequestPasswordTokenAsync(new PasswordTokenRequest
             {
                 Address = discoveryServer.TokenEndpoint,
-                ClientId = config.GetValue<string>("clientid"),
-                ClientSecret = config["secret"],
+                ClientId = _config.GetValue<string>("clientid"),
+                ClientSecret = _config["secret"],
                 UserName = username,
                 Password = password
             });
@@ -67,6 +68,30 @@ namespace StaffFrontend.Proxies.AuthorizationProxy
                 claimsPrincipal = claimsPrincipal,
                 authProperties = authProperties
             };
+        }
+
+        public async Task UpdatePassword(string userid, string password, IList<string> roles)
+        {
+            Dictionary<string, object> values = new Dictionary<string, object>
+            {
+                { "user-id", userid }
+            };
+
+            string url = Utils.createUriBuilder(_config.GetSection("UpdatePassword"), values).ToString();
+
+            var client = _client.CreateClient();
+
+            client.DefaultRequestHeaders.Accept.ParseAdd("application/json");
+
+            UserUpdateForm uuf = new UserUpdateForm() {
+                Email = "",
+                FullName = "",
+                Password = password,
+                Roles = roles
+            };
+
+
+            var response = await client.PostAsJsonAsync(url, uuf);
         }
     }
 }
