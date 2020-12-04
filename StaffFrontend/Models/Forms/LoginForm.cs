@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace StaffFrontend.Models
 {
-    public class LoginModel
+    public class LoginForm
     {
         public string Email { get; set; }
 
