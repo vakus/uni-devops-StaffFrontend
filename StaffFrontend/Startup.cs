@@ -61,6 +61,7 @@ namespace StaffFrontend
                 services.AddSingleton<ICustomerProxy, CustomerProxyRemote>();
                 services.AddSingleton<IReviewProxy, ReviewProxyRemote>();
                 services.AddSingleton<IAuthorizationProxy, AuthorizationProxyRemote>();
+                services.AddSingleton<ISupplierProxy, SupplierProxyRemote>();
             }
             else
             {
