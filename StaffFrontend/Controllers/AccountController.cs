@@ -42,7 +42,7 @@ namespace StaffFrontend.Controllers
                     AuthorizationLoginResult loginResult = await authProxy.Login(login.Email, login.Password);
                     await HttpContext.SignInAsync("Cookies", loginResult.claimsPrincipal, loginResult.authProperties);
 
-                    return LocalRedirect(returnUrl ?? "/");
+                    return LocalRedirect(returnUrl ?? "/products");
                 }
                 catch (SystemException)
                 {
@@ -78,7 +78,7 @@ namespace StaffFrontend.Controllers
                     return View();
                 }
             }
-            return LocalRedirect("/");
+            return LocalRedirect("/products");
         }
 
 

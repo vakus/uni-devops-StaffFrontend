@@ -9,7 +9,12 @@ namespace StaffFrontend.Proxies.SuplierProxy
 
     public class SupplierProxyRemote : ISupplierProxy
     {
-        public Task DeleteSupplier(Supplier supplier)
+        public Task CreateSupplier(Supplier supplier)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task DeleteSupplier(int supplierid)
         {
             throw new NotImplementedException();
         }

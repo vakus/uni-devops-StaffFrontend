@@ -14,8 +14,8 @@ namespace StaffFrontend.Proxies.SuplierProxy
         public SupplierProxyLocal()
         {
             suppliers = new List<Supplier>(){
-                new Supplier(){ id=1, name="Teesside", items=new List<int>(){ 1, 2, 3} },
-                new Supplier(){ id=2, name="idk co", items=new List<int>(){ 1, 2} }
+                new Supplier(){ SupplierId=1, SupplierName="Teesside", SupplierAddress="teeside", SupplierContactNumber="69420-177013", SupplierEmail="t33ss1d3@t33ss1d3.ac.co.uk.com.gov.uk"},
+                new Supplier(){ SupplierId=2, SupplierName="idk co", SupplierAddress="london", SupplierContactNumber="123456789", SupplierEmail="email@email.co.uk"}
             };
         }
 
@@ -24,16 +24,44 @@ namespace StaffFrontend.Proxies.SuplierProxy
             this.suppliers = suppliers;
         }
 
-        public Task DeleteSupplier(Supplier supplier)
+        public Task CreateSupplier(Supplier supplier)
+        {
+
+            return Task.Run(() => {
+
+                int id = int.MinValue;
+
+                //get available highest ID
+                if (suppliers.Count == 0)
+                {
+                    id = 1;
+                }
+                else
+                {
+                    foreach (Supplier s in suppliers)
+                    {
+                        if (id <= s.SupplierId)
+                        {
+                            id = s.SupplierId + 1;
+                        }
+                    }
+                }
+
+                supplier.SupplierId = id;
+                suppliers.Add(supplier);
+            });
+        }
+
+        public Task DeleteSupplier(int supplierid)
         {
             return Task.Run(() => {
-                suppliers.RemoveAll(s => s.id == supplier.id);
+                suppliers.RemoveAll(s => s.SupplierId == supplierid);
             });
         }
 
         public Task<Supplier> GetSupplier(int supplierid)
         {
-            return Task.FromResult(suppliers.Find(s => s.id == supplierid));
+            return Task.FromResult(suppliers.Find(s => s.SupplierId == supplierid));
         }
 
         public Task<List<Supplier>> GetSuppliers()
@@ -44,7 +72,7 @@ namespace StaffFrontend.Proxies.SuplierProxy
         public Task UpdateSupplier(Supplier supplier)
         {
             return Task.Run(() => {
-                suppliers.RemoveAll(s => s.id == supplier.id);
+                suppliers.RemoveAll(s => s.SupplierId == supplier.SupplierId);
                 suppliers.Add(supplier);
             });
         }

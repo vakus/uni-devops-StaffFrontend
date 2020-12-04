@@ -15,7 +15,9 @@ namespace StaffFrontend.Proxies
 
         Task UpdateSupplier(Supplier supplier);
 
-        Task DeleteSupplier(Supplier supplier);
+        Task DeleteSupplier(int supplierid);
+
+        Task CreateSupplier(Supplier supplier);
     }
 
 }

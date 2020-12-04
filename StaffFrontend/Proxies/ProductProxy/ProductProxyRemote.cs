@@ -56,7 +56,7 @@ namespace StaffFrontend.Proxies.ProductProxy
             }
         }
 
-        public async Task<List<Product>> GetProducts(string name, bool? visible, double? minprice, double? maxprice)
+        public async Task<List<Product>> GetProducts(string name, bool? visible, decimal? minprice, decimal? maxprice)
         {
             Dictionary<string, object> values = new Dictionary<string, object>
             {

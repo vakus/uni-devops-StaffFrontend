@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -13,6 +14,7 @@ using StaffFrontend.Proxies.AuthorizationProxy;
 using StaffFrontend.Proxies.CustomerProxy;
 using StaffFrontend.Proxies.ProductProxy;
 using StaffFrontend.Proxies.ReviewProxy;
+using StaffFrontend.Proxies.SuplierProxy;
 
 namespace StaffFrontend
 {
@@ -50,25 +52,6 @@ namespace StaffFrontend
                 options.IncludeSubDomains = true;
                 options.MaxAge = TimeSpan.FromDays(360);
             });
-
-            /*if (_env.IsDevelopment())
-            {
-                services.AddSingleton<IProductProxy, ProductProxyLocal>();
-                services.AddSingleton<ICustomerProxy, CustomerProxyLocal>();
-                services.AddSingleton<IReviewProxy, ReviewProxyLocal>();
-            }
-            else if (_env.IsStaging())
-            {
-                services.AddSingleton<IProductProxy, ProductProxyRemote>();
-                services.AddSingleton<ICustomerProxy, CustomerProxyRemote>();
-                services.AddSingleton<IReviewProxy, ReviewProxyRemote>();
-            }
-            else
-            {
-                services.AddSingleton<IProductProxy, ProductProxyRemote>();
-                services.AddSingleton<ICustomerProxy, CustomerProxyRemote>();
-                services.AddSingleton<IReviewProxy, ReviewProxyRemote>();
-            }*/
 
 
             if (_env.IsProduction())
@@ -109,13 +92,23 @@ namespace StaffFrontend
                     services.AddSingleton<IReviewProxy, ReviewProxyRemote>();
                 }
 
+                if (Configuration.GetValue<bool>("SupplierMicroservice:useFake"))
+                {
+                    services.AddSingleton<ISupplierProxy, SupplierProxyLocal>();
+                }
+                else
+                {
+                    services.AddSingleton<ISupplierProxy, SupplierProxyRemote>();
+                }
+
+
                 //Authorization Proxy doesnt have fake
                 services.AddSingleton<IAuthorizationProxy, AuthorizationProxyRemote>();
             }
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IHttpClientFactory factory)
         {
             if (env.IsDevelopment())
             {
@@ -140,6 +133,13 @@ namespace StaffFrontend
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
             });
+
+            //warm up HttpClientFactory to prevent 10 minutes long first connection
+            HttpClient client = factory.CreateClient();
+
+            client.DefaultRequestHeaders.Accept.ParseAdd("application/json");
+            //any website is good as any
+            client.GetAsync("https://google.com");
         }
     }
 }
