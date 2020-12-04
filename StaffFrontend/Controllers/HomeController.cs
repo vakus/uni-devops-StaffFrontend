@@ -20,7 +20,7 @@ namespace StaffFrontend.Controllers
 
         public IActionResult Index()
         {
-            return View();
+            return RedirectPermanent("/products");
         }
 
         public IActionResult Privacy()

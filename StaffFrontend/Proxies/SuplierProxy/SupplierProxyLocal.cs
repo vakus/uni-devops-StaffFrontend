@@ -24,6 +24,34 @@ namespace StaffFrontend.Proxies.SuplierProxy
             this.suppliers = suppliers;
         }
 
+        public Task CreateSupplier(Supplier supplier)
+        {
+
+            return Task.Run(() => {
+
+                int id = int.MinValue;
+
+                //get available highest ID
+                if (suppliers.Count == 0)
+                {
+                    id = 1;
+                }
+                else
+                {
+                    foreach (Supplier s in suppliers)
+                    {
+                        if (id <= s.SupplierId)
+                        {
+                            id = s.SupplierId + 1;
+                        }
+                    }
+                }
+
+                supplier.SupplierId = id;
+                suppliers.Add(supplier);
+            });
+        }
+
         public Task DeleteSupplier(int supplierid)
         {
             return Task.Run(() => {

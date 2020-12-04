@@ -23,16 +23,16 @@ namespace StaffFrontend.Controllers
 
         // GET: SuppliersController
         [HttpGet("/suppliers")]
-        public ActionResult Index()
+        public async Task<ActionResult> Index()
         {
-            return View(_supplierProxy.GetSuppliers());
+            return View(await _supplierProxy.GetSuppliers());
         }
 
         [HttpGet("/suppliers/{id}")]
         // GET: SuppliersController/Details/5
-        public ActionResult Details(int id)
+        public async Task<ActionResult> Details(int id)
         {
-            return View(_supplierProxy.GetSupplier(id));
+            return View(await _supplierProxy.GetSupplier(id));
         }
 
         [HttpGet("/suppliers/new")]
@@ -45,10 +45,11 @@ namespace StaffFrontend.Controllers
         // POST: SuppliersController/Create
         [HttpPost("/suppliers/new")]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public ActionResult Create([FromForm] Supplier supplier)
         {
             try
             {
+                _supplierProxy.CreateSupplier(supplier);
                 return RedirectToAction(nameof(Index));
             }
             catch
@@ -59,20 +60,20 @@ namespace StaffFrontend.Controllers
 
         [HttpGet("/suppliers/edit/{id}")]
         // GET: SuppliersController/Edit/5
-        public ActionResult Edit(int id)
+        public async Task<ActionResult> Edit(int id)
         {
-            return View(_supplierProxy.GetSupplier(id));
+            return View(await _supplierProxy.GetSupplier(id));
         }
 
         // POST: SuppliersController/Edit/5
         [HttpPost("/suppliers/edit/{id}")]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([FromQuery] int id, [FromForm] Supplier supplier)
+        public async Task<ActionResult> Edit(int id, [FromForm] Supplier supplier)
         {
             try
             {
                 supplier.SupplierId = id;
-                _supplierProxy.UpdateSupplier(supplier);
+                await _supplierProxy.UpdateSupplier(supplier);
                 return RedirectToAction(nameof(Index));
             }
             catch
@@ -83,9 +84,9 @@ namespace StaffFrontend.Controllers
 
         [HttpGet("/suppliers/delete/{id}")]
         // GET: SuppliersController/Delete/5
-        public ActionResult Delete(int id)
+        public async Task<ActionResult> Delete(int id)
         {
-            return View(_supplierProxy.GetSupplier(id));
+            return View(await _supplierProxy.GetSupplier(id));
         }
 
         // POST: SuppliersController/Delete/5
