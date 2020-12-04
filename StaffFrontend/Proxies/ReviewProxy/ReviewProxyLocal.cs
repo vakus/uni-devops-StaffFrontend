@@ -39,26 +39,36 @@ namespace StaffFrontend.Proxies.ReviewProxy
                 {
                     total += review.reviewRating;
                 }
-                return (double)(total / applicable.Count());
+                if (total != 0)
+                {
+                    return (double)(total / applicable.Count());
+                }
+                else
+                {
+                    return 0;
+                }
             });
         }
 
         public Task<Review> GetReview(int reviewid)
         {
-            return Task.FromResult(reviews.Find(r => r.reviewId == reviewid));
+            return Task.FromResult(reviews.FirstOrDefault(r => r.reviewId == reviewid));
         }
 
         public Task<List<Review>> GetReviews(int? itemId, int? customerId)
         {
-            return Task.FromResult(reviews.FindAll(r => (itemId.HasValue && r.productId == itemId) || (customerId.HasValue && r.userId == customerId.Value)));
+            return Task.FromResult(reviews.FindAll(r => (itemId.HasValue && r.productId == itemId) || (customerId.HasValue && r.userId == customerId.Value) || (!itemId.HasValue && !customerId.HasValue)));
         }
 
         public Task UpdateReview(Review review)
         {
             return Task.Run(() =>
             {
-                reviews.RemoveAll(r => r.reviewId == review.reviewId);
-                reviews.Add(review);
+                if (reviews.Where(r => r.reviewId == review.reviewId).Count() != 0)
+                {
+                    reviews.RemoveAll(r => r.reviewId == review.reviewId);
+                    reviews.Add(review);
+                }
             });
         }
     }

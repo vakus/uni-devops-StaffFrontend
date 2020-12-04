@@ -1,6 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using StaffFrontend.Models;
-using StaffFrontend.Proxies;
+using StaffFrontend.Proxies.ProductProxy;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,9 +22,9 @@ namespace StaffFrontend.test.Proxies
         {
             products = new List<Product>()
             {
-                new Product(){ID=1, Name="Duck", Description="Rubber ducky", Price=99.99, Available=true, Supply=20},
-                new Product(){ID=2, Name="Raspberry PI", Description="very smoll pc", Price=20.00, Available=true, Supply=4},
-                new Product(){ID=3, Name="Arduino", Description="microcontroller", Price=40.00, Available=false, Supply=0}
+                new Product(){ID=1, Name="Duck", Description="Rubber ducky", Price=99.99m, Available=true, Supply=20},
+                new Product(){ID=2, Name="Raspberry PI", Description="very smoll pc", Price=20.00m, Available=true, Supply=4},
+                new Product(){ID=3, Name="Arduino", Description="microcontroller", Price=40.00m, Available=false, Supply=0}
             };
 
             ppl = new ProductProxyLocal(products);
@@ -78,9 +78,9 @@ namespace StaffFrontend.test.Proxies
         [TestMethod]
         public async Task ProductProxy_GetProduct()
         {
-            Assert.IsTrue(ppl.GetProduct(1).Equals(products.Find(p => p.ID == 1)));
-            Assert.IsTrue(ppl.GetProduct(2).Equals(products.Find(p => p.ID == 2)));
-            Assert.IsTrue(ppl.GetProduct(3).Equals(products.Find(p => p.ID == 3)));
+            Assert.IsTrue((await ppl.GetProduct(1)).Equals(products.Find(p => p.ID == 1)));
+            Assert.IsTrue((await ppl.GetProduct(2)).Equals(products.Find(p => p.ID == 2)));
+            Assert.IsTrue((await ppl.GetProduct(3)).Equals(products.Find(p => p.ID == 3)));
             Assert.IsNull(await ppl.GetProduct(5));
             Assert.IsNull(await ppl.GetProduct(-2));
         }
@@ -94,20 +94,20 @@ namespace StaffFrontend.test.Proxies
                 Name = "OnePlus One",
                 Description = "First phone from OnePlus",
                 Available = false,
-                Price = 999.99,
+                Price = 999.99m,
                 Supply = 13
             };
             await ppl.AddProduct(prod);
-            Assert.IsTrue(ppl.GetProduct(4).Equals(prod));
+            Assert.IsTrue((await ppl.GetProduct(4)).Equals(prod));
         }
 
         [TestMethod]
         public async Task ProductProxy_UpdateProduct()
         {
             Product p = products.First();
-            p.Price = 4.99;
+            p.Price = 4.99m;
             await ppl.UpdateProduct(p);
-            Assert.IsTrue(ppl.GetProduct(1).Equals(p));
+            Assert.IsTrue((await ppl.GetProduct(1)).Equals(p));
         }
 
         [TestMethod]
