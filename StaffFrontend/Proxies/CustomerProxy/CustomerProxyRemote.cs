@@ -26,15 +26,14 @@ namespace StaffFrontend.Proxies.CustomerProxy
 
         public async Task<Customer> GetCustomer(int customerid)
         {
-            Dictionary<string, object> values = new Dictionary<string, object> { { "customer-id", customerid } };
-
-            string url = Utils.createUriBuilder(_config.GetSection("GetCustomers"), values).ToString();
+            Dictionary<string, object> values = new Dictionary<string, object>
+            {
+                { "customer-id", customerid }
+            };
 
             var client = _clientFactory.CreateClient();
 
-            client.DefaultRequestHeaders.Accept.ParseAdd("application/json");
-
-            var response = await client.GetAsync(url);
+            var response = await Utils.Request(client, _config.GetSection("GetCustomers"), values);
 
             if (!response.IsSuccessStatusCode)
             {
@@ -50,15 +49,14 @@ namespace StaffFrontend.Proxies.CustomerProxy
 
         public async Task<List<Customer>> GetCustomers(bool excludeDeleted)
         {
-            Dictionary<string, object> values = new Dictionary<string, object> { { "exclude-deleted", excludeDeleted } };
-
-            string url = Utils.createUriBuilder(_config.GetSection("GetCustomers"), values).ToString();
+            Dictionary<string, object> values = new Dictionary<string, object>
+            {
+                { "exclude-deleted", excludeDeleted }
+            };
 
             var client = _clientFactory.CreateClient();
 
-            client.DefaultRequestHeaders.Accept.ParseAdd("application/json");
-
-            var response = await client.GetAsync(url);
+            var response = await Utils.Request(client, _config.GetSection("GetCustomers"), values);
 
             if (!response.IsSuccessStatusCode)
             {

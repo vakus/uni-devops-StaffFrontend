@@ -77,9 +77,7 @@ namespace StaffFrontend.Proxies.AuthorizationProxy
                 { "user-id", User.Identity.Name }
             };
 
-            
-
-            string url = Utils.createUriBuilder(_config.GetSection("UpdatePassword"), values).ToString();
+            string url = Utils.CreateUriBuilder(_config.GetSection("UpdatePassword"), values).ToString();
 
             var client = _client.CreateClient();
 

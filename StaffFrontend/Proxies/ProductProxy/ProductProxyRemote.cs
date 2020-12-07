@@ -36,14 +36,9 @@ namespace StaffFrontend.Proxies.ProductProxy
                 { "item-id", itemid }
             };
 
-            string url = Utils.createUriBuilder(_config.GetSection("GetProduct"), values).ToString();
-
             var client = _clientFactory.CreateClient();
 
-            client.DefaultRequestHeaders.Accept.ParseAdd("application/json");
-
-
-            var response = await client.GetAsync(url);
+            var response = await Utils.Request(client, _config.GetSection("GetProduct"), values);
 
             if (!response.IsSuccessStatusCode)
             {
@@ -65,15 +60,9 @@ namespace StaffFrontend.Proxies.ProductProxy
                 { "price-min", minprice },
                 { "price-max", maxprice }
             };
-
-            string url = Utils.createUriBuilder(_config.GetSection("GetProducts"), values).ToString();
-
             var client = _clientFactory.CreateClient();
 
-
-            client.DefaultRequestHeaders.Accept.ParseAdd("application/json");
-
-            var response = await client.GetAsync(url);
+            var response = await Utils.Request(client, _config.GetSection("GetProducts"), values);
 
             if (!response.IsSuccessStatusCode)
             {

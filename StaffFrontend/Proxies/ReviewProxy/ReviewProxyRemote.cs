@@ -26,15 +26,9 @@ namespace StaffFrontend.Proxies.ReviewProxy
             {
                 { "item-id", itemid }
             };
-
-            string url = Utils.createUriBuilder(_config.GetSection("GetRating"), values).ToString();
-
             var client = _clientFactory.CreateClient();
 
-            client.DefaultRequestHeaders.Accept.ParseAdd("application/json");
-
-
-            var response = await client.GetAsync(url);
+            var response = await Utils.Request(client, _config.GetSection("GetRating"), values);
 
             if (!response.IsSuccessStatusCode)
             {
@@ -54,14 +48,9 @@ namespace StaffFrontend.Proxies.ReviewProxy
                 { "review-id", reviewid }
             };
 
-            string url = Utils.createUriBuilder(_config.GetSection("GetReview"), values).ToString();
-
             var client = _clientFactory.CreateClient();
 
-            client.DefaultRequestHeaders.Accept.ParseAdd("application/json");
-
-
-            var response = await client.GetAsync(url);
+            var response = await Utils.Request(client, _config.GetSection("GetReview"), values);
 
             if (!response.IsSuccessStatusCode)
             {
@@ -81,15 +70,9 @@ namespace StaffFrontend.Proxies.ReviewProxy
                 { "item-id", itemid },
                 { "customer-id", customerid }
             };
-
-            string url = Utils.createUriBuilder(_config.GetSection("GetReviews"), values).ToString();
-
             var client = _clientFactory.CreateClient();
 
-            client.DefaultRequestHeaders.Accept.ParseAdd("application/json");
-
-
-            var response = await client.GetAsync(url);
+            var response = await Utils.Request(client, _config.GetSection("GetReviews"), values);
 
             if (!response.IsSuccessStatusCode)
             {
