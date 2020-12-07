@@ -30,14 +30,9 @@ namespace StaffFrontend.Proxies.SuplierProxy
                 { "supplier-address", supplier.SupplierAddress }
             };
 
-            string url = Utils.createUriBuilder(_config.GetSection("CreateSupplier"), values).ToString();
-
             var client = _clientFactory.CreateClient();
 
-            client.DefaultRequestHeaders.Accept.ParseAdd("application/json");
-
-
-            var response = await client.GetAsync(url);
+            var response = await Utils.Request(client, _config.GetSection("CreateSupplier"), values);
 
             if (!response.IsSuccessStatusCode)
             {
@@ -46,9 +41,22 @@ namespace StaffFrontend.Proxies.SuplierProxy
             }
         }
 
-        public Task DeleteSupplier(int supplierid)
+        public async Task DeleteSupplier(int supplierid)
         {
-            throw new NotImplementedException();
+            Dictionary<string, object> values = new Dictionary<string, object>
+            {
+                { "supplier-id", supplierid }
+            };
+
+            var client = _clientFactory.CreateClient();
+
+            var response = await Utils.Request(client, _config.GetSection("DeleteSupplier"), values);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                //error occured can not receive information
+                throw new SystemException("Could not receive data from remote service");
+            }
         }
 
         public async Task<Supplier> GetSupplier(int supplierid)
@@ -57,14 +65,10 @@ namespace StaffFrontend.Proxies.SuplierProxy
             {
                 { "supplier-id", supplierid }
             };
-            string url = Utils.createUriBuilder(_config.GetSection("GetSupplier"), values).ToString();
 
             var client = _clientFactory.CreateClient();
 
-            client.DefaultRequestHeaders.Accept.ParseAdd("application/json");
-
-
-            var response = await client.GetAsync(url);
+            var response = await Utils.Request(client, _config.GetSection("GetSupplier"), values);
 
             if (!response.IsSuccessStatusCode)
             {
@@ -79,14 +83,9 @@ namespace StaffFrontend.Proxies.SuplierProxy
 
         public async Task<List<Supplier>> GetSuppliers()
         {
-            string url = Utils.createUriBuilder(_config.GetSection("GetSuppliers"), new Dictionary<string, object> { }).ToString();
-
             var client = _clientFactory.CreateClient();
 
-            client.DefaultRequestHeaders.Accept.ParseAdd("application/json");
-
-
-            var response = await client.GetAsync(url);
+            var response = await Utils.Request(client, _config.GetSection("GetSuppliers"), new Dictionary<string, object> { });
 
             if (!response.IsSuccessStatusCode)
             {
@@ -110,14 +109,9 @@ namespace StaffFrontend.Proxies.SuplierProxy
                 { "supplier-address", supplier.SupplierAddress }
             };
 
-            string url = Utils.createUriBuilder(_config.GetSection("EditSupplier"), values).ToString();
-
             var client = _clientFactory.CreateClient();
 
-            client.DefaultRequestHeaders.Accept.ParseAdd("application/json");
-
-
-            var response = await client.GetAsync(url);
+            var response = await Utils.Request(client, _config.GetSection("EditSupplier"), values);
 
             if (!response.IsSuccessStatusCode)
             {
