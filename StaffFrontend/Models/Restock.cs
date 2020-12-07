@@ -7,10 +7,18 @@ namespace StaffFrontend.Models
 {
     public class Restock
     {
-        public int id { get; set; }
+        public string restockId { get; set; }
 
-        public bool confirmed { get; set; }
+        public string supplierId { get; set; }
 
-        public DateTime orderTime { get; set; }
+        public string sProductId { get; set; }
+
+        public int quantity { get; set; }
+
+        public decimal price { get; set; }
+
+        public DateTime date { get; set; }
+
+        public bool approved { get; set; }
     }
 }
