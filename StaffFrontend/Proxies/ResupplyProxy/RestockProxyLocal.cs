@@ -8,29 +8,57 @@ namespace StaffFrontend.Proxies.ResupplyProxy
 {
     public class RestockProxyLocal : IRestockProxy
     {
-        public Task CreateRestock(Restock resupply)
+        private List<Restock> restocks;
+
+        public RestockProxyLocal()
         {
-            throw new NotImplementedException();
+            restocks = new List<Restock>
+            {
+                new Restock(){restockId="1", supplierId="1", sProductId="1", quantity=4, price=4.99m, approved=false, date=DateTime.MinValue}
+            };
         }
 
-        public Task DeleteRestock(int resupplyId)
+        public RestockProxyLocal(List<Restock> restocks)
         {
-            throw new NotImplementedException();
+            this.restocks = restocks;
+        }
+
+        public Task CreateRestock(Restock restock)
+        {
+            return Task.Run(() =>
+            {
+                restocks.Add(restock);
+            });
+        }
+
+        public Task DeleteRestock(int restockId)
+        {
+            return Task.Run(() =>
+            {
+                restocks.RemoveAll(s => s.restockId == restockId.ToString());
+            });
         }
 
         public Task<List<Restock>> GetRestocks()
         {
-            throw new NotImplementedException();
+            return Task.FromResult(restocks);
         }
 
-        public Task<Restock> GetRestock(int resupplyId)
+        public Task<Restock> GetRestock(int restockId)
         {
-            throw new NotImplementedException();
+            return Task.FromResult(restocks.FirstOrDefault(s => s.restockId == restockId.ToString()));
         }
 
-        public Task UpdateRestock(Restock resupply)
+        public Task UpdateRestock(Restock restock)
         {
-            throw new NotImplementedException();
+            return Task.Run(() =>
+            {
+                if (restocks.Where(r => r.restockId == restock.restockId).Count() != 0)
+                {
+                    restocks.RemoveAll(s => s.restockId == restock.restockId);
+                    restocks.Add(restock);
+                }
+            });
         }
     }
 }
