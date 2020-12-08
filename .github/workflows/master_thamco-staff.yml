@@ -34,5 +34,5 @@ jobs:
       with:
         app-name: 'thamco-staff'
         slot-name: 'production'
-        publish-profile: ${{ secrets.AzureAppService_PublishProfile_557cd5d6113b42a7a6ae993116d34969 }}
+        publish-profile: ${{ secrets.AzureAppService_PublishProfile_82458f5c3f9c472ba4375be6b28d74a4 }}
         package: ${{env.DOTNET_ROOT}}/myapp 

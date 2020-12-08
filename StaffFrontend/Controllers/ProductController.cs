@@ -6,9 +6,11 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using StaffFrontend.Proxies;
 using StaffFrontend.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace StaffFrontend.Controllers
 {
+    [Authorize(Policy = "StaffOnly")]
     public class ProductController : Controller
     {
 
@@ -20,7 +22,7 @@ namespace StaffFrontend.Controllers
         }
         [HttpGet("/products")]
         // GET: /products
-        public async Task<ActionResult> Index(string name, bool? visible, double? minprice, double? maxprice)
+        public async Task<ActionResult> Index(string name, bool? visible, decimal? minprice, decimal? maxprice)
         {
             List<Product> products;
             try

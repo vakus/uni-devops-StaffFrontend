@@ -1,0 +1,65 @@
+﻿@model IEnumerable<StaffFrontend.Models.Supplier>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table table-dark">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.SupplierId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.SupplierName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.SupplierAddress)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.SupplierEmail)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.SupplierContactNumber)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.SupplierId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.SupplierName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.SupplierAddress)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.SupplierEmail)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.SupplierContactNumber)
+            </td>
+            <td>
+                @{/* 
+                @Html.ActionLink("Edit", "Edit", new {  id=item.PrimaryKey  }) |
+                @Html.ActionLink("Details", "Details", new {  id=item.PrimaryKey  }) |
+                @Html.ActionLink("Delete", "Delete", new {  id=item.PrimaryKey  })
+                */}
+
+                <a href="/Suppliers/Edit/@item.SupplierId">Edit</a> |
+                <a href="/Suppliers/@item.SupplierId">View</a> |
+                <a href="/Suppliers/Delete/@item.SupplierId">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

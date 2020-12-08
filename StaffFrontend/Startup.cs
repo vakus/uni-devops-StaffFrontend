@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -9,6 +10,12 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using StaffFrontend.Proxies;
+using StaffFrontend.Proxies.AuthorizationProxy;
+using StaffFrontend.Proxies.CustomerProxy;
+using StaffFrontend.Proxies.ProductProxy;
+using StaffFrontend.Proxies.ResupplyProxy;
+using StaffFrontend.Proxies.ReviewProxy;
+using StaffFrontend.Proxies.SuplierProxy;
 
 namespace StaffFrontend
 {
@@ -29,6 +36,16 @@ namespace StaffFrontend
             services.AddControllersWithViews();
             services.AddHttpClient();
 
+            services.AddAuthentication("Cookies").AddCookie("Cookies");
+
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("StaffOnly", builder =>
+                {
+                    builder.RequireClaim("role", "Staff");
+                });
+            });
+
             //Use preloading, HSTS for 360 days
             services.AddHsts(options =>
             {
@@ -37,28 +54,73 @@ namespace StaffFrontend
                 options.MaxAge = TimeSpan.FromDays(360);
             });
 
-            if (_env.IsDevelopment())
+
+            if (_env.IsProduction())
             {
-                services.AddSingleton<IProductProxy, ProductProxyLocal>();
-                services.AddSingleton<ICustomerProxy, CustomerProxyLocal>();
-                services.AddSingleton<IReviewProxy, ReviewProxyLocal>();
-            }
-            else if (_env.IsStaging())
-            {
+                // in production we dont want to allow fakes
                 services.AddSingleton<IProductProxy, ProductProxyRemote>();
                 services.AddSingleton<ICustomerProxy, CustomerProxyRemote>();
                 services.AddSingleton<IReviewProxy, ReviewProxyRemote>();
+                services.AddSingleton<IAuthorizationProxy, AuthorizationProxyRemote>();
+                services.AddSingleton<ISupplierProxy, SupplierProxyRemote>();
+                services.AddSingleton<IRestockProxy, RestockProxyRemote>();
             }
             else
             {
-                services.AddSingleton<IProductProxy, ProductProxyRemote>();
-                services.AddSingleton<ICustomerProxy, CustomerProxyRemote>();
-                services.AddSingleton<IReviewProxy, ReviewProxyRemote>();
+                //anywhere else fakes are ok
+                if (Configuration.GetValue<bool>("ProductMicroservice:useFake"))
+                {
+                    services.AddSingleton<IProductProxy, ProductProxyLocal>();
+                }
+                else
+                {
+                    services.AddSingleton<IProductProxy, ProductProxyRemote>();
+                }
+
+                if (Configuration.GetValue<bool>("CustomerMicroservice:useFake"))
+                {
+                    services.AddSingleton<ICustomerProxy, CustomerProxyLocal>();
+                }
+                else
+                {
+                    services.AddSingleton<ICustomerProxy, CustomerProxyRemote>();
+                }
+
+                if (Configuration.GetValue<bool>("ReviewMicroservice:useFake"))
+                {
+                    services.AddSingleton<IReviewProxy, ReviewProxyLocal>();
+                }
+                else
+                {
+                    services.AddSingleton<IReviewProxy, ReviewProxyRemote>();
+                }
+
+                if (Configuration.GetValue<bool>("SupplierMicroservice:useFake"))
+                {
+                    services.AddSingleton<ISupplierProxy, SupplierProxyLocal>();
+                }
+                else
+                {
+                    services.AddSingleton<ISupplierProxy, SupplierProxyRemote>();
+                }
+
+                if (Configuration.GetValue<bool>("RestockMicroservice:useFake"))
+                {
+                    services.AddSingleton<IRestockProxy, RestockProxyLocal>();
+                }
+                else
+                {
+                    services.AddSingleton<IRestockProxy, RestockProxyRemote>();
+                }
+
+
+                //Authorization Proxy doesnt have fake
+                services.AddSingleton<IAuthorizationProxy, AuthorizationProxyRemote>();
             }
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IHttpClientFactory factory)
         {
             if (env.IsDevelopment())
             {
@@ -74,6 +136,7 @@ namespace StaffFrontend
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
@@ -82,6 +145,13 @@ namespace StaffFrontend
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
             });
+
+            //warm up HttpClientFactory to prevent 10 minutes long first connection
+            HttpClient client = factory.CreateClient();
+
+            client.DefaultRequestHeaders.Accept.ParseAdd("application/json");
+            //any website is good as any
+            client.GetAsync("https://google.com");
         }
     }
 }
