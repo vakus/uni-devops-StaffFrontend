@@ -24,6 +24,7 @@ namespace StaffFrontend.Proxies.SuplierProxy
         {
             Dictionary<string, object> values = new Dictionary<string, object>
             {
+                { "supplier-id", supplier.SupplierId },
                 { "supplier-name", supplier.SupplierName },
                 { "supplier-email", supplier.SupplierEmail },
                 { "supplier-phone", supplier.SupplierContactNumber },
