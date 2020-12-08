@@ -68,7 +68,7 @@ namespace StaffFrontend.Controllers
         // POST: RestockController/Edit/5
         [HttpPost("/restock/edit/{id}")]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit([FromQuery] int id, [FromForm] Restock restock)
+        public async Task<ActionResult> Edit(int id, [FromForm] Restock restock)
         {
             try
             {
