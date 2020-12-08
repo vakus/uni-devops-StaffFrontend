@@ -1,0 +1,26 @@
+# This is a basic workflow to help you get started with Actions
+
+name: CI
+
+# Controls when the action will run. 
+on:
+  # Triggers the workflow on push or pull request events but only for the master branch
+  schedule:
+    - cron: '59 23 * * *'
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  Nightly-Tag:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          ref: development
+      - uses: fregante/daily-version-action@v1
+        name: Nightly Tag
+        id: nightly-version
+        with:
+          prefix: nightly-v
+    outputs: # Shares the action’s outputs to the Next jobs
+      created: ${{ steps.daily-version.outputs.created }}
+      version: ${{ steps.daily-version.outputs.version }}
