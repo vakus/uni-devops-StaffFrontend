@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using StaffFrontend.Proxies;
 using StaffFrontend.Models;
 using Microsoft.AspNetCore.Authorization;
+using StaffFrontend.Models.Product;
 
 namespace StaffFrontend.Controllers
 {
@@ -14,11 +15,13 @@ namespace StaffFrontend.Controllers
     public class ProductController : Controller
     {
 
-        private IProductProxy _product;
+        private readonly IProductProxy _product;
+        private readonly IReviewProxy _review;
 
-        public ProductController(IProductProxy productProxy)
+        public ProductController(IProductProxy productProxy, IReviewProxy reviewProxy)
         {
             _product = productProxy;
+            _review = reviewProxy;
         }
         [HttpGet("/products")]
         // GET: /products
@@ -41,12 +44,13 @@ namespace StaffFrontend.Controllers
         // GET: /products/view/5
         public async Task<ActionResult> Details(int itemid)
         {
-            Product prod;
+
+            ProductDetailsDTO product = new ProductDetailsDTO();
             try
             {
-                prod = await _product.GetProduct(itemid);
+                product.product = await _product.GetProduct(itemid);
 
-                if (prod == null)
+                if (product.product == null)
                 {
                     return NotFound();
                 }
@@ -54,9 +58,18 @@ namespace StaffFrontend.Controllers
             catch (SystemException)
             {
                 ModelState.AddModelError("", "Unable to load data from remote service. Please try again.");
-                prod = new Product();
+                product.product = new Product();
             }
-            return View(prod);
+
+            try
+            {
+                product.reviews = await _review.GetReviews(itemid, null);
+            }
+            catch (SystemException)
+            {
+                ModelState.AddModelError("", "Unable to load review data from remote service.");
+            }
+            return View(product);
         }
 
         [HttpGet("/products/new")]
