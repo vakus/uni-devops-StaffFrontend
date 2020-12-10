@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace StaffFrontend.Proxies.ResupplyProxy
+namespace StaffFrontend.Proxies.RestockProxy
 {
     public interface IRestockProxy
     {

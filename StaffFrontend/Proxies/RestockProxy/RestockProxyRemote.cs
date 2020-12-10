@@ -6,7 +6,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 
-namespace StaffFrontend.Proxies.ResupplyProxy
+namespace StaffFrontend.Proxies.RestockProxy
 {
     public class RestockProxyRemote : IRestockProxy
     {

@@ -6,7 +6,7 @@ using StaffFrontend.Proxies;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace StaffFrontend.Test
+namespace StaffFrontend.Test.Controllers
 {
     [TestClass]
     public class CustomerControllerTest
