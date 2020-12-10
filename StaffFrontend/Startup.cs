@@ -13,7 +13,7 @@ using StaffFrontend.Proxies;
 using StaffFrontend.Proxies.AuthorizationProxy;
 using StaffFrontend.Proxies.CustomerProxy;
 using StaffFrontend.Proxies.ProductProxy;
-using StaffFrontend.Proxies.ResupplyProxy;
+using StaffFrontend.Proxies.RestockProxy;
 using StaffFrontend.Proxies.ReviewProxy;
 using StaffFrontend.Proxies.SuplierProxy;
 

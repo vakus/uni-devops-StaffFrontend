@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using StaffFrontend.Models;
-using StaffFrontend.Proxies.ResupplyProxy;
+using StaffFrontend.Proxies.RestockProxy;
 
 namespace StaffFrontend.Controllers
 {

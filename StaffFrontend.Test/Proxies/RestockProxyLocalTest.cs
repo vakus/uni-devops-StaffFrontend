@@ -1,13 +1,13 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using StaffFrontend.Models;
-using StaffFrontend.Proxies.ResupplyProxy;
+using StaffFrontend.Proxies.RestockProxy;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace StaffFrontend.test.Proxies
+namespace StaffFrontend.Test.Proxies
 {
     [TestClass]
     public class RestockProxyLocalTest

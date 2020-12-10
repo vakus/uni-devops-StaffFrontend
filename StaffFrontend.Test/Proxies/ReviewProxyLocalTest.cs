@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace StaffFrontend.test.Proxies
+namespace StaffFrontend.Test.Proxies
 {
     [TestClass]
     public class ReviewProxyLocalTest
