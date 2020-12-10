@@ -1,5 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using StaffFrontend.Models;
+using StaffFrontend.Models.Product;
 using StaffFrontend.Proxies.ProductProxy;
 using System;
 using System.Collections.Generic;

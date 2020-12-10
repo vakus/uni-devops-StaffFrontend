@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
 using StaffFrontend.Models;
+using StaffFrontend.Models.Product;
 using System;
 using System.Collections.Generic;
 using System.Linq;
