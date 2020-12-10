@@ -49,15 +49,26 @@
 <div>
     <h4>Reviews</h4>
     <hr />
-    @foreach (Review review in Model.reviews)
+    @if (Model.reviews.Count() != 0)
+    {
+        @foreach (Review review in Model.reviews)
+        {
+            <dl class="row">
+                <dt class="col-sm-2">
+                    @Html.DisplayFor(model => review.userName)
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => review.reviewContent)
+                </dd>
+            </dl>
+        }
+    }
+    else
     {
         <dl class="row">
-            <dt class="col-sm-2">
-                @Html.DisplayFor(model => review.userName)
+            <dt class="col-sm-10">
+                There are no reviews for this product.
             </dt>
-            <dd class="col-sm-10">
-                @Html.DisplayFor(model => review.reviewContent)
-            </dd>
         </dl>
     }
 </div>
