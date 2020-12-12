@@ -45,11 +45,11 @@ namespace StaffFrontend.Controllers
         // POST: SuppliersController/Create
         [HttpPost("/suppliers/new")]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([FromForm] Supplier supplier)
+        public async Task<ActionResult> Create([FromForm] Supplier supplier)
         {
             try
             {
-                _supplierProxy.CreateSupplier(supplier);
+                await _supplierProxy.CreateSupplier(supplier);
                 return RedirectToAction(nameof(Index));
             }
             catch
