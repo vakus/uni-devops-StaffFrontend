@@ -19,9 +19,22 @@ namespace StaffFrontend.Proxies.CustomerProxy
             _config = config.GetSection("CustomerMicroservice");
             _clientFactory = clientFactory;
         }
-        public Task DeleteCustomer(int customerid)
+        public async Task DeleteCustomer(int customerid)
         {
-            throw new NotImplementedException();
+            Dictionary<string, object> values = new Dictionary<string, object>
+            {
+                { "customer-id", customerid }
+            };
+
+            var client = _clientFactory.CreateClient();
+
+            var response = await Utils.Request(client, _config.GetSection("DeleteCustomer"), values);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                //error occured can not receive information
+                throw new SystemException("Could not receive data from remote service");
+            }
         }
 
         public async Task<Customer> GetCustomer(int customerid)
@@ -44,7 +57,6 @@ namespace StaffFrontend.Proxies.CustomerProxy
             {
                 return await response.Content.ReadAsAsync<Customer>();
             }
-
         }
 
         public async Task<List<Customer>> GetCustomers(bool excludeDeleted)
@@ -69,9 +81,26 @@ namespace StaffFrontend.Proxies.CustomerProxy
             }
         }
 
-        public Task UpdateCustomer(Customer customer)
+        public async Task UpdateCustomer(Customer customer)
         {
-            throw new NotImplementedException();
+            Dictionary<string, object> values = new Dictionary<string, object>
+            {
+                { "customer-id", customer.id },
+                { "customer-surname", customer.surname },
+                { "customer-firstname", customer.firstname },
+                { "customer-address", customer.address },
+                { "customer-contact", customer.contact }
+            };
+
+            var client = _clientFactory.CreateClient();
+
+            var response = await Utils.Request(client, _config.GetSection("UpdateCustomer"), values);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                //error occured can not receive information
+                throw new SystemException("Could not receive data from remote service");
+            }
         }
     }
 }
