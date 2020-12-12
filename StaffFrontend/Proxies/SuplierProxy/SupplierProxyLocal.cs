@@ -72,8 +72,11 @@ namespace StaffFrontend.Proxies.SuplierProxy
         public Task UpdateSupplier(Supplier supplier)
         {
             return Task.Run(() => {
-                suppliers.RemoveAll(s => s.SupplierId == supplier.SupplierId);
-                suppliers.Add(supplier);
+                if (suppliers.Where(s => s.SupplierId == supplier.SupplierId).Count() != 0)
+                {
+                    suppliers.RemoveAll(s => s.SupplierId == supplier.SupplierId);
+                    suppliers.Add(supplier);
+                }
             });
         }
     }
