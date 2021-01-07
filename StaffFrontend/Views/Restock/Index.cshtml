@@ -1,0 +1,43 @@
+﻿@model IEnumerable<StaffFrontend.Models.Restock.Supplier>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<table class="table table-dark">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.supplierID)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.supplierName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.webaddress)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.supplierID)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.supplierName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.webaddress)
+            </td>
+            <td>
+                <a href="/restock/orders?supplierid=@item.supplierID">View orders</a> |
+                <a href="/restock/orders/@item.supplierID/new">Create order</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

@@ -13,6 +13,7 @@ using StaffFrontend.Proxies;
 using StaffFrontend.Proxies.AuthorizationProxy;
 using StaffFrontend.Proxies.CustomerProxy;
 using StaffFrontend.Proxies.ProductProxy;
+using StaffFrontend.Proxies.RestockProxy;
 using StaffFrontend.Proxies.ReviewProxy;
 
 namespace StaffFrontend
@@ -60,6 +61,7 @@ namespace StaffFrontend
                 services.AddSingleton<ICustomerProxy, CustomerProxyRemote>();
                 services.AddSingleton<IReviewProxy, ReviewProxyRemote>();
                 services.AddSingleton<IAuthorizationProxy, AuthorizationProxyRemote>();
+                services.AddHttpClient<IRestockProxy, RestockProxyRemote>();
             }
             else
             {
@@ -90,8 +92,15 @@ namespace StaffFrontend
                 {
                     services.AddSingleton<IReviewProxy, ReviewProxyRemote>();
                 }
-
-
+                if (Configuration.GetValue<bool>("RestockMicroservice:useFake"))
+                {
+                    services.AddSingleton<IRestockProxy, RestockProxyLocal>();
+                }
+                else
+                {
+                    services.AddSingleton<IRestockProxy, RestockProxyRemote>();
+                }
+                
                 //Authorization Proxy doesnt have fake
                 services.AddSingleton<IAuthorizationProxy, AuthorizationProxyRemote>();
             }
