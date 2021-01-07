@@ -13,9 +13,7 @@ using StaffFrontend.Proxies;
 using StaffFrontend.Proxies.AuthorizationProxy;
 using StaffFrontend.Proxies.CustomerProxy;
 using StaffFrontend.Proxies.ProductProxy;
-using StaffFrontend.Proxies.RestockProxy;
 using StaffFrontend.Proxies.ReviewProxy;
-using StaffFrontend.Proxies.SuplierProxy;
 
 namespace StaffFrontend
 {
@@ -62,8 +60,6 @@ namespace StaffFrontend
                 services.AddSingleton<ICustomerProxy, CustomerProxyRemote>();
                 services.AddSingleton<IReviewProxy, ReviewProxyRemote>();
                 services.AddSingleton<IAuthorizationProxy, AuthorizationProxyRemote>();
-                services.AddSingleton<ISupplierProxy, SupplierProxyRemote>();
-                services.AddSingleton<IRestockProxy, RestockProxyRemote>();
             }
             else
             {
@@ -93,24 +89,6 @@ namespace StaffFrontend
                 else
                 {
                     services.AddSingleton<IReviewProxy, ReviewProxyRemote>();
-                }
-
-                if (Configuration.GetValue<bool>("SupplierMicroservice:useFake"))
-                {
-                    services.AddSingleton<ISupplierProxy, SupplierProxyLocal>();
-                }
-                else
-                {
-                    services.AddSingleton<ISupplierProxy, SupplierProxyRemote>();
-                }
-
-                if (Configuration.GetValue<bool>("RestockMicroservice:useFake"))
-                {
-                    services.AddSingleton<IRestockProxy, RestockProxyLocal>();
-                }
-                else
-                {
-                    services.AddSingleton<IRestockProxy, RestockProxyRemote>();
                 }
 
 
