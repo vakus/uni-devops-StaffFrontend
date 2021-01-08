@@ -43,6 +43,10 @@ namespace StaffFrontend
                 {
                     builder.RequireClaim("role", "Staff");
                 });
+                options.AddPolicy("ManagerOnly", builder =>
+                {
+                    builder.RequireClaim("role", "Manager");
+                });
             });
 
             //Use preloading, HSTS for 360 days

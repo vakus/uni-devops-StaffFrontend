@@ -83,12 +83,13 @@ namespace StaffFrontend.Proxies.RestockProxy
             this.restocks = restocks;
         }
 
-        public Task<List<Restock>> GetRestocks(string accountName, int? supplierId, bool? approved)
+        public Task<List<Restock>> GetRestocks(int? id, string accountName, int? supplierId, bool? approved)
         {
             return Task.FromResult(restocks.Where(r =>
                 (String.IsNullOrEmpty(accountName) || r.AccountName == accountName)
                 && (!supplierId.HasValue || r.SupplierID == supplierId.Value)
-                && (!approved.HasValue || r.Approved == approved.Value)).ToList()
+                && (!approved.HasValue || r.Approved == approved.Value)
+                && (!id.HasValue || r.Id == id.Value)).ToList()
             );
         }
 

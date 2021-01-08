@@ -76,7 +76,7 @@
                 </div>
             </td>
             <td>
-                @if (User.Claims.FirstOrDefault(r => r.Type == "role").Value == "Manager")
+                @if (User.Claims.FirstOrDefault(r => r.Type == "role").Value == "Staff")
                 {
                     <a href="/restock/process/@item.Id">Process</a>
                 }

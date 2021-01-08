@@ -19,10 +19,11 @@ namespace StaffFrontend.Proxies.RestockProxy
             _config = config.GetSection("RestockMicroservice");
         }
 
-        public async Task<List<Restock>> GetRestocks(string accountName, int? supplierId, bool? approved)
+        public async Task<List<Restock>> GetRestocks(int? id, string accountName, int? supplierId, bool? approved)
         {
             Dictionary<string, object> values = new Dictionary<string, object>
             {
+                { "restock-id", id },
                 { "account-name", accountName },
                 { "supplier-id", supplierId },
                 { "approved", approved }

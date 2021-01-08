@@ -27,7 +27,20 @@ namespace StaffFrontend.Controllers
         [HttpGet("/restock/orders")]
         public async Task<IActionResult> ViewOrders([FromQuery] string accountName, [FromQuery] int? supplierid, [FromQuery] bool? approved)
         {
-            return View(await restockProxy.GetRestocks(accountName, supplierid, approved));
+            return View(await restockProxy.GetRestocks(null, accountName, supplierid, approved));
+        }
+
+        [HttpGet("/restock/process/{id}")]
+        public async Task<IActionResult> Process(int id)
+        {
+            return View((await restockProxy.GetRestocks(id, null, null, null))[0]);
+        }
+
+        [HttpPost("/restock/process/{id}")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Process(int id, string cardNumber, [FromQuery] bool approved)
+        {
+            return RedirectPermanent("/restock/orders");
         }
     }
 }

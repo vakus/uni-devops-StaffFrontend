@@ -10,7 +10,7 @@ namespace StaffFrontend.Proxies.RestockProxy
     {
         public Task<List<Supplier>> GetSuppliers();
 
-        public Task<List<Restock>> GetRestocks(string accountName, int? supplierId, bool? approved);
+        public Task<List<Restock>> GetRestocks(int? id, string accountName, int? supplierId, bool? approved);
 
         public Task<List<SupplierProduct>> GetSuppliersProducts(int id);
     }
