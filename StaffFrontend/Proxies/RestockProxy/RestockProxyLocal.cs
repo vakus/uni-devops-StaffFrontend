@@ -9,7 +9,7 @@ namespace StaffFrontend.Proxies.RestockProxy
     public class RestockProxyLocal : IRestockProxy
     {
         private readonly List<Supplier> suppliers;
-        private readonly List<List<SupplierProduct>> supplierProducts;
+        private readonly Dictionary<int, List<SupplierProduct>> supplierProducts;
         private readonly List<Restock> restocks;
 
         public RestockProxyLocal()
@@ -23,22 +23,23 @@ namespace StaffFrontend.Proxies.RestockProxy
                 }
             };
 
-            supplierProducts = new List<List<SupplierProduct>>
+            supplierProducts = new Dictionary<int, List<SupplierProduct>>
             {
-                new List<SupplierProduct>
-                {
-                    new SupplierProduct(){
-                        id=1,
-                        ean="string",
-                        brandId=1,
-                        brandName="apple",
-                        categoryId=1,
-                        categoryName="phone",
-                        name="iphone 13",
-                        description="revolutionary now without screen",
-                        price=1399.99m,
-                        inStock=true,
-                        expectedRestock=DateTime.Now
+                { 1, new List<SupplierProduct>
+                    {
+                        new SupplierProduct(){
+                            id=1,
+                            ean="string",
+                            brandId=1,
+                            brandName="apple",
+                            categoryId=1,
+                            categoryName="phone",
+                            name="iphone 13",
+                            description="revolutionary now without screen",
+                            price=1399.99m,
+                            inStock=true,
+                            expectedRestock=DateTime.Now
+                        }
                     }
                 }
             };
@@ -75,7 +76,7 @@ namespace StaffFrontend.Proxies.RestockProxy
 
         public RestockProxyLocal(
             List<Supplier> suppliers,
-            List<List<SupplierProduct>> supplierProducts,
+            Dictionary<int, List<SupplierProduct>> supplierProducts,
             List<Restock> restocks)
         {
             this.suppliers = suppliers;

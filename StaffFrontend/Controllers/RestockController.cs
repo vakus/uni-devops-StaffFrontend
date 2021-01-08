@@ -4,6 +4,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using StaffFrontend.Models.Restock;
 using StaffFrontend.Proxies.RestockProxy;
 
 namespace StaffFrontend.Controllers
@@ -39,6 +41,22 @@ namespace StaffFrontend.Controllers
         [HttpPost("/restock/process/{id}")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Process(int id, string cardNumber, [FromQuery] bool approved)
+        {
+            return RedirectPermanent("/restock/orders");
+        }
+
+        [HttpGet("/restock/create/{id}")]
+        public async Task<IActionResult> Create(int id)
+        {
+            RestockCreateDTO rc = new RestockCreateDTO();
+            rc.products = new SelectList(await restockProxy.GetSuppliersProducts(id), "id", "name");
+            rc.restock = new Restock();
+            return View(rc);
+        }
+
+        [HttpPost("/restock/create/{id}")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create(int id, string accountname, int productid, int quantity)
         {
             return RedirectPermanent("/restock/orders");
         }
