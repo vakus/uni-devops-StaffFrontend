@@ -18,6 +18,6 @@ namespace StaffFrontend.Models.Restock
         public string description { get; set; }
         public decimal price { get; set; }
         public bool inStock { get; set; }
-        public DateTime expectedRestock { get; set; }
+        public DateTime? expectedRestock { get; set; }
     }
 }
