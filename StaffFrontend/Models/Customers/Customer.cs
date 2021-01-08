@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace StaffFrontend.Models
+namespace StaffFrontend.Models.Customers
 {
     public class Customer
     {
