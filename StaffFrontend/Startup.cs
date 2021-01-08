@@ -15,7 +15,6 @@ using StaffFrontend.Proxies.CustomerProxy;
 using StaffFrontend.Proxies.ProductProxy;
 using StaffFrontend.Proxies.RestockProxy;
 using StaffFrontend.Proxies.ReviewProxy;
-using StaffFrontend.Proxies.SuplierProxy;
 
 namespace StaffFrontend
 {
@@ -44,6 +43,10 @@ namespace StaffFrontend
                 {
                     builder.RequireClaim("role", "Staff");
                 });
+                options.AddPolicy("ManagerOnly", builder =>
+                {
+                    builder.RequireClaim("role", "Manager");
+                });
             });
 
             //Use preloading, HSTS for 360 days
@@ -62,8 +65,7 @@ namespace StaffFrontend
                 services.AddSingleton<ICustomerProxy, CustomerProxyRemote>();
                 services.AddSingleton<IReviewProxy, ReviewProxyRemote>();
                 services.AddSingleton<IAuthorizationProxy, AuthorizationProxyRemote>();
-                services.AddSingleton<ISupplierProxy, SupplierProxyRemote>();
-                services.AddSingleton<IRestockProxy, RestockProxyRemote>();
+                services.AddHttpClient<IRestockProxy, RestockProxyRemote>();
             }
             else
             {
@@ -94,16 +96,6 @@ namespace StaffFrontend
                 {
                     services.AddSingleton<IReviewProxy, ReviewProxyRemote>();
                 }
-
-                if (Configuration.GetValue<bool>("SupplierMicroservice:useFake"))
-                {
-                    services.AddSingleton<ISupplierProxy, SupplierProxyLocal>();
-                }
-                else
-                {
-                    services.AddSingleton<ISupplierProxy, SupplierProxyRemote>();
-                }
-
                 if (Configuration.GetValue<bool>("RestockMicroservice:useFake"))
                 {
                     services.AddSingleton<IRestockProxy, RestockProxyLocal>();
@@ -112,8 +104,7 @@ namespace StaffFrontend
                 {
                     services.AddSingleton<IRestockProxy, RestockProxyRemote>();
                 }
-
-
+                
                 //Authorization Proxy doesnt have fake
                 services.AddSingleton<IAuthorizationProxy, AuthorizationProxyRemote>();
             }

@@ -1,4 +1,4 @@
-﻿using StaffFrontend.Models;
+﻿using StaffFrontend.Models.Restock;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,57 +8,100 @@ namespace StaffFrontend.Proxies.RestockProxy
 {
     public class RestockProxyLocal : IRestockProxy
     {
-        private List<Restock> restocks;
+        private readonly List<Supplier> suppliers;
+        private readonly Dictionary<int, List<SupplierProduct>> supplierProducts;
+        private readonly List<Restock> restocks;
 
         public RestockProxyLocal()
         {
+            suppliers = new List<Supplier>()
+            {
+                new Supplier(){
+                    supplierID=1,
+                    supplierName="test",
+                    webaddress="example.com"
+                }
+            };
+
+            supplierProducts = new Dictionary<int, List<SupplierProduct>>
+            {
+                { 1, new List<SupplierProduct>
+                    {
+                        new SupplierProduct(){
+                            id=1,
+                            ean="string",
+                            brandId=1,
+                            brandName="apple",
+                            categoryId=1,
+                            categoryName="phone",
+                            name="iphone 13",
+                            description="revolutionary now without screen",
+                            price=1399.99m,
+                            inStock=true,
+                            expectedRestock=DateTime.Now
+                        }
+                    }
+                }
+            };
+
             restocks = new List<Restock>
             {
-                new Restock(){restockId="1", supplierId="1", sProductId="1", quantity=4, price=4.99m, approved=false, date=DateTime.MinValue}
+                new Restock()
+                {
+                    Id = 1,
+                    AccountName = "John",
+                    Approved = false,
+                    ProductEan = "A",
+                    ProductID = 1,
+                    ProductName = "iphone 13",
+                    Qty = 2,
+                    SupplierID = 1,
+                    TotalPrice = 2799.98m
+                },
+
+                new Restock()
+                {
+                    Id = 1,
+                    AccountName = "John",
+                    Approved = true,
+                    ProductEan = "A",
+                    ProductID = 1,
+                    ProductName = "iphone 13",
+                    Qty = 1,
+                    SupplierID = 1,
+                    TotalPrice = 1399.99m
+                }
             };
         }
 
-        public RestockProxyLocal(List<Restock> restocks)
+        public RestockProxyLocal(
+            List<Supplier> suppliers,
+            Dictionary<int, List<SupplierProduct>> supplierProducts,
+            List<Restock> restocks)
         {
+            this.suppliers = suppliers;
+            this.supplierProducts = supplierProducts;
             this.restocks = restocks;
         }
 
-        public Task CreateRestock(Restock restock)
+        public Task<List<Restock>> GetRestocks(int? id, string accountName, int? supplierId, bool? approved)
         {
-            return Task.Run(() =>
-            {
-                restocks.Add(restock);
-            });
+            return Task.FromResult(restocks.Where(r =>
+                (String.IsNullOrEmpty(accountName) || r.AccountName == accountName)
+                && (!supplierId.HasValue || r.SupplierID == supplierId.Value)
+                && (!approved.HasValue || r.Approved == approved.Value)
+                && (!id.HasValue || r.Id == id.Value)).ToList()
+            );
         }
 
-        public Task DeleteRestock(int restockId)
+        public Task<List<Supplier>> GetSuppliers()
         {
-            return Task.Run(() =>
-            {
-                restocks.RemoveAll(s => s.restockId == restockId.ToString());
-            });
+            return Task.FromResult(suppliers);
         }
 
-        public Task<List<Restock>> GetRestocks()
+        public Task<List<SupplierProduct>> GetSuppliersProducts(int id)
         {
-            return Task.FromResult(restocks);
-        }
-
-        public Task<Restock> GetRestock(int restockId)
-        {
-            return Task.FromResult(restocks.FirstOrDefault(s => s.restockId == restockId.ToString()));
-        }
-
-        public Task UpdateRestock(Restock restock)
-        {
-            return Task.Run(() =>
-            {
-                if (restocks.Where(r => r.restockId == restock.restockId).Count() != 0)
-                {
-                    restocks.RemoveAll(s => s.restockId == restock.restockId);
-                    restocks.Add(restock);
-                }
-            });
+            return Task.FromResult(supplierProducts[id]);
         }
     }
 }

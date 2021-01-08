@@ -1,5 +1,5 @@
 ﻿using Microsoft.Extensions.Configuration;
-using StaffFrontend.Models;
+using StaffFrontend.Models.Restock;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,63 +10,28 @@ namespace StaffFrontend.Proxies.RestockProxy
 {
     public class RestockProxyRemote : IRestockProxy
     {
+        private readonly IHttpClientFactory _clientFactory;
+        private readonly IConfigurationSection _config;
 
-        private IHttpClientFactory _clientFactory;
-        private IConfigurationSection _config;
         public RestockProxyRemote(IHttpClientFactory clientFactory, IConfiguration config)
         {
             _clientFactory = clientFactory;
             _config = config.GetSection("RestockMicroservice");
         }
 
-        public async Task CreateRestock(Restock restock)
+        public async Task<List<Restock>> GetRestocks(int? id, string accountName, int? supplierId, bool? approved)
         {
             Dictionary<string, object> values = new Dictionary<string, object>
             {
-                { "restock-id", restock.restockId },
-                { "restock-supplier-id", restock.supplierId },
-                { "restock-product-id", restock.sProductId },
-                { "restock-product-quantity", restock.quantity },
-                { "restock-price", restock.price },
-                { "restock-date", restock.date },
-                { "restock-approved", restock.approved }
+                { "restock-id", id },
+                { "account-name", accountName },
+                { "supplier-id", supplierId },
+                { "approved", approved }
             };
 
             var client = _clientFactory.CreateClient();
 
-            var response = await Utils.Request(client, _config.GetSection("CreateRestock"), values);
-
-            if (!response.IsSuccessStatusCode)
-            {
-                //error occured can not receive information
-                throw new SystemException("Could not receive data from remote service");
-            }
-        }
-
-        public async Task DeleteRestock(int restockId)
-        {
-            Dictionary<string, object> values = new Dictionary<string, object>
-            {
-                { "restock-id", restockId }
-            };
-
-            var client = _clientFactory.CreateClient();
-
-            var response = await Utils.Request(client, _config.GetSection("DeleteRestock"), values);
-
-            if (!response.IsSuccessStatusCode)
-            {
-                //error occured can not receive information
-                throw new SystemException("Could not receive data from remote service");
-            }
-        }
-
-        public async Task<List<Restock>> GetRestocks()
-        {
-
-            var client = _clientFactory.CreateClient();
-
-            var response = await Utils.Request(client, _config.GetSection("GetRestocks"), new Dictionary<string, object> { });
+            var response = await Utils.Request(client, _config.GetSection("GetRestocks"), values);
 
             if (!response.IsSuccessStatusCode)
             {
@@ -79,16 +44,11 @@ namespace StaffFrontend.Proxies.RestockProxy
             }
         }
 
-        public async Task<Restock> GetRestock(int restockId)
+        public async Task<List<Supplier>> GetSuppliers()
         {
-            Dictionary<string, object> values = new Dictionary<string, object>
-            {
-                { "restock-id", restockId }
-            };
-
             var client = _clientFactory.CreateClient();
 
-            var response = await Utils.Request(client, _config.GetSection("GetRestock"), values);
+            var response = await Utils.Request(client, _config.GetSection("GetSuppliers"), new Dictionary<string, object>());
 
             if (!response.IsSuccessStatusCode)
             {
@@ -97,31 +57,29 @@ namespace StaffFrontend.Proxies.RestockProxy
             }
             else
             {
-                return await response.Content.ReadAsAsync<Restock>();
+                return await response.Content.ReadAsAsync<List<Supplier>>();
             }
         }
 
-        public async Task UpdateRestock(Restock restock)
+        public async Task<List<SupplierProduct>> GetSuppliersProducts(int id)
         {
             Dictionary<string, object> values = new Dictionary<string, object>
             {
-                { "restock-id", restock.restockId },
-                { "restock-supplier-id", restock.supplierId },
-                { "restock-product-id", restock.sProductId },
-                { "restock-product-quantity", restock.quantity },
-                { "restock-price", restock.price },
-                { "restock-date", restock.date },
-                { "restock-approved", restock.approved }
+                { "supplier-id", id }
             };
 
             var client = _clientFactory.CreateClient();
 
-            var response = await Utils.Request(client, _config.GetSection("EditRestock"), values);
+            var response = await Utils.Request(client, _config.GetSection("GetSuppliersProducts"), values);
 
             if (!response.IsSuccessStatusCode)
             {
                 //error occured can not receive information
                 throw new SystemException("Could not receive data from remote service");
+            }
+            else
+            {
+                return await response.Content.ReadAsAsync<List<SupplierProduct>>();
             }
         }
     }

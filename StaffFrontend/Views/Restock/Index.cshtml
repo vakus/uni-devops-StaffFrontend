@@ -1,4 +1,4 @@
-﻿@model IEnumerable<StaffFrontend.Models.Restock>
+﻿@model IEnumerable<StaffFrontend.Models.Restock.Supplier>
 
 @{
     ViewData["Title"] = "Index";
@@ -6,32 +6,17 @@
 
 <h1>Index</h1>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
 <table class="table table-dark">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.restockId)
+                @Html.DisplayNameFor(model => model.supplierID)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.supplierId)
+                @Html.DisplayNameFor(model => model.supplierName)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.sProductId)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.quantity)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.price)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.date)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.approved)
+                @Html.DisplayNameFor(model => model.webaddress)
             </th>
             <th></th>
         </tr>
@@ -40,37 +25,17 @@
 @foreach (var item in Model) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.restockId)
+                @Html.DisplayFor(modelItem => item.supplierID)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.supplierId)
+                @Html.DisplayFor(modelItem => item.supplierName)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.sProductId)
+                @Html.DisplayFor(modelItem => item.webaddress)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.quantity)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.price)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.date)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.approved)
-            </td>
-            <td>
-                @{ /*
-                 @Html.ActionLink("Edit", "Edit", new { id=item.PrimaryKey  }) |
-                 @Html.ActionLink("Details", "Details", new { id=item.PrimaryKey  }) |
-                 @Html.ActionLink("Delete", "Delete", new { id=item.PrimaryKey  })*/
-                }
-
-
-                <a href="/restock/edit/@item.restockId">Edit</a> |
-                <a href="/restock/view/@item.restockId">View</a> |
-                <a href="/restock/delete/@item.restockId">Delete</a>
+                <a href="/restock/orders?supplierid=@item.supplierID">View orders</a> |
+                <a href="/restock/create/@item.supplierID">Create order</a>
             </td>
         </tr>
 }

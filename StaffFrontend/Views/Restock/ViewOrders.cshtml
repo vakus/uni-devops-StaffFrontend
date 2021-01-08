@@ -1,0 +1,87 @@
+﻿@model IEnumerable<StaffFrontend.Models.Restock.Restock>
+
+@{
+    ViewData["Title"] = "Orders";
+}
+
+<h1>Restocks</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table table-dark">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Id)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.AccountName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ProductID)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Qty)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ProductName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ProductEan)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TotalPrice)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.SupplierID)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Approved)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Id)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.AccountName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ProductID)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Qty)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ProductName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ProductEan)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TotalPrice)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.SupplierID)
+            </td>
+            <td>
+                <div class="custom-control custom-switch">
+                    <input id="customSwitch1" type="checkbox" class="custom-control-input" asp-for="@item.Approved" disabled />
+                    <label for="customSwitch1" class="custom-control-label"></label>
+                </div>
+            </td>
+            <td>
+                @if (User.Claims.FirstOrDefault(r => r.Type == "role").Value == "Staff")
+                {
+                    <a href="/restock/process/@item.Id">Process</a>
+                }
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
