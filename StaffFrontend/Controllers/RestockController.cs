@@ -53,7 +53,15 @@ namespace StaffFrontend.Controllers
         public async Task<IActionResult> Create(int id)
         {
             RestockCreateDTO rc = new RestockCreateDTO();
-            rc.products = new SelectList(await restockProxy.GetSuppliersProducts(id), "id", "name");
+            try
+            {
+                rc.products = new SelectList(await restockProxy.GetSuppliersProducts(id), "id", "name");
+            }
+            catch (SystemException)
+            {
+                rc.products = new SelectList(new List<SupplierProduct>(), "id", "name");
+                ModelState.AddModelError("", "Unable to load data from remote service. Please try again.");
+            }
             rc.restock = new Restock();
             return View(rc);
         }

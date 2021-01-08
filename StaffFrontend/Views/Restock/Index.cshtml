@@ -4,7 +4,7 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<h1>Restock</h1>
 
 <table class="table table-dark">
     <thead>
@@ -34,8 +34,8 @@
                 @Html.DisplayFor(modelItem => item.webaddress)
             </td>
             <td>
-                <a href="/restock/orders?supplierid=@item.supplierID">View orders</a> |
-                <a href="/restock/create/@item.supplierID">Create order</a>
+                <a href="/restock/orders?supplierid=@item.supplierID">View Restock Orders</a> |
+                <a href="/restock/create/@item.supplierID">Create Restock Order</a>
             </td>
         </tr>
 }
