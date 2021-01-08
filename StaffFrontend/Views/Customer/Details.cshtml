@@ -1,4 +1,4 @@
-﻿@model StaffFrontend.Models.Customer
+﻿@model StaffFrontend.Models.Customers.CustomerDetailsDTO
 
 @{
     ViewData["Title"] = "Details";
@@ -12,47 +12,47 @@
     <hr />
     <dl class="row">
         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.id)
+            @Html.DisplayNameFor(model => model.Customer.id)
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.id)
+            @Html.DisplayFor(model => model.Customer.id)
         </dd>
         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.firstname)
+            @Html.DisplayNameFor(model => model.Customer.firstname)
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.firstname)
+            @Html.DisplayFor(model => model.Customer.firstname)
         </dd>
         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.surname)
+            @Html.DisplayNameFor(model => model.Customer.surname)
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.surname)
+            @Html.DisplayFor(model => model.Customer.surname)
         </dd>
         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.address)
+            @Html.DisplayNameFor(model => model.Customer.address)
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.address)
+            @Html.DisplayFor(model => model.Customer.address)
         </dd>
         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.contact)
+            @Html.DisplayNameFor(model => model.Customer.contact)
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.contact)
+            @Html.DisplayFor(model => model.Customer.contact)
         </dd>
         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.canPurchase)
+            @Html.DisplayNameFor(model => model.Customer.canPurchase)
         </dt>
         <dd class="col-sm-10">
             <div class="custom-control custom-switch">
-                <input id="customSwitch1" type="checkbox" class="custom-control-input" asp-for="@Model.canPurchase" disabled />
+                <input id="customSwitch1" type="checkbox" class="custom-control-input" asp-for="@Model.Customer.canPurchase" disabled />
                 <label for="customSwitch1" class="custom-control-label"></label>
             </div>
         </dd>
     </dl>
 </div>
 <div>
-    <a href="/customers/edit/@Model.id">Edit</a> |
+    <a href="/customers/edit/@Model.Customer.id">Edit</a> |
     <a asp-action="Index">Back to List</a>
 </div>

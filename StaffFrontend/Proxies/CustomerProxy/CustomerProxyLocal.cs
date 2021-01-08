@@ -1,4 +1,5 @@
 ﻿using StaffFrontend.Models;
+using StaffFrontend.Models.Customers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
