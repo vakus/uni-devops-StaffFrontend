@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -10,6 +11,7 @@ using StaffFrontend.Proxies.RestockProxy;
 
 namespace StaffFrontend.Controllers
 {
+    [Authorize(Policy = "StaffOnly")]
     public class RestockController : Controller
     {
 
@@ -32,12 +34,14 @@ namespace StaffFrontend.Controllers
             return View(await restockProxy.GetRestocks(null, accountName, supplierid, approved));
         }
 
+        [Authorize(Policy = "ManagerOnly")]
         [HttpGet("/restock/process/{id}")]
         public async Task<IActionResult> Process(int id)
         {
             return View((await restockProxy.GetRestocks(id, null, null, null))[0]);
         }
 
+        [Authorize(Policy = "ManagerOnly")]
         [HttpPost("/restock/process/{id}")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Process(int id, string cardNumber, [FromQuery] bool approved)
