@@ -1,8 +1,11 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using IdentityModel.Client;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Web;
 
@@ -130,6 +133,18 @@ namespace StaffFrontend
         public static async Task<HttpResponseMessage> Request(HttpClient client, IConfigurationSection config, Dictionary<string, object> values)
         {
             string url = Utils.CreateUriBuilder(config, values).ToString();
+
+            //FIXME: remove hardcoded oauth credentials
+            //TODO: Revise Scopes
+            var disco = await client.GetDiscoveryDocumentAsync("https://thamco-auth-staging.azurewebsites.net");
+            var tokenResponse = await client.RequestClientCredentialsTokenAsync(new ClientCredentialsTokenRequest
+            {
+                Address = disco.TokenEndpoint,
+                ClientId = "staff_frontend",
+                ClientSecret = "steff_frontand_vrey_secret_hopefuly_nobody_figuras_this_crep_out_or_at_laest_its_long_enough"
+            });
+
+            client.SetBearerToken(tokenResponse.AccessToken);
 
             client.DefaultRequestHeaders.Accept.ParseAdd("application/json");
 
