@@ -41,7 +41,7 @@ namespace StaffFrontend
             {
                 options.AddPolicy("StaffOnly", builder =>
                 {
-                    builder.RequireClaim("role", "Staff");
+                    builder.RequireClaim("role", "Staff", "Manager"); //Manager has more access than Staff, but ultimately has access to all system the staff has
                 });
                 options.AddPolicy("ManagerOnly", builder =>
                 {
