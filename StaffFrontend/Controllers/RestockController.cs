@@ -60,6 +60,7 @@ namespace StaffFrontend.Controllers
             catch (SystemException)
             {
                 rc.products = new SelectList(new List<SupplierProduct>(), "id", "name");
+                ModelState.AddModelError("", "Unable to load data from remote service. Please try again.");
             }
             rc.restock = new Restock();
             return View(rc);
