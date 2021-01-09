@@ -83,7 +83,7 @@ namespace StaffFrontend.Controllers
         // POST: /products/new
         [HttpPost("/products/new")]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create([Bind("name,description,price")] Product prod)
+        public async Task<ActionResult> Create([Bind("Name,Description,Price,Supply,Available")] Product prod)
         {
             try
             {
@@ -123,7 +123,7 @@ namespace StaffFrontend.Controllers
         // POST: /products/edit/5
         [HttpPost("/products/edit/{itemid}")]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit([Bind("id,name,description,price")] Product prod)
+        public async Task<ActionResult> Edit([Bind("id,name,description,price,supply,available")] Product prod)
         {
             try
             {
