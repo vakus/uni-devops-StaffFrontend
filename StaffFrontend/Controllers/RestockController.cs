@@ -71,7 +71,7 @@ namespace StaffFrontend.Controllers
         public async Task<IActionResult> Create(int id, string accountname, int productid, int quantity)
         {
             await restockProxy.CreateRestock(id, accountname, productid, quantity);
-            return RedirectPermanent("/restock/orders");
+            return RedirectPermanent("/restock/orders?supplierid=" + id.ToString());
         }
     }
 }
