@@ -19,6 +19,27 @@ namespace StaffFrontend.Proxies.RestockProxy
             _config = config.GetSection("RestockMicroservice");
         }
 
+        public async Task CreateRestock(int supplierid, string accountName, int productid, int quantity)
+        {
+            Dictionary<string, object> values = new Dictionary<string, object>
+            {
+                { "supplier-id", supplierid },
+                { "account-name", accountName },
+                { "product-id", productid },
+                { "product-quantity", quantity }
+            };
+
+            var client = _clientFactory.CreateClient();
+
+            var response = await Utils.Request(client, _config.GetSection("CreateRestock"), values);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                //error occured can not receive information
+                throw new SystemException("Could not receive data from remote service");
+            }
+        }
+
         public async Task<List<Restock>> GetRestocks(int? id, string accountName, int? supplierId, bool? approved)
         {
             Dictionary<string, object> values = new Dictionary<string, object>
