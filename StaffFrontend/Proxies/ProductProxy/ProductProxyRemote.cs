@@ -20,9 +20,26 @@ namespace StaffFrontend.Proxies.ProductProxy
             _clientFactory = clientFactory;
             _config = config.GetSection("ProductMicroservice");
         }
-        public Task AddProduct(Product product)
+        public async Task AddProduct(Product product)
         {
-            throw new NotImplementedException();
+            Dictionary<string, object> values = new Dictionary<string, object>
+            {
+                { "product-name", product.Name },
+                { "product-description", product.Description },
+                { "product-price", product.Price },
+                { "product-supply", product.Supply },
+                { "product-available", product.Available }
+            };
+
+            var client = _clientFactory.CreateClient();
+
+            var response = await Utils.Request(client, _config.GetSection("AddProduct"), values);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                //error occured can not receive information
+                throw new SystemException("Could not receive data from remote service");
+            }
         }
 
         public async Task DeleteProduct(int itemid)
