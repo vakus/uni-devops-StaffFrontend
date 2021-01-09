@@ -25,9 +25,22 @@ namespace StaffFrontend.Proxies.ProductProxy
             throw new NotImplementedException();
         }
 
-        public Task DeleteProduct(int itemid)
+        public async Task DeleteProduct(int itemid)
         {
-            throw new NotImplementedException();
+            Dictionary<string, object> values = new Dictionary<string, object>
+            {
+                { "item-id", itemid }
+            };
+
+            var client = _clientFactory.CreateClient();
+
+            var response = await Utils.Request(client, _config.GetSection("DeleteProduct"), values);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                //error occured can not receive information
+                throw new SystemException("Could not receive data from remote service");
+            }
         }
 
         public async Task<Product> GetProduct(int itemid)
