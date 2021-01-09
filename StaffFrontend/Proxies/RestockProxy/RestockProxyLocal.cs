@@ -84,6 +84,25 @@ namespace StaffFrontend.Proxies.RestockProxy
             this.restocks = restocks;
         }
 
+        public Task CreateRestock(int supplierid, string accountName, int productid, int quantity)
+        {
+
+            return Task.Run(() => 
+            {
+                Restock r = new Restock()
+                {
+                    SupplierID = supplierid,
+                    AccountName = accountName,
+                    ProductID = productid,
+                    Qty = quantity
+                };
+
+                restocks.Add(r);
+            });
+
+
+        }
+
         public Task<List<Restock>> GetRestocks(int? id, string accountName, int? supplierId, bool? approved)
         {
             return Task.FromResult(restocks.Where(r =>

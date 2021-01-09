@@ -13,5 +13,7 @@ namespace StaffFrontend.Proxies.RestockProxy
         public Task<List<Restock>> GetRestocks(int? id, string accountName, int? supplierId, bool? approved);
 
         public Task<List<SupplierProduct>> GetSuppliersProducts(int id);
+
+        public Task CreateRestock(int supplierid, string accountName, int productid, int quantity);
     }
 }
