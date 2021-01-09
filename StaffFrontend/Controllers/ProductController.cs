@@ -123,8 +123,9 @@ namespace StaffFrontend.Controllers
         // POST: /products/edit/5
         [HttpPost("/products/edit/{itemid}")]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit([Bind("id,name,description,price,supply,available")] Product prod)
+        public async Task<ActionResult> Edit(int id, [Bind("Name,Description,Price,Supply,Available")] Product prod)
         {
+            prod.ID = id;
             try
             {
                 await _product.UpdateProduct(prod);
@@ -163,16 +164,9 @@ namespace StaffFrontend.Controllers
         // POST: products/delete/5
         [HttpPost("/products/delete/{itemid}")]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Delete(int itemid, IFormCollection collection)
+        public async Task<ActionResult> DeleteConfirmed(int itemid)
         {
-            try
-            {
-                await _product.DeleteProduct(itemid);
-            }catch(SystemException)
-            {
-                ModelState.AddModelError("", "Unable to send data to remote service. Please try again.");
-                return View(new Product());
-            }
+            await _product.DeleteProduct(itemid);
             return RedirectToAction(nameof(Index));
         }
     }
