@@ -68,9 +68,13 @@ namespace StaffFrontend.Controllers
 
         [HttpPost("/restock/create/{id}")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(int id, string accountname, int productid, int quantity)
+        public async Task<IActionResult> Create(
+            int id,
+            [FromForm(Name ="restock.AccountName")] string AccountName,
+            [FromForm(Name = "restock.ProductID")] int ProductID,
+            [FromForm(Name = "restock.Gty")] int Qty)
         {
-            await restockProxy.CreateRestock(id, accountname, productid, quantity);
+            await restockProxy.CreateRestock(id, AccountName, ProductID, Qty);
             return RedirectPermanent("/restock/orders?supplierid=" + id.ToString());
         }
     }
