@@ -181,7 +181,7 @@ namespace StaffFrontend.Test.Controllers
 
             var productController = new ProductController(productMock.Object, reviewMock.Object);
 
-            var result = await productController.Edit(products[0]);
+            var result = await productController.Edit(products[0].ID, products[0]);
 
             Assert.IsNotNull(result);
 
@@ -211,7 +211,7 @@ namespace StaffFrontend.Test.Controllers
 
             var productController = new ProductController(productMock.Object, reviewMock.Object);
 
-            var result = await productController.Delete(products[0].ID, null);
+            var result = await productController.Delete(products[0].ID);
 
             Assert.IsNotNull(result);
 
