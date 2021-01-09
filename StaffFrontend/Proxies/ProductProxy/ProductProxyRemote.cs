@@ -46,7 +46,7 @@ namespace StaffFrontend.Proxies.ProductProxy
         {
             Dictionary<string, object> values = new Dictionary<string, object>
             {
-                { "item-id", itemid }
+                { "product-id", itemid }
             };
 
             var client = _clientFactory.CreateClient();
@@ -64,7 +64,7 @@ namespace StaffFrontend.Proxies.ProductProxy
         {
             Dictionary<string, object> values = new Dictionary<string, object>
             {
-                { "item-id", itemid }
+                { "product-id", itemid }
             };
 
             var client = _clientFactory.CreateClient();
@@ -110,6 +110,7 @@ namespace StaffFrontend.Proxies.ProductProxy
         {
             Dictionary<string, object> values = new Dictionary<string, object>
             {
+                { "product-id", product.ID },
                 { "product-name", product.Name },
                 { "product-description", product.Description },
                 { "product-price", product.Price },
