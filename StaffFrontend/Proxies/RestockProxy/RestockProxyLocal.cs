@@ -48,26 +48,26 @@ namespace StaffFrontend.Proxies.RestockProxy
             {
                 new Restock()
                 {
-                    Id = 1,
+                    RestockId = 1,
                     AccountName = "John",
                     Approved = false,
                     ProductEan = "A",
                     ProductID = 1,
                     ProductName = "iphone 13",
-                    Qty = 2,
+                    Gty = 2,
                     SupplierID = 1,
                     TotalPrice = 2799.98m
                 },
 
                 new Restock()
                 {
-                    Id = 1,
+                    RestockId = 1,
                     AccountName = "John",
                     Approved = true,
                     ProductEan = "A",
                     ProductID = 1,
                     ProductName = "iphone 13",
-                    Qty = 1,
+                    Gty = 1,
                     SupplierID = 1,
                     TotalPrice = 1399.99m
                 }
@@ -94,7 +94,7 @@ namespace StaffFrontend.Proxies.RestockProxy
                     SupplierID = supplierid,
                     AccountName = accountName,
                     ProductID = productid,
-                    Qty = quantity
+                    Gty = quantity
                 };
 
                 restocks.Add(r);
@@ -109,7 +109,7 @@ namespace StaffFrontend.Proxies.RestockProxy
                 (String.IsNullOrEmpty(accountName) || r.AccountName == accountName)
                 && (!supplierId.HasValue || r.SupplierID == supplierId.Value)
                 && (!approved.HasValue || r.Approved == approved.Value)
-                && (!id.HasValue || r.Id == id.Value)).ToList()
+                && (!id.HasValue || r.RestockId == id.Value)).ToList()
             );
         }
 

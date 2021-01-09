@@ -10,7 +10,7 @@ namespace StaffFrontend.Models.Restock
     {
 
         [Display(Name = "Restock ID")]
-        public int Id { get; set; }
+        public int RestockId { get; set; }
 
         [Display(Name = "Account Name")]
         public string AccountName { get; set; }
@@ -19,7 +19,7 @@ namespace StaffFrontend.Models.Restock
         public int ProductID { get; set; }
 
         [Display(Name = "Quantity")]
-        public int Qty { get; set; }
+        public int Gty { get; set; }
 
         [Display(Name = "Product Name")]
         public string ProductName { get; set; }

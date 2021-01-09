@@ -13,7 +13,7 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Id)
+                @Html.DisplayNameFor(model => model.RestockId)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.AccountName)
@@ -22,7 +22,7 @@
                 @Html.DisplayNameFor(model => model.ProductID)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Qty)
+                @Html.DisplayNameFor(model => model.Gty)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.ProductName)
@@ -46,7 +46,7 @@
 @foreach (var item in Model) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.Id)
+                @Html.DisplayFor(modelItem => item.RestockId)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.AccountName)
@@ -55,7 +55,7 @@
                 @Html.DisplayFor(modelItem => item.ProductID)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Qty)
+                @Html.DisplayFor(modelItem => item.Gty)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.ProductName)
@@ -78,7 +78,7 @@
             <td>
                 @if (User.Claims.FirstOrDefault(r => r.Type == "role").Value == "Staff")
                 {
-                    <a href="/restock/process/@item.Id">Process</a>
+                    <a href="/restock/process/@item.RestockId">Process</a>
                 }
             </td>
         </tr>
