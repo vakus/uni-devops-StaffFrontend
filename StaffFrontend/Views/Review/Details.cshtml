@@ -53,6 +53,13 @@
     </dl>
 </div>
 <div>
-    @Html.ActionLink("Edit", "Edit", new { /* id = Model.PrimaryKey */ }) |
+    @if (Model.hidden)
+    {
+        <a href="/reviews/unhide/@Model.reviewId?url=/reviews/view/@Model.reviewId">Unhide Review</a>
+    }
+    else
+    {
+        <a href="/reviews/hide/@Model.reviewId?url=/reviews/view/@Model.reviewId">Hide Review</a>
+    }
     <a href="/reviews/@Model.productId">Back to List</a>
 </div>
