@@ -48,6 +48,15 @@
 </div>
 <div>
     <h4>Reviews</h4>
+    @if (Context.Request.Query["hidden"] == "false" || Context.Request.Query["hidden"] == Microsoft.Extensions.Primitives.StringValues.Empty)
+    {
+        <a href="?hidden=true">Show Hidden Reviews</a>
+    }
+    else
+    {
+        <a href="?hidden=false">Show Visible Reviews</a>
+    }
+    
     <hr />
     @if (Model.reviews.Count() != 0)
     {

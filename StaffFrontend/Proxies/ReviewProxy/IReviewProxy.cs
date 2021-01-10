@@ -12,12 +12,17 @@ namespace StaffFrontend.Proxies
     {
         Task<List<Review>> GetReviews(int? itemId, int? customerId);
 
-        Task<Review> GetReview(int reviewid);
+        Task<List<Review>> GetHiddenReviews(int? itemId, int? customerId);
 
-        Task UpdateReview(Review review);
+        Task<Review> GetReview(int reviewid);
 
         Task<double> GetRating(int itemid);
 
         Task DeleteByProductId(int productid);
+
+        Task HideReview(int reviewid);
+
+        Task UnhideReview(int reviewid);
+
     }
 }

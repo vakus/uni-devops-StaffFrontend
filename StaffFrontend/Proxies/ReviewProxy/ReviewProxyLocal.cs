@@ -33,6 +33,16 @@ namespace StaffFrontend.Proxies.ReviewProxy
             });
         }
 
+        public Task<List<Review>> GetHiddenReviews(int? itemId, int? customerId)
+        {
+            return Task.FromResult(reviews.FindAll(r =>
+                ((itemId.HasValue && r.productId == itemId)
+                || (customerId.HasValue && r.userId == customerId.Value)
+                || (!itemId.HasValue && !customerId.HasValue))
+                && r.hidden
+            ));
+        }
+
         public Task<double> GetRating(int itemid)
         {
 
@@ -64,7 +74,38 @@ namespace StaffFrontend.Proxies.ReviewProxy
 
         public Task<List<Review>> GetReviews(int? itemId, int? customerId)
         {
-            return Task.FromResult(reviews.FindAll(r => (itemId.HasValue && r.productId == itemId) || (customerId.HasValue && r.userId == customerId.Value) || (!itemId.HasValue && !customerId.HasValue)));
+            return Task.FromResult(reviews.FindAll(r =>
+                ((itemId.HasValue && r.productId == itemId)
+                || (customerId.HasValue && r.userId == customerId.Value)
+                || (!itemId.HasValue && !customerId.HasValue))
+                && !r.hidden
+            ));
+        }
+
+        public Task HideReview(int reviewid)
+        {
+            return Task.Run(() => {
+                if (reviews.Where(r => r.reviewId == reviewid).Count() != 0)
+                {
+                    Review review = reviews.FirstOrDefault(r => r.reviewId == reviewid);
+                    reviews.Remove(review);
+                    review.hidden = true;
+                    reviews.Add(review);
+                }
+            });
+        }
+
+        public Task UnhideReview(int reviewid)
+        {
+            return Task.Run(() => {
+                if (reviews.Where(r => r.reviewId == reviewid).Count() != 0)
+                {
+                    Review review = reviews.FirstOrDefault(r => r.reviewId == reviewid);
+                    reviews.Remove(review);
+                    review.hidden = false;
+                    reviews.Add(review);
+                }
+            });
         }
 
         public Task UpdateReview(Review review)

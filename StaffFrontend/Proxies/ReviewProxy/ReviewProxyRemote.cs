@@ -39,6 +39,28 @@ namespace StaffFrontend.Proxies.ReviewProxy
             }
         }
 
+        public async Task<List<Review>> GetHiddenReviews(int? itemId, int? customerId)
+        {
+            Dictionary<string, object> values = new Dictionary<string, object>
+            {
+                { "item-id", itemId },
+                { "customer-id", customerId }
+            };
+            var client = _clientFactory.CreateClient();
+
+            var response = await Utils.Request(client, _config.GetSection("GetHiddenReviews"), values);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                //error occured can not receive information
+                throw new SystemException("Could not receive data from remote service");
+            }
+            else
+            {
+                return await response.Content.ReadAsAsync<List<Review>>();
+            }
+        }
+
         public async Task<double> GetRating(int itemid)
         {
             Dictionary<string, object> values = new Dictionary<string, object>
@@ -104,9 +126,41 @@ namespace StaffFrontend.Proxies.ReviewProxy
             }
         }
 
-        public Task UpdateReview(Review review)
+        public async Task HideReview(int reviewid)
         {
-            throw new NotImplementedException();
+
+            Dictionary<string, object> values = new Dictionary<string, object>
+            {
+                { "review-id", reviewid }
+            };
+
+            var client = _clientFactory.CreateClient();
+
+            var response = await Utils.Request(client, _config.GetSection("HideReview"), values);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                //error occured can not receive information
+                throw new SystemException("Could not receive data from remote service");
+            }
+        }
+
+        public async Task UnhideReview(int reviewid)
+        {
+            Dictionary<string, object> values = new Dictionary<string, object>
+            {
+                { "review-id", reviewid }
+            };
+
+            var client = _clientFactory.CreateClient();
+
+            var response = await Utils.Request(client, _config.GetSection("UnhideReview"), values);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                //error occured can not receive information
+                throw new SystemException("Could not receive data from remote service");
+            }
         }
     }
 }

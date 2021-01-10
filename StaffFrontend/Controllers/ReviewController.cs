@@ -21,12 +21,20 @@ namespace StaffFrontend.Controllers
 
         [HttpGet("/reviews/{itemid}")]
         // GET: /reviews/5
-        public async Task<ActionResult> Index(int itemid)
+        public async Task<ActionResult> Index(int itemid, [FromQuery] bool? hidden)
         {
             List<Review> reviews;
             try
             {
-                reviews = await _review.GetReviews(itemid, null);
+                //default to visible comments if hidden doesnt have value
+                if (!hidden.HasValue || !hidden.Value)
+                {
+                    reviews = await _review.GetReviews(itemid, null);
+                }
+                else
+                {
+                    reviews = await _review.GetHiddenReviews(itemid, null);
+                }
             }
             catch (SystemException)
             {
