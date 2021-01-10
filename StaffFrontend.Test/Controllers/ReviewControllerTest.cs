@@ -45,7 +45,7 @@ namespace StaffFrontend.test.Controllers
 
             var reviewController = new ReviewController(reviewMock.Object);
 
-            var result = await reviewController.Index(1);
+            var result = await reviewController.Index(1, false);
 
             Assert.IsNotNull(result);
 
@@ -65,41 +65,6 @@ namespace StaffFrontend.test.Controllers
             Assert.IsNotNull(result);
 
             reviewMock.Verify();
-            reviewMock.Verify(m => m.GetReview(1), Times.Once);
-        }
-
-        [TestMethod]
-        public async Task Edit_Initial()
-        {
-            reviewMock.Setup(m => m.GetReview(1)).ReturnsAsync(reviews.Find(r => r.reviewId == 1));
-
-            var reviewController = new ReviewController(reviewMock.Object);
-
-            var result = await reviewController.Edit(1);
-
-            Assert.IsNotNull(result);
-
-            reviewMock.Verify();
-            reviewMock.Verify(m => m.GetReview(1), Times.Once);
-        }
-
-
-
-        [TestMethod]
-        public async Task Edit_Edit()
-        {
-            Review r = reviews.First();
-            reviewMock.Setup(m => m.GetReview(r.reviewId)).ReturnsAsync(r);
-            reviewMock.Setup(m => m.UpdateReview(r)).Returns(Task.Run(() => { }));
-
-            var reviewController = new ReviewController(reviewMock.Object);
-
-            var result = await reviewController.Edit(r);
-
-            Assert.IsNotNull(result);
-
-            reviewMock.Verify();
-            reviewMock.Verify(m => m.UpdateReview(r), Times.Once);
             reviewMock.Verify(m => m.GetReview(1), Times.Once);
         }
     }

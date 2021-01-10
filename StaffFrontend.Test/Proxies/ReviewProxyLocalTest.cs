@@ -34,7 +34,7 @@ namespace StaffFrontend.Test.Proxies
         [TestMethod]
         public async Task ReviewProxy_GetReviews()
         {
-            Assert.IsTrue(reviews.SequenceEqual(await rpl.GetReviews(null, null)));
+            Assert.IsTrue(reviews.Where(r => !r.hidden).ToList().SequenceEqual(await rpl.GetReviews(null, null)));
         }
 
         [TestMethod]
@@ -69,26 +69,6 @@ namespace StaffFrontend.Test.Proxies
             Assert.AreEqual(reviews.First(r => r.reviewId == 2), await rpl.GetReview(2));
             Assert.AreEqual(reviews.First(r => r.reviewId == 3), await rpl.GetReview(3));
             Assert.AreEqual(reviews.First(r => r.reviewId == 4), await rpl.GetReview(4));
-        }
-
-        [TestMethod]
-        public async Task ReviewProxy_UpdateReview()
-        {
-            Review review = reviews.First(r => r.reviewId == 1);
-            review.reviewContent = "new content";
-            await rpl.UpdateReview(review);
-
-            Assert.AreEqual(review, await rpl.GetReview(review.reviewId));
-        }
-
-        [TestMethod]
-        public async Task ReviewProxy_UpdateReview_Invalid()
-        {
-            Review review = new Review() { reviewId = 5, userId = 4, userName = "Shamiko", reviewContent = "nice", hidden = false, productId = 3, createTime = DateTime.Now, reviewRating = 5 };
-            await rpl.UpdateReview(review);
-
-            Assert.IsNull(await rpl.GetReview(review.reviewId));
-            Assert.IsTrue(reviews.SequenceEqual(await rpl.GetReviews(null, null)));
         }
     }
 }

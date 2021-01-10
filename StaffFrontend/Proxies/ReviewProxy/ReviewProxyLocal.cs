@@ -121,17 +121,5 @@ namespace StaffFrontend.Proxies.ReviewProxy
                 }
             });
         }
-
-        public Task UpdateReview(Review review)
-        {
-            return Task.Run(() =>
-            {
-                if (reviews.Where(r => r.reviewId == review.reviewId).Count() != 0)
-                {
-                    reviews.RemoveAll(r => r.reviewId == review.reviewId);
-                    reviews.Add(review);
-                }
-            });
-        }
     }
 }
