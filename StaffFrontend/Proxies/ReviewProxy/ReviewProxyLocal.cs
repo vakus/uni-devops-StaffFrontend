@@ -13,17 +13,48 @@ namespace StaffFrontend.Proxies.ReviewProxy
         public ReviewProxyLocal()
         {
             reviews = new List<Review>() {
-                new Review() { reviewId=1, reviewContent="Love this! Especially when it suddenly goes *quack*!", reviewRating=5, productId=2, hidden=false, createTime=new DateTime(2020, 11, 12, 1, 9, 52)},
-                new Review() { reviewId=2, reviewContent="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam arcu leo, porta quis suscipit id, varius sed urna. Nulla ut. ", reviewRating=3, productId=1, hidden=false, createTime=new DateTime(1980, 1, 1, 0, 0, 0)},
-                new Review() { reviewId=3, reviewContent="dont like", reviewRating=1, productId=3, hidden=false, createTime=new DateTime(2020, 11, 6, 12, 32, 52)},
-                new Review() { reviewId=4, reviewContent="Adorable!", reviewRating=4, productId=2, hidden=false, createTime=new DateTime(2020, 11, 7, 15, 42, 23)},
-                new Review() { reviewId=5, reviewContent="", reviewRating=1, productId=1, hidden=true, createTime=new DateTime(2020, 10, 12, 13, 24, 42)}
+                new Review() { reviewId=1, reviewContent="Love this! Especially when it suddenly goes *quack*!", reviewRating=5, productId=2, hidden=false},
+                new Review() { reviewId=2, reviewContent="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam arcu leo, porta quis suscipit id, varius sed urna. Nulla ut. ", reviewRating=3, productId=1, hidden=false},
+                new Review() { reviewId=3, reviewContent="dont like", reviewRating=1, productId=3, hidden=false},
+                new Review() { reviewId=4, reviewContent="Adorable!", reviewRating=4, productId=2, hidden=false},
+                new Review() { reviewId=5, reviewContent="", reviewRating=1, productId=1, hidden=true}
             };
         }
 
         public ReviewProxyLocal(List<Review> reviews)
         {
             this.reviews = reviews;
+        }
+
+        public Task DeleteByProductId(int productid)
+        {
+            return Task.Run(() => {
+                reviews.RemoveAll(p => p.productId == productid);
+            });
+        }
+
+        public Task DeletePII(int customerid)
+        {
+            return Task.Run(() =>
+            {
+                for(int x = 0; x < reviews.Count; x++)
+                {
+                    if(reviews[x].userId == customerid)
+                    {
+                        reviews[x].userName = "";
+                    }
+                }
+            });
+        }
+
+        public Task<List<Review>> GetHiddenReviews(int? itemId, int? customerId)
+        {
+            return Task.FromResult(reviews.FindAll(r =>
+                ((itemId.HasValue && r.productId == itemId)
+                || (customerId.HasValue && r.userId == customerId.Value)
+                || (!itemId.HasValue && !customerId.HasValue))
+                && r.hidden
+            ));
         }
 
         public Task<double> GetRating(int itemid)
@@ -57,16 +88,35 @@ namespace StaffFrontend.Proxies.ReviewProxy
 
         public Task<List<Review>> GetReviews(int? itemId, int? customerId)
         {
-            return Task.FromResult(reviews.FindAll(r => (itemId.HasValue && r.productId == itemId) || (customerId.HasValue && r.userId == customerId.Value) || (!itemId.HasValue && !customerId.HasValue)));
+            return Task.FromResult(reviews.FindAll(r =>
+                ((itemId.HasValue && r.productId == itemId)
+                || (customerId.HasValue && r.userId == customerId.Value)
+                || (!itemId.HasValue && !customerId.HasValue))
+                && !r.hidden
+            ));
         }
 
-        public Task UpdateReview(Review review)
+        public Task HideReview(int reviewid)
         {
-            return Task.Run(() =>
-            {
-                if (reviews.Where(r => r.reviewId == review.reviewId).Count() != 0)
+            return Task.Run(() => {
+                if (reviews.Where(r => r.reviewId == reviewid).Count() != 0)
                 {
-                    reviews.RemoveAll(r => r.reviewId == review.reviewId);
+                    Review review = reviews.FirstOrDefault(r => r.reviewId == reviewid);
+                    reviews.Remove(review);
+                    review.hidden = true;
+                    reviews.Add(review);
+                }
+            });
+        }
+
+        public Task UnhideReview(int reviewid)
+        {
+            return Task.Run(() => {
+                if (reviews.Where(r => r.reviewId == reviewid).Count() != 0)
+                {
+                    Review review = reviews.FirstOrDefault(r => r.reviewId == reviewid);
+                    reviews.Remove(review);
+                    review.hidden = false;
                     reviews.Add(review);
                 }
             });

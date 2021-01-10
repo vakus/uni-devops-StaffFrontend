@@ -48,6 +48,15 @@
 </div>
 <div>
     <h4>Reviews</h4>
+    @if (Context.Request.Query["hidden"] == "false" || Context.Request.Query["hidden"] == Microsoft.Extensions.Primitives.StringValues.Empty)
+    {
+        <a href="?hidden=true">Show Hidden Reviews</a>
+    }
+    else
+    {
+        <a href="?hidden=false">Show Visible Reviews</a>
+    }
+    
     <hr />
     @if (Model.reviews.Count() != 0)
     {
@@ -57,8 +66,12 @@
                 <dt class="col-sm-2">
                     <a href="/customers/view/@review.userId">@Html.DisplayFor(model => review.userName)</a>
                 </dt>
-                <dd class="col-sm-10">
+                <dd class="col-sm-8">
                     @Html.DisplayFor(model => review.reviewContent)
+                </dd>
+                <dd class="col-sm-2">
+                    <a href="/reviews/hide/@review.reviewId?url=/products/view/@Model.product.ID">Hide Review</a> |
+                    <a href="/reviews/view/@review.reviewId">Details</a>
                 </dd>
             </dl>
         }

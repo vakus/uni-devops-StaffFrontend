@@ -28,8 +28,5 @@ namespace StaffFrontend.Models
 
         [Display(Name = "Product ID")]
         public int productId { get; set; }
-
-        [Display(Name = "Created At")]
-        public DateTime createTime { get; set; }
     }
 }

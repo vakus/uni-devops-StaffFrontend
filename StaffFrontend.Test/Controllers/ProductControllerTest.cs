@@ -121,7 +121,6 @@ namespace StaffFrontend.Test.Controllers
                 {
                     reviewId = 1,
                     productId = 1,
-                    createTime = DateTime.Now,
                     hidden = false,
                     reviewContent = "Ipsum Lorem",
                     reviewRating = 5,
@@ -208,6 +207,7 @@ namespace StaffFrontend.Test.Controllers
         public async Task DeleteProductPost()
         {
             productMock.Setup(m => m.DeleteProduct(products[0].ID)).Returns(Task.Run(() => { }));
+            reviewMock.Setup(m => m.DeleteByProductId(products[0].ID)).Returns(Task.Run(() => { }));
 
             var productController = new ProductController(productMock.Object, reviewMock.Object);
 
@@ -216,7 +216,9 @@ namespace StaffFrontend.Test.Controllers
             Assert.IsNotNull(result);
 
             productMock.Verify();
+            reviewMock.Verify();
             productMock.Verify(m => m.DeleteProduct(products[0].ID), Times.Once);
+            reviewMock.Verify(m => m.DeleteByProductId(products[0].ID), Times.Once);
         }
 
 
