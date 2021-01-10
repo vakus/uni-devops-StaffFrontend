@@ -30,9 +30,6 @@ else
             <th>
                 @Html.DisplayNameFor(model => model.hidden)
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.createTime)
-            </th>
             <th></th>
         </tr>
     </thead>
@@ -48,9 +45,6 @@ else
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.hidden)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.createTime)
                 </td>
                 <td>
                     @if (item.hidden)

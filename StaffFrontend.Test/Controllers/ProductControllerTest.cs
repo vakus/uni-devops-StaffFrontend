@@ -121,7 +121,6 @@ namespace StaffFrontend.Test.Controllers
                 {
                     reviewId = 1,
                     productId = 1,
-                    createTime = DateTime.Now,
                     hidden = false,
                     reviewContent = "Ipsum Lorem",
                     reviewRating = 5,

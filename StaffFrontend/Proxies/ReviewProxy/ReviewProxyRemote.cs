@@ -76,7 +76,12 @@ namespace StaffFrontend.Proxies.ReviewProxy
             }
             else
             {
-                return await response.Content.ReadAsAsync<List<Review>>();
+                List<Review> reviews = await response.Content.ReadAsAsync<List<Review>>();
+                for(int x = 0; x < reviews.Count; x++)
+                {
+                    reviews[x].hidden = true;
+                }
+                return reviews;
             }
         }
 

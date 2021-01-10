@@ -30,7 +30,6 @@ namespace StaffFrontend.test.Controllers
                     productId = 1,
                     reviewContent = "pretty decent",
                     reviewRating = 4,
-                    createTime = DateTime.Now,
                     hidden = false
                 }
             };
