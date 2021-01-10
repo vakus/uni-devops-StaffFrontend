@@ -65,5 +65,19 @@ namespace StaffFrontend.Controllers
             }
             return View(review);
         }
+
+        [HttpGet("/reviews/hide/{reviewid}")]
+        public async Task<ActionResult> Hide(int reviewid, [FromQuery] string url)
+        {
+            await _review.HideReview(reviewid);
+            return LocalRedirect(url);
+        }
+
+        [HttpGet("/reviews/unhide/{reviewid}")]
+        public async Task<ActionResult> Unhide(int reviewid, [FromQuery] string url)
+        {
+            await _review.UnhideReview(reviewid);
+            return LocalRedirect(url);
+        }
     }
 }

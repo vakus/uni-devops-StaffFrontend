@@ -42,14 +42,15 @@
                     @Html.DisplayFor(modelItem => item.createTime)
                 </td>
                 <td>
-                    @{ /*
-                            @Html.ActionLink("Edit", "Edit", new { id=item.PrimaryKey }) |
-                            @Html.ActionLink("Details", "Details", new {  id=item.PrimaryKey }) |
-                            @Html.ActionLink("Delete", "Delete", new {  id=item.PrimaryKey })
-                           */
+                    @if (item.hidden)
+                    {
+                        <a href="/reviews/unhide/@item.reviewId?url=/reviews/@item.productId">Unhide Review</a>
                     }
-                    <a href="/reviews/edit/@item.reviewId">Edit</a> |
-                    <a href="/reviews/view/@item.reviewId">Details</a>
+                    else
+                    {
+                        <a href="/reviews/hide/@item.reviewId?url=/reviews/@item.productId">Hide Review</a>
+                    }
+                    | <a href="/reviews/view/@item.reviewId">Details</a>
                 </td>
             </tr>
         }
