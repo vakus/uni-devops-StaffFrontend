@@ -26,6 +26,13 @@ namespace StaffFrontend.Proxies.ReviewProxy
             this.reviews = reviews;
         }
 
+        public Task DeleteByProductId(int productid)
+        {
+            return Task.Run(() => {
+                reviews.RemoveAll(p => p.productId == productid);
+            });
+        }
+
         public Task<double> GetRating(int itemid)
         {
 

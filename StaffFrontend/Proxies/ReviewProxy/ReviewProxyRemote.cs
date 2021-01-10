@@ -20,6 +20,25 @@ namespace StaffFrontend.Proxies.ReviewProxy
             _config = config.GetSection("ReviewMicroservice");
         }
 
+        public async Task DeleteByProductId(int productid)
+        {
+
+            Dictionary<string, object> values = new Dictionary<string, object>
+            {
+                { "product-id", productid }
+            };
+
+            var client = _clientFactory.CreateClient();
+
+            var response = await Utils.Request(client, _config.GetSection("DeleteByProductId"), values);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                //error occured can not receive information
+                throw new SystemException("Could not receive data from remote service");
+            }
+        }
+
         public async Task<double> GetRating(int itemid)
         {
             Dictionary<string, object> values = new Dictionary<string, object>

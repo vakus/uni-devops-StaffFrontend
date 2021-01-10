@@ -167,6 +167,7 @@ namespace StaffFrontend.Controllers
         public async Task<ActionResult> DeleteConfirmed(int itemid)
         {
             await _product.DeleteProduct(itemid);
+            await _review.DeleteByProductId(itemid);
             return RedirectToAction(nameof(Index));
         }
     }

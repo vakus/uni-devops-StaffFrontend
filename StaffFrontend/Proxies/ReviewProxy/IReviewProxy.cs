@@ -17,5 +17,7 @@ namespace StaffFrontend.Proxies
         Task UpdateReview(Review review);
 
         Task<double> GetRating(int itemid);
+
+        Task DeleteByProductId(int productid);
     }
 }
