@@ -65,46 +65,5 @@ namespace StaffFrontend.Controllers
             }
             return View(review);
         }
-
-        [HttpGet("/reviews/edit/{reviewid}")]
-        // GET: /reviews/edit/5
-        public async Task<ActionResult> Edit(int reviewid)
-        {
-            Review review;
-            try
-            {
-                review = await _review.GetReview(reviewid);
-
-                if (review == null)
-                {
-                    return NotFound();
-                }
-            }
-            catch (SystemException)
-            {
-                ModelState.AddModelError("", "Unable to load data from remote service. Please try again.");
-                review = new Review();
-            }
-            return View(review);
-        }
-
-        [HttpPost("/reviews/edit/{reviewid}")]
-        // POST: /reviews/edit/5
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit([Bind("reviewid,content,rating,hidden,itemid,createTime")] Review review)
-        {
-            try
-            {
-                Review rev = await _review.GetReview(review.reviewId);
-                rev.hidden = review.hidden;
-                await _review.UpdateReview(rev);
-            }
-            catch (SystemException)
-            {
-                ModelState.AddModelError("", "Unable to send data to remote service. Please try again.");
-                return View(new Review());
-            }
-            return RedirectToAction(nameof(Index), new { itemid = review.productId });
-        }
     }
 }
