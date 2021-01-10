@@ -44,9 +44,17 @@ namespace StaffFrontend.Controllers
         [Authorize(Policy = "ManagerOnly")]
         [HttpPost("/restock/process/{id}")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Process(int id, string cardNumber, [FromQuery] bool approved)
+        public async Task<IActionResult> Process(int id, string accountName, string cardNumber, bool approved)
         {
-            return RedirectPermanent("/restock/orders");
+            if (approved)
+            {
+                await restockProxy.ApproveRestock(id, accountName, cardNumber);
+            }
+            else
+            {
+                await restockProxy.RejectRestock(id);
+            }
+            return RedirectPermanent("/restock");
         }
 
         [HttpGet("/restock/create/{id}")]
