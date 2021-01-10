@@ -144,6 +144,7 @@ namespace StaffFrontend.Controllers
             try
             {
                 await _customer.DeleteCustomer(userid);
+                await _review.DeletePII(userid);
             }
             catch (SystemException)
             {

@@ -33,6 +33,20 @@ namespace StaffFrontend.Proxies.ReviewProxy
             });
         }
 
+        public Task DeletePII(int customerid)
+        {
+            return Task.Run(() =>
+            {
+                for(int x = 0; x < reviews.Count; x++)
+                {
+                    if(reviews[x].userId == customerid)
+                    {
+                        reviews[x].userName = "";
+                    }
+                }
+            });
+        }
+
         public Task<List<Review>> GetHiddenReviews(int? itemId, int? customerId)
         {
             return Task.FromResult(reviews.FindAll(r =>

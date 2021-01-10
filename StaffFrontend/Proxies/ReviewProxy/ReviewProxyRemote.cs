@@ -39,6 +39,25 @@ namespace StaffFrontend.Proxies.ReviewProxy
             }
         }
 
+        public async Task DeletePII(int customerid)
+        {
+
+            Dictionary<string, object> values = new Dictionary<string, object>
+            {
+                { "customer-id", customerid }
+            };
+
+            var client = _clientFactory.CreateClient();
+
+            var response = await Utils.Request(client, _config.GetSection("DeletePII"), values);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                //error occured can not receive information
+                throw new SystemException("Could not receive data from remote service");
+            }
+        }
+
         public async Task<List<Review>> GetHiddenReviews(int? itemId, int? customerId)
         {
             Dictionary<string, object> values = new Dictionary<string, object>

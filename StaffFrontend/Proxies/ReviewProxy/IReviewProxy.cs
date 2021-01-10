@@ -20,6 +20,8 @@ namespace StaffFrontend.Proxies
 
         Task DeleteByProductId(int productid);
 
+        Task DeletePII(int customerid);
+
         Task HideReview(int reviewid);
 
         Task UnhideReview(int reviewid);
