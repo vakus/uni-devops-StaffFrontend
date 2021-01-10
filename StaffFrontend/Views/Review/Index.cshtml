@@ -7,6 +7,17 @@
 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 <h1>Index</h1>
 
+
+@if (Context.Request.Query["hidden"] == "false" || Context.Request.Query["hidden"] == Microsoft.Extensions.Primitives.StringValues.Empty)
+{
+    <a href="?hidden=true">Show Hidden Reviews</a>
+}
+else
+{
+    <a href="?hidden=false">Show Visible Reviews</a>
+}
+
+
 <table class="table table-dark">
     <thead>
         <tr>
