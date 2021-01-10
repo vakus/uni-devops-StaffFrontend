@@ -84,6 +84,17 @@ namespace StaffFrontend.Proxies.RestockProxy
             this.restocks = restocks;
         }
 
+        public Task ApproveRestock(int restockid, string accountName, string CardNumber)
+        {
+            return Task.Run(() =>
+            {
+                int index = restocks.FindIndex(r => r.RestockId == restockid);
+                restocks[index].AccountName = accountName;
+                restocks[index].CardNumber = CardNumber;
+                restocks[index].Approved = true;
+            });
+        }
+
         public Task CreateRestock(int supplierid, string accountName, int productid, int quantity)
         {
 
@@ -121,6 +132,13 @@ namespace StaffFrontend.Proxies.RestockProxy
         public Task<List<SupplierProduct>> GetSuppliersProducts(int id)
         {
             return Task.FromResult(supplierProducts[id]);
+        }
+
+        public Task RejectRestock(int restockid)
+        {
+            return Task.Run(() => {
+                restocks.RemoveAll(r => r.RestockId == restockid);
+            });
         }
     }
 }
