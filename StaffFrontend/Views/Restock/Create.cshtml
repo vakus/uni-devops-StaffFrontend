@@ -1,4 +1,4 @@
-﻿@model StaffFrontend.Models.Restock
+﻿@model StaffFrontend.Models.Restock.RestockCreateDTO
 
 @{
     ViewData["Title"] = "Create";
@@ -6,46 +6,26 @@
 
 <h1>Create</h1>
 
-<h4>Restock</h4>
+<h4>Restock Order</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="restockId" class="control-label"></label>
-                <input asp-for="restockId" class="form-control" />
-                <span asp-validation-for="restockId" class="text-danger"></span>
+                <label asp-for="restock.AccountName" class="control-label"></label>
+                <input asp-for="restock.AccountName" class="form-control" />
+                <span asp-validation-for="restock.AccountName" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="supplierId" class="control-label"></label>
-                <input asp-for="supplierId" class="form-control" />
-                <span asp-validation-for="supplierId" class="text-danger"></span>
+                <label asp-for="restock.ProductID" class="control-label"></label>
+                <select asp-for="restock.ProductID" class="form-control" asp-items="Model.products"></select>
+                <span asp-validation-for="products" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="sProductId" class="control-label"></label>
-                <input asp-for="sProductId" class="form-control" />
-                <span asp-validation-for="sProductId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="quantity" class="control-label"></label>
-                <input asp-for="quantity" class="form-control" />
-                <span asp-validation-for="quantity" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="price" class="control-label"></label>
-                <input asp-for="price" class="form-control" />
-                <span asp-validation-for="price" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="date" class="control-label"></label>
-                <input asp-for="date" class="form-control" />
-                <span asp-validation-for="date" class="text-danger"></span>
-            </div>
-            <div class="form-group form-check">
-                <label class="form-check-label">
-                    <input class="form-check-input" asp-for="approved" /> @Html.DisplayNameFor(model => model.approved)
-                </label>
+                <label asp-for="restock.Gty" class="control-label"></label>
+                <input asp-for="restock.Gty" class="form-control" />
+                <span asp-validation-for="restock.Gty" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />

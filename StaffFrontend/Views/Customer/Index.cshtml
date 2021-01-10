@@ -1,4 +1,4 @@
-﻿@model IEnumerable<StaffFrontend.Models.Customer>
+﻿@model IEnumerable<StaffFrontend.Models.Customers.Customer>
 
 @{
     ViewData["Title"] = "Index";
@@ -15,9 +15,6 @@
     {
         <a href="?excludeDeleted=true">Exclude deleted accounts</a>
     }
-</p>
-<p>
-    <a asp-action="Create">Create New</a>
 </p>
 <table class="table table-dark">
     <thead>

@@ -1,5 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using StaffFrontend.Models;
+using StaffFrontend.Models.Product;
 using StaffFrontend.Proxies.ProductProxy;
 using System;
 using System.Collections.Generic;
@@ -7,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace StaffFrontend.test.Proxies
+namespace StaffFrontend.Test.Proxies
 {
     [TestClass]
     public class ProductProxyLocalTest

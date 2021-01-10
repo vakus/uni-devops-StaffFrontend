@@ -17,6 +17,9 @@ jobs:
       with:
         dotnet-version: 3.1.102
     
+    - name: Clean
+      run: dotnet clean --configuration Release && dotnet nuget locals all --clear
+    
     - name: Build
       run: dotnet build --configuration Staging
       

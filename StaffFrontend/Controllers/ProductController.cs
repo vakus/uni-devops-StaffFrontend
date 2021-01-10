@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using StaffFrontend.Proxies;
 using StaffFrontend.Models;
 using Microsoft.AspNetCore.Authorization;
+using StaffFrontend.Models.Product;
 
 namespace StaffFrontend.Controllers
 {
@@ -14,11 +15,13 @@ namespace StaffFrontend.Controllers
     public class ProductController : Controller
     {
 
-        private IProductProxy _product;
+        private readonly IProductProxy _product;
+        private readonly IReviewProxy _review;
 
-        public ProductController(IProductProxy productProxy)
+        public ProductController(IProductProxy productProxy, IReviewProxy reviewProxy)
         {
             _product = productProxy;
+            _review = reviewProxy;
         }
         [HttpGet("/products")]
         // GET: /products
@@ -41,12 +44,13 @@ namespace StaffFrontend.Controllers
         // GET: /products/view/5
         public async Task<ActionResult> Details(int itemid)
         {
-            Product prod;
+
+            ProductDetailsDTO product = new ProductDetailsDTO();
             try
             {
-                prod = await _product.GetProduct(itemid);
+                product.product = await _product.GetProduct(itemid);
 
-                if (prod == null)
+                if (product.product == null)
                 {
                     return NotFound();
                 }
@@ -54,9 +58,18 @@ namespace StaffFrontend.Controllers
             catch (SystemException)
             {
                 ModelState.AddModelError("", "Unable to load data from remote service. Please try again.");
-                prod = new Product();
+                product.product = new Product();
             }
-            return View(prod);
+
+            try
+            {
+                product.reviews = await _review.GetReviews(itemid, null);
+            }
+            catch (SystemException)
+            {
+                ModelState.AddModelError("", "Unable to load review data from remote service.");
+            }
+            return View(product);
         }
 
         [HttpGet("/products/new")]
@@ -70,7 +83,7 @@ namespace StaffFrontend.Controllers
         // POST: /products/new
         [HttpPost("/products/new")]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create([Bind("name,description,price")] Product prod)
+        public async Task<ActionResult> Create([Bind("Name,Description,Price,Supply,Available")] Product prod)
         {
             try
             {
@@ -110,8 +123,9 @@ namespace StaffFrontend.Controllers
         // POST: /products/edit/5
         [HttpPost("/products/edit/{itemid}")]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit([Bind("id,name,description,price")] Product prod)
+        public async Task<ActionResult> Edit(int id, [Bind("Name,Description,Price,Supply,Available")] Product prod)
         {
+            prod.ID = id;
             try
             {
                 await _product.UpdateProduct(prod);
@@ -150,16 +164,10 @@ namespace StaffFrontend.Controllers
         // POST: products/delete/5
         [HttpPost("/products/delete/{itemid}")]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Delete(int itemid, IFormCollection collection)
+        public async Task<ActionResult> DeleteConfirmed(int itemid)
         {
-            try
-            {
-                await _product.DeleteProduct(itemid);
-            }catch(SystemException)
-            {
-                ModelState.AddModelError("", "Unable to send data to remote service. Please try again.");
-                return View(new Product());
-            }
+            await _product.DeleteProduct(itemid);
+            await _review.DeleteByProductId(itemid);
             return RedirectToAction(nameof(Index));
         }
     }

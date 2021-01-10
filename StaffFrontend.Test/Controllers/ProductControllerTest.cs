@@ -2,6 +2,7 @@
 using Moq;
 using StaffFrontend.Controllers;
 using StaffFrontend.Models;
+using StaffFrontend.Models.Product;
 using StaffFrontend.Proxies;
 using System;
 using System.Collections.Generic;
@@ -17,7 +18,8 @@ namespace StaffFrontend.Test.Controllers
     {
 
         private List<Product> products;
-        private Mock<IProductProxy> mock;
+        private Mock<IProductProxy> productMock;
+        private Mock<IReviewProxy> reviewMock;
 
         [TestInitialize]
         public void initTest()
@@ -28,179 +30,195 @@ namespace StaffFrontend.Test.Controllers
                 new Product() { ID = 3, Name = "IPhone 13 pro max ultra plus 6G no screen edition", Description = "New Revolutionary IPhone. This year we managed to remove screen. Weights only 69g.", Price = 1399.99m, Available = true }
             };
 
-            mock = new Mock<IProductProxy>(MockBehavior.Strict);
+            productMock = new Mock<IProductProxy>(MockBehavior.Strict);
+            reviewMock = new Mock<IReviewProxy>(MockBehavior.Strict);
         }
 
         [TestMethod]
         public async Task GetProducts_NoFilters()
         {
-            mock.Setup(m => m.GetProducts(null, null, null, null)).ReturnsAsync(products);
+            productMock.Setup(m => m.GetProducts(null, null, null, null)).ReturnsAsync(products);
 
-            var productController = new ProductController(mock.Object);
+            var productController = new ProductController(productMock.Object, reviewMock.Object);
 
             var result = await productController.Index(null, null, null, null);
 
             Assert.IsNotNull(result);
 
-            mock.Verify();
-            mock.Verify(m => m.GetProducts(null, null, null, null), Times.Once);
+            productMock.Verify();
+            productMock.Verify(m => m.GetProducts(null, null, null, null), Times.Once);
         }
 
         [TestMethod]
         public async Task GetProducts_FilterName()
         {
-            mock.Setup(m => m.GetProducts("Lorem Ipsum", null, null, null)).ReturnsAsync(products);
+            productMock.Setup(m => m.GetProducts("Lorem Ipsum", null, null, null)).ReturnsAsync(products);
 
-            var productController = new ProductController(mock.Object);
+            var productController = new ProductController(productMock.Object, reviewMock.Object);
 
             var result = await productController.Index("Lorem Ipsum", null, null, null);
 
             Assert.IsNotNull(result);
 
-            mock.Verify();
-            mock.Verify(m => m.GetProducts("Lorem Ipsum", null, null, null), Times.Once);
+            productMock.Verify();
+            productMock.Verify(m => m.GetProducts("Lorem Ipsum", null, null, null), Times.Once);
         }
 
         [TestMethod]
         public async Task GetProducts_FilterVisible()
         {
-            mock.Setup(m => m.GetProducts(null, true, null, null)).ReturnsAsync(products);
+            productMock.Setup(m => m.GetProducts(null, true, null, null)).ReturnsAsync(products);
 
-            var productController = new ProductController(mock.Object);
+            var productController = new ProductController(productMock.Object, reviewMock.Object);
 
             var result = await productController.Index(null, true, null, null);
 
             Assert.IsNotNull(result);
 
-            mock.Verify();
-            mock.Verify(m => m.GetProducts(null, true, null, null), Times.Once);
+            productMock.Verify();
+            productMock.Verify(m => m.GetProducts(null, true, null, null), Times.Once);
         }
 
         [TestMethod]
         public async Task GetProducts_FilterMinPrice()
         {
-            mock.Setup(m => m.GetProducts(null, null, 10, null)).ReturnsAsync(products);
+            productMock.Setup(m => m.GetProducts(null, null, 10, null)).ReturnsAsync(products);
 
-            var productController = new ProductController(mock.Object);
+            var productController = new ProductController(productMock.Object, reviewMock.Object);
 
             var result = await productController.Index(null, null, 10, null);
 
             Assert.IsNotNull(result);
 
-            mock.Verify();
-            mock.Verify(m => m.GetProducts(null, null, 10, null), Times.Once);
+            productMock.Verify();
+            productMock.Verify(m => m.GetProducts(null, null, 10, null), Times.Once);
         }
 
         [TestMethod]
         public async Task GetProducts_FilterMaxPrice()
         {
-            mock.Setup(m => m.GetProducts(null, null, null, 10)).ReturnsAsync(products);
+            productMock.Setup(m => m.GetProducts(null, null, null, 10)).ReturnsAsync(products);
 
-            var productController = new ProductController(mock.Object);
+            var productController = new ProductController(productMock.Object, reviewMock.Object);
 
             var result = await productController.Index(null, null, null, 10);
 
             Assert.IsNotNull(result);
 
-            mock.Verify();
-            mock.Verify(m => m.GetProducts(null, null, null, 10), Times.Once);
+            productMock.Verify();
+            productMock.Verify(m => m.GetProducts(null, null, null, 10), Times.Once);
         }
 
 
         [TestMethod]
         public async Task GetProduct()
         {
-            var mock = new Mock<IProductProxy>(MockBehavior.Strict);
-            mock.Setup(m => m.GetProduct(1)).ReturnsAsync(products[0]);
+            productMock.Setup(m => m.GetProduct(1)).ReturnsAsync(products[0]);
 
-            var productController = new ProductController(mock.Object);
+            List<Review> reviews = new List<Review>()
+            {
+                new Review()
+                {
+                    reviewId = 1,
+                    productId = 1,
+                    hidden = false,
+                    reviewContent = "Ipsum Lorem",
+                    reviewRating = 5,
+                    userId = 1,
+                    userName = "Giorno"
+                }
+            };
+
+            reviewMock.Setup(m => m.GetReviews(1, null)).ReturnsAsync(reviews);
+
+            var productController = new ProductController(productMock.Object, reviewMock.Object);
 
             var result = await productController.Details(1);
 
             Assert.IsNotNull(result);
 
-            mock.Verify();
-            mock.Verify(m => m.GetProduct(1), Times.Once);
+            productMock.Verify();
+            productMock.Verify(m => m.GetProduct(1), Times.Once);
+            reviewMock.Verify();
+            reviewMock.Verify(m => m.GetReviews(1, null), Times.Once);
         }
 
         [TestMethod]
         public async Task AddProduct()
         {
-            var mock = new Mock<IProductProxy>(MockBehavior.Strict);
-            mock.Setup(m => m.AddProduct(products[0])).Returns(Task.Run(() => { })) ;
+            productMock.Setup(m => m.AddProduct(products[0])).Returns(Task.Run(() => { })) ;
 
-            var productController = new ProductController(mock.Object);
+            var productController = new ProductController(productMock.Object, reviewMock.Object);
 
             var result = await productController.Create(products[0]);
 
             Assert.IsNotNull(result);
 
-            mock.Verify();
-            mock.Verify(m => m.AddProduct(products[0]), Times.Once);
+            productMock.Verify();
+            productMock.Verify(m => m.AddProduct(products[0]), Times.Once);
         }
 
         [TestMethod]
         public async Task EditProductInitial()
         {
-            var mock = new Mock<IProductProxy>(MockBehavior.Strict);
-            mock.Setup(m => m.GetProduct(products[0].ID)).ReturnsAsync(products[0]);
+            productMock.Setup(m => m.GetProduct(products[0].ID)).ReturnsAsync(products[0]);
 
-            var productController = new ProductController(mock.Object);
+            var productController = new ProductController(productMock.Object, reviewMock.Object);
 
             var result = await productController.Edit(products[0].ID);
 
             Assert.IsNotNull(result);
 
-            mock.Verify();
-            mock.Verify(m => m.GetProduct(products[0].ID), Times.Once);
+            productMock.Verify();
+            productMock.Verify(m => m.GetProduct(products[0].ID), Times.Once);
         }
 
         [TestMethod]
         public async Task EditProductPost()
         {
-            var mock = new Mock<IProductProxy>(MockBehavior.Strict);
-            mock.Setup(m => m.UpdateProduct(products[0])).Returns(Task.Run(() => { }));
+            productMock.Setup(m => m.UpdateProduct(products[0])).Returns(Task.Run(() => { }));
 
-            var productController = new ProductController(mock.Object);
+            var productController = new ProductController(productMock.Object, reviewMock.Object);
 
-            var result = await productController.Edit(products[0]);
+            var result = await productController.Edit(products[0].ID, products[0]);
 
             Assert.IsNotNull(result);
 
-            mock.Verify();
-            mock.Verify(m => m.UpdateProduct(products[0]), Times.Once);
+            productMock.Verify();
+            productMock.Verify(m => m.UpdateProduct(products[0]), Times.Once);
         }
 
         [TestMethod]
         public async Task DeleteProductInitial()
         {
-            var mock = new Mock<IProductProxy>(MockBehavior.Strict);
-            mock.Setup(m => m.GetProduct(products[0].ID)).ReturnsAsync(products[0]);
+            productMock.Setup(m => m.GetProduct(products[0].ID)).ReturnsAsync(products[0]);
 
-            var productController = new ProductController(mock.Object);
+            var productController = new ProductController(productMock.Object, reviewMock.Object);
 
             var result = await productController.Delete(products[0].ID);
 
             Assert.IsNotNull(result);
 
-            mock.Verify();
-            mock.Verify(m => m.GetProduct(products[0].ID), Times.Once);
+            productMock.Verify();
+            productMock.Verify(m => m.GetProduct(products[0].ID), Times.Once);
         }
 
         [TestMethod]
         public async Task DeleteProductPost()
         {
-            var mock = new Mock<IProductProxy>(MockBehavior.Strict);
-            mock.Setup(m => m.DeleteProduct(products[0].ID)).Returns(Task.Run(() => { }));
+            productMock.Setup(m => m.DeleteProduct(products[0].ID)).Returns(Task.Run(() => { }));
+            reviewMock.Setup(m => m.DeleteByProductId(products[0].ID)).Returns(Task.Run(() => { }));
 
-            var productController = new ProductController(mock.Object);
+            var productController = new ProductController(productMock.Object, reviewMock.Object);
 
-            var result = await productController.Delete(products[0].ID, null);
+            var result = await productController.DeleteConfirmed(products[0].ID);
 
             Assert.IsNotNull(result);
 
-            mock.Verify();
-            mock.Verify(m => m.DeleteProduct(products[0].ID), Times.Once);
+            productMock.Verify();
+            reviewMock.Verify();
+            productMock.Verify(m => m.DeleteProduct(products[0].ID), Times.Once);
+            reviewMock.Verify(m => m.DeleteByProductId(products[0].ID), Times.Once);
         }
 
 

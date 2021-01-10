@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using StaffFrontend.Models;
+using StaffFrontend.Models.Customers;
 using StaffFrontend.Proxies;
 
 namespace StaffFrontend.Controllers
@@ -14,10 +15,12 @@ namespace StaffFrontend.Controllers
     public class CustomerController : Controller
     {
         private readonly ICustomerProxy _customer;
+        private readonly IReviewProxy _review;
 
-        public CustomerController(ICustomerProxy _proxy)
+        public CustomerController(ICustomerProxy _customer, IReviewProxy _review)
         {
-            _customer = _proxy;
+            this._customer = _customer;
+            this._review = _review;
         }
 
         [HttpGet("/customers")]
@@ -41,22 +44,35 @@ namespace StaffFrontend.Controllers
         // GET: /customers/view/5
         public async Task<ActionResult> Details(int userid)
         {
-            Customer cust;
+            CustomerDetailsDTO cddto = new CustomerDetailsDTO();
+            cddto.Customer = new Customer();
+            cddto.Reviews = new List<Review>();
             try
             {
-                cust = await _customer.GetCustomer(userid);
+                cddto.Customer = await _customer.GetCustomer(userid);
 
-                if (cust == null)
+                if (cddto.Customer == null)
                 {
                     return NotFound();
                 }
             }
             catch (SystemException)
             {
-                cust = new Customer();
+                cddto.Customer = new Customer();
                 ModelState.AddModelError("", "Unable to load data from remote service. Please try again.");
             }
-            return View(cust);
+
+
+            try
+            {
+                cddto.Reviews = await _review.GetReviews(null, cddto.Customer.id);
+            }
+            catch (SystemException)
+            {
+                ModelState.AddModelError("", "Unable to load data from remote service. Please try again.");
+            }
+
+            return View(cddto);
         }
 
         [HttpGet("/customers/edit/{userid}")]
@@ -128,6 +144,7 @@ namespace StaffFrontend.Controllers
             try
             {
                 await _customer.DeleteCustomer(userid);
+                await _review.DeletePII(userid);
             }
             catch (SystemException)
             {

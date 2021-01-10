@@ -5,8 +5,9 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using StaffFrontend.Models;
-using StaffFrontend.Proxies.ResupplyProxy;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using StaffFrontend.Models.Restock;
+using StaffFrontend.Proxies.RestockProxy;
 
 namespace StaffFrontend.Controllers
 {
@@ -14,95 +15,75 @@ namespace StaffFrontend.Controllers
     public class RestockController : Controller
     {
 
-        private readonly IRestockProxy restockProxy;
 
+        private readonly IRestockProxy restockProxy;
         public RestockController(IRestockProxy restockProxy)
         {
             this.restockProxy = restockProxy;
         }
-        [HttpGet("/restock")]
         // GET: RestockController
-        public async Task<ActionResult> Index()
+        [HttpGet("/restock/")]
+        public async Task<IActionResult> Index()
         {
-            return View(await restockProxy.GetRestocks());
+            return View(await restockProxy.GetSuppliers());
         }
 
-        [HttpGet("/restock/view/{id}")]
-        // GET: RestockController/Details/5
-        public async Task<ActionResult> Details(int id)
+        [HttpGet("/restock/orders")]
+        public async Task<IActionResult> ViewOrders([FromQuery] string accountName, [FromQuery] int? supplierid, [FromQuery] bool? approved)
         {
-            return View(await restockProxy.GetRestock(id));
+            return View(await restockProxy.GetRestocks(null, accountName, supplierid, approved));
         }
 
-        [HttpGet("/restock/new")]
-        // GET: RestockController/Create
-        public ActionResult Create()
+        [Authorize(Policy = "ManagerOnly")]
+        [HttpGet("/restock/process/{id}")]
+        public async Task<IActionResult> Process(int id)
         {
-            return View();
+            return View((await restockProxy.GetRestocks(id, null, null, null))[0]);
         }
 
-        // POST: RestockController/Create
-        [HttpPost("/restock/new")]
+        [Authorize(Policy = "ManagerOnly")]
+        [HttpPost("/restock/process/{id}")]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create([FromForm] Restock restock)
+        public async Task<IActionResult> Process(int id, string accountName, string cardNumber, bool approved)
         {
+            if (approved)
+            {
+                await restockProxy.ApproveRestock(id, accountName, cardNumber);
+            }
+            else
+            {
+                await restockProxy.RejectRestock(id);
+            }
+            return RedirectPermanent("/restock");
+        }
+
+        [HttpGet("/restock/create/{id}")]
+        public async Task<IActionResult> Create(int id)
+        {
+            RestockCreateDTO rc = new RestockCreateDTO();
             try
             {
-                await restockProxy.CreateRestock(restock);
-
-                return RedirectToAction(nameof(Index));
+                rc.products = new SelectList(await restockProxy.GetSuppliersProducts(id), "id", "name");
             }
-            catch
+            catch (SystemException)
             {
-                return View();
+                rc.products = new SelectList(new List<SupplierProduct>(), "id", "name");
+                ModelState.AddModelError("", "Unable to load data from remote service. Please try again.");
             }
+            rc.restock = new Restock();
+            return View(rc);
         }
 
-        [HttpGet("/restock/edit/{id}")]
-        // GET: RestockController/Edit/5
-        public async Task<ActionResult> Edit(int id)
-        {
-            return View(await restockProxy.GetRestock(id));
-        }
-
-        // POST: RestockController/Edit/5
-        [HttpPost("/restock/edit/{id}")]
+        [HttpPost("/restock/create/{id}")]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit(int id, [FromForm] Restock restock)
+        public async Task<IActionResult> Create(
+            int id,
+            [FromForm(Name ="restock.AccountName")] string AccountName,
+            [FromForm(Name = "restock.ProductID")] int ProductID,
+            [FromForm(Name = "restock.Gty")] int Qty)
         {
-            try
-            {
-                restock.restockId = id.ToString();
-                await restockProxy.UpdateRestock(restock);
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
-
-        [HttpGet("/restock/delete/{id}")]
-        // GET: RestockController/Delete/5
-        public async Task<ActionResult> Delete(int id)
-        {
-            return View(await restockProxy.GetRestock(id));
-        }
-
-        // POST: RestockController/Delete/5
-        [HttpPost("/restock/delete/{id}")]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Delete(int id, IFormCollection collection)
-        {
-            try
-            {
-                await restockProxy.DeleteRestock(id);
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
+            await restockProxy.CreateRestock(id, AccountName, ProductID, Qty);
+            return RedirectPermanent("/restock/orders?supplierid=" + id.ToString());
         }
     }
 }

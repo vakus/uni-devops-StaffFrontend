@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace StaffFrontend.Models
+namespace StaffFrontend.Models.Product
 {
     public class Product
     {

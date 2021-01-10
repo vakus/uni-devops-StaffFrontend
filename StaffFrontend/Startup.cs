@@ -13,9 +13,8 @@ using StaffFrontend.Proxies;
 using StaffFrontend.Proxies.AuthorizationProxy;
 using StaffFrontend.Proxies.CustomerProxy;
 using StaffFrontend.Proxies.ProductProxy;
-using StaffFrontend.Proxies.ResupplyProxy;
+using StaffFrontend.Proxies.RestockProxy;
 using StaffFrontend.Proxies.ReviewProxy;
-using StaffFrontend.Proxies.SuplierProxy;
 
 namespace StaffFrontend
 {
@@ -42,7 +41,11 @@ namespace StaffFrontend
             {
                 options.AddPolicy("StaffOnly", builder =>
                 {
-                    builder.RequireClaim("role", "Staff");
+                    builder.RequireClaim("role", "Staff", "Manager"); //Manager has more access than Staff, but ultimately has access to all system the staff has
+                });
+                options.AddPolicy("ManagerOnly", builder =>
+                {
+                    builder.RequireClaim("role", "Manager");
                 });
             });
 
@@ -62,8 +65,7 @@ namespace StaffFrontend
                 services.AddSingleton<ICustomerProxy, CustomerProxyRemote>();
                 services.AddSingleton<IReviewProxy, ReviewProxyRemote>();
                 services.AddSingleton<IAuthorizationProxy, AuthorizationProxyRemote>();
-                services.AddSingleton<ISupplierProxy, SupplierProxyRemote>();
-                services.AddSingleton<IRestockProxy, RestockProxyRemote>();
+                services.AddHttpClient<IRestockProxy, RestockProxyRemote>();
             }
             else
             {
@@ -94,16 +96,6 @@ namespace StaffFrontend
                 {
                     services.AddSingleton<IReviewProxy, ReviewProxyRemote>();
                 }
-
-                if (Configuration.GetValue<bool>("SupplierMicroservice:useFake"))
-                {
-                    services.AddSingleton<ISupplierProxy, SupplierProxyLocal>();
-                }
-                else
-                {
-                    services.AddSingleton<ISupplierProxy, SupplierProxyRemote>();
-                }
-
                 if (Configuration.GetValue<bool>("RestockMicroservice:useFake"))
                 {
                     services.AddSingleton<IRestockProxy, RestockProxyLocal>();
@@ -112,8 +104,7 @@ namespace StaffFrontend
                 {
                     services.AddSingleton<IRestockProxy, RestockProxyRemote>();
                 }
-
-
+                
                 //Authorization Proxy doesnt have fake
                 services.AddSingleton<IAuthorizationProxy, AuthorizationProxyRemote>();
             }

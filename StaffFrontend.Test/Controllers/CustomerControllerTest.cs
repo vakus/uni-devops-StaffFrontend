@@ -2,11 +2,12 @@
 using Moq;
 using StaffFrontend.Controllers;
 using StaffFrontend.Models;
+using StaffFrontend.Models.Customers;
 using StaffFrontend.Proxies;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace StaffFrontend.Test
+namespace StaffFrontend.Test.Controllers
 {
     [TestClass]
     public class CustomerControllerTest
@@ -26,7 +27,7 @@ namespace StaffFrontend.Test
             var mock = new Mock<ICustomerProxy>(MockBehavior.Strict);
             mock.Setup(m => m.GetCustomers(true)).ReturnsAsync(customers);
 
-            var customerController = new CustomerController(mock.Object);
+            //var customerController = new CustomerController(mock.Object);
 
             
         }
