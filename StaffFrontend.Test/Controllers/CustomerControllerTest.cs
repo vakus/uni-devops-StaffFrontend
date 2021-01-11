@@ -26,10 +26,9 @@ namespace StaffFrontend.Test.Controllers
 
             var mock = new Mock<ICustomerProxy>(MockBehavior.Strict);
             mock.Setup(m => m.GetCustomers(true)).ReturnsAsync(customers);
-
             //var customerController = new CustomerController(mock.Object);
 
-            
+
         }
     }
 }

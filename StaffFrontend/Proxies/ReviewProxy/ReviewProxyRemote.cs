@@ -11,12 +11,12 @@ namespace StaffFrontend.Proxies.ReviewProxy
     public class ReviewProxyRemote : IReviewProxy
     {
 
-        IHttpClientFactory _clientFactory;
+        HttpClient client;
         IConfigurationSection _config;
 
-        public ReviewProxyRemote(IHttpClientFactory clientFactory, IConfiguration config)
+        public ReviewProxyRemote(HttpClient client, IConfiguration config)
         {
-            _clientFactory = clientFactory;
+            this.client = client;
             _config = config.GetSection("ReviewMicroservice");
         }
 
@@ -27,8 +27,6 @@ namespace StaffFrontend.Proxies.ReviewProxy
             {
                 { "product-id", productid }
             };
-
-            var client = _clientFactory.CreateClient();
 
             var response = await Utils.Request(client, _config.GetSection("DeleteByProductId"), values);
 
@@ -47,8 +45,6 @@ namespace StaffFrontend.Proxies.ReviewProxy
                 { "customer-id", customerid }
             };
 
-            var client = _clientFactory.CreateClient();
-
             var response = await Utils.Request(client, _config.GetSection("DeletePII"), values);
 
             if (!response.IsSuccessStatusCode)
@@ -65,7 +61,6 @@ namespace StaffFrontend.Proxies.ReviewProxy
                 { "item-id", itemId },
                 { "customer-id", customerId }
             };
-            var client = _clientFactory.CreateClient();
 
             var response = await Utils.Request(client, _config.GetSection("GetHiddenReviews"), values);
 
@@ -91,7 +86,6 @@ namespace StaffFrontend.Proxies.ReviewProxy
             {
                 { "item-id", itemid }
             };
-            var client = _clientFactory.CreateClient();
 
             var response = await Utils.Request(client, _config.GetSection("GetRating"), values);
 
@@ -113,7 +107,6 @@ namespace StaffFrontend.Proxies.ReviewProxy
                 { "review-id", reviewid }
             };
 
-            var client = _clientFactory.CreateClient();
 
             var response = await Utils.Request(client, _config.GetSection("GetReview"), values);
 
@@ -135,7 +128,6 @@ namespace StaffFrontend.Proxies.ReviewProxy
                 { "item-id", itemid },
                 { "customer-id", customerid }
             };
-            var client = _clientFactory.CreateClient();
 
             var response = await Utils.Request(client, _config.GetSection("GetReviews"), values);
 
@@ -158,8 +150,6 @@ namespace StaffFrontend.Proxies.ReviewProxy
                 { "review-id", reviewid }
             };
 
-            var client = _clientFactory.CreateClient();
-
             var response = await Utils.Request(client, _config.GetSection("HideReview"), values);
 
             if (!response.IsSuccessStatusCode)
@@ -175,8 +165,6 @@ namespace StaffFrontend.Proxies.ReviewProxy
             {
                 { "review-id", reviewid }
             };
-
-            var client = _clientFactory.CreateClient();
 
             var response = await Utils.Request(client, _config.GetSection("UnhideReview"), values);
 

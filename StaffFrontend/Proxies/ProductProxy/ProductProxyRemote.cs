@@ -12,12 +12,12 @@ namespace StaffFrontend.Proxies.ProductProxy
     public class ProductProxyRemote : IProductProxy
     {
 
-        IHttpClientFactory _clientFactory;
+        HttpClient client;
         IConfigurationSection _config;
 
-        public ProductProxyRemote(IHttpClientFactory clientFactory, IConfiguration config)
+        public ProductProxyRemote(HttpClient client, IConfiguration config)
         {
-            _clientFactory = clientFactory;
+            this.client = client;
             _config = config.GetSection("ProductMicroservice");
         }
         public async Task AddProduct(Product product)
@@ -30,8 +30,6 @@ namespace StaffFrontend.Proxies.ProductProxy
                 { "product-supply", product.Supply },
                 { "product-available", product.Available }
             };
-
-            var client = _clientFactory.CreateClient();
 
             var response = await Utils.Request(client, _config.GetSection("AddProduct"), values);
 
@@ -49,8 +47,6 @@ namespace StaffFrontend.Proxies.ProductProxy
                 { "product-id", itemid }
             };
 
-            var client = _clientFactory.CreateClient();
-
             var response = await Utils.Request(client, _config.GetSection("DeleteProduct"), values);
 
             if (!response.IsSuccessStatusCode)
@@ -66,8 +62,6 @@ namespace StaffFrontend.Proxies.ProductProxy
             {
                 { "product-id", itemid }
             };
-
-            var client = _clientFactory.CreateClient();
 
             var response = await Utils.Request(client, _config.GetSection("GetProduct"), values);
 
@@ -91,7 +85,6 @@ namespace StaffFrontend.Proxies.ProductProxy
                 { "price-min", minprice },
                 { "price-max", maxprice }
             };
-            var client = _clientFactory.CreateClient();
 
             var response = await Utils.Request(client, _config.GetSection("GetProducts"), values);
 
@@ -117,8 +110,6 @@ namespace StaffFrontend.Proxies.ProductProxy
                 { "product-supply", product.Supply },
                 { "product-available", product.Available }
             };
-
-            var client = _clientFactory.CreateClient();
 
             var response = await Utils.Request(client, _config.GetSection("UpdateProduct"), values);
 

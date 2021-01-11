@@ -12,13 +12,13 @@ namespace StaffFrontend.Proxies.CustomerProxy
     public class CustomerProxyRemote : ICustomerProxy
     {
 
-        IHttpClientFactory _clientFactory;
+        HttpClient client;
         IConfigurationSection _config;
 
-        public CustomerProxyRemote(IHttpClientFactory clientFactory, IConfiguration config)
+        public CustomerProxyRemote(HttpClient client, IConfiguration config)
         {
             _config = config.GetSection("CustomerMicroservice");
-            _clientFactory = clientFactory;
+            this.client = client;
         }
         public async Task DeleteCustomer(int customerid)
         {
@@ -26,8 +26,6 @@ namespace StaffFrontend.Proxies.CustomerProxy
             {
                 { "customer-id", customerid }
             };
-
-            var client = _clientFactory.CreateClient();
 
             var response = await Utils.Request(client, _config.GetSection("DeleteCustomer"), values);
 
@@ -44,8 +42,6 @@ namespace StaffFrontend.Proxies.CustomerProxy
             {
                 { "customer-id", customerid }
             };
-
-            var client = _clientFactory.CreateClient();
 
             var response = await Utils.Request(client, _config.GetSection("GetCustomers"), values);
 
@@ -66,8 +62,6 @@ namespace StaffFrontend.Proxies.CustomerProxy
             {
                 { "exclude-deleted", excludeDeleted }
             };
-
-            var client = _clientFactory.CreateClient();
 
             var response = await Utils.Request(client, _config.GetSection("GetCustomers"), values);
 
@@ -92,8 +86,6 @@ namespace StaffFrontend.Proxies.CustomerProxy
                 { "customer-address", customer.address },
                 { "customer-contact", customer.contact }
             };
-
-            var client = _clientFactory.CreateClient();
 
             var response = await Utils.Request(client, _config.GetSection("UpdateCustomer"), values);
 
