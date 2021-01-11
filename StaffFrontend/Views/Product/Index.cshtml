@@ -5,7 +5,7 @@
 }
 
 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-<h1>View</h1>
+<h1>Products</h1>
 
 <p>
     <a href="/products/new">Create New</a>
@@ -25,7 +25,7 @@
     <tbody>
         @foreach (var item in Model)
         {
-            <tr onclick="window.location='/products/view/@item.ID'" style="cursor: pointer">
+            <tr>
                 <td>
                     @Html.DisplayFor(modelItem => item.Name)
                 </td>
@@ -33,21 +33,9 @@
                     @Html.DisplayFor(modelItem => item.Price)
                 </td>
                 <td>
-                    @{
-                        /* ofcourse this doesnt work its a microsoft product */
-                        /* @Html.ActionLink("Edit", "Edit", new { id=item.id }) |
-                        @Html.ActionLink("Details", "view", "products", new { id=item.id }) |
-                        @Html.ActionLink("Delete", "Delete", new { id=item.id })
-                        <a href="/products/edit/@item.id">Edit</a> |
-                        <a href="/products/view/@item.id">View</a> |
-                        <a href="/products/delete/@item.id">Delete</a>
-                        */
-                    }
-
-
-                    <input type="button" value="Edit" class="btn btn-primary" onclick="event.stopPropagation(); window.location = '/products/edit/@item.ID'" />
-                    <input type="button" value="View" class="btn btn-primary" onclick="event.stopPropagation(); window.location='/products/view/@item.ID'" />
-                    <input type="button" value="Delete" class="btn btn-danger" onclick="event.stopPropagation(); window.location='/products/delete/@item.ID'" />
+                    <a href="/products/edit/@item.ID">Edit</a> |
+                    <a href="/products/view/@item.ID">View</a> |
+                    <a href="/products/delete/@item.ID">Delete</a>
                 </td>
             </tr>
         }
