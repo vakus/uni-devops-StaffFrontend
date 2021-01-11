@@ -66,7 +66,7 @@ namespace StaffFrontend
                 services.AddHttpClient<IProductProxy, ProductProxyRemote>();
             }
 
-            if (shouldRegisterFake("CustomerMicroservice:useFake"))
+            if (shouldRegisterFake("CustomerMicroservice"))
             {
                 services.AddSingleton<ICustomerProxy, CustomerProxyLocal>();
             }
@@ -75,7 +75,7 @@ namespace StaffFrontend
                 services.AddHttpClient<ICustomerProxy, CustomerProxyRemote>();
             }
 
-            if (shouldRegisterFake("ReviewMicroservice:useFake"))
+            if (shouldRegisterFake("ReviewMicroservice"))
             {
                 services.AddSingleton<IReviewProxy, ReviewProxyLocal>();
             }
@@ -83,7 +83,7 @@ namespace StaffFrontend
             {
                 services.AddHttpClient<IReviewProxy, ReviewProxyRemote>();
             }
-            if (shouldRegisterFake("RestockMicroservice:useFake"))
+            if (shouldRegisterFake("RestockMicroservice"))
             {
                 services.AddSingleton<IRestockProxy, RestockProxyLocal>();
             }
