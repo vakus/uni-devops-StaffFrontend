@@ -1,14 +1,12 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net.Http;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Polly;
+using Polly.Extensions.Http;
 using StaffFrontend.Proxies;
 using StaffFrontend.Proxies.AuthorizationProxy;
 using StaffFrontend.Proxies.CustomerProxy;
@@ -63,7 +61,10 @@ namespace StaffFrontend
             }
             else
             {
-                services.AddHttpClient<IProductProxy, ProductProxyRemote>();
+                services.AddHttpClient<IProductProxy, ProductProxyRemote>()
+                    .SetHandlerLifetime(TimeSpan.FromMinutes(5))
+                    .AddPolicyHandler(GetRetryPolicy())
+                    .AddPolicyHandler(GetCircuitBreaker());
             }
 
             if (shouldRegisterFake("CustomerMicroservice"))
@@ -72,7 +73,10 @@ namespace StaffFrontend
             }
             else
             {
-                services.AddHttpClient<ICustomerProxy, CustomerProxyRemote>();
+                services.AddHttpClient<ICustomerProxy, CustomerProxyRemote>()
+                    .SetHandlerLifetime(TimeSpan.FromMinutes(5))
+                    .AddPolicyHandler(GetRetryPolicy())
+                    .AddPolicyHandler(GetCircuitBreaker());
             }
 
             if (shouldRegisterFake("ReviewMicroservice"))
@@ -81,7 +85,10 @@ namespace StaffFrontend
             }
             else
             {
-                services.AddHttpClient<IReviewProxy, ReviewProxyRemote>();
+                services.AddHttpClient<IReviewProxy, ReviewProxyRemote>()
+                    .SetHandlerLifetime(TimeSpan.FromMinutes(5))
+                    .AddPolicyHandler(GetRetryPolicy())
+                    .AddPolicyHandler(GetCircuitBreaker());
             }
             if (shouldRegisterFake("RestockMicroservice"))
             {
@@ -89,12 +96,18 @@ namespace StaffFrontend
             }
             else
             {
-                services.AddHttpClient<IRestockProxy, RestockProxyRemote>();
+                services.AddHttpClient<IRestockProxy, RestockProxyRemote>()
+                    .SetHandlerLifetime(TimeSpan.FromMinutes(5))
+                    .AddPolicyHandler(GetRetryPolicy())
+                    .AddPolicyHandler(GetCircuitBreaker());
             }
 
 
             //Authorization Proxy doesnt have fake
-            services.AddHttpClient<IAuthorizationProxy, AuthorizationProxyRemote>();
+            services.AddHttpClient<IAuthorizationProxy, AuthorizationProxyRemote>()
+                    .SetHandlerLifetime(TimeSpan.FromMinutes(5))
+                    .AddPolicyHandler(GetRetryPolicy())
+                    .AddPolicyHandler(GetCircuitBreaker());
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -135,6 +148,28 @@ namespace StaffFrontend
         private bool shouldRegisterFake(string name)
         {
             return (_env.IsProduction() ? false : Configuration.GetValue<bool>(name + ":useFake"));
+        }
+
+        /**
+         * Based on:
+         *  - https://docs.microsoft.com/en-us/dotnet/architecture/microservices/implement-resilient-applications/implement-http-call-retries-exponential-backoff-polly
+         *  - https://github.com/App-vNext/Polly/wiki/Retry-with-jitter
+         *  
+         */
+        private IAsyncPolicy<HttpResponseMessage> GetRetryPolicy()
+        {
+            return HttpPolicyExtensions
+                .HandleTransientHttpError()
+                .OrResult(msg => msg.StatusCode == System.Net.HttpStatusCode.NotFound)
+                .WaitAndRetryAsync(6, retryAttempt =>
+                    TimeSpan.FromSeconds(Math.Pow(2, retryAttempt)));
+        }
+
+        private IAsyncPolicy<HttpResponseMessage> GetCircuitBreaker()
+        {
+            return HttpPolicyExtensions.
+                HandleTransientHttpError()
+                .CircuitBreakerAsync(5, TimeSpan.FromSeconds(30));
         }
     }
 }
