@@ -10,7 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace StaffFrontend.test.Controllers.Controllers.Customer
+namespace StaffFrontend.test.Controllers.Customer
 {
     [TestClass]
     public class Index
