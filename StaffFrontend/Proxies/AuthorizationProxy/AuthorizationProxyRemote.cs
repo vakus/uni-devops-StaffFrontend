@@ -13,18 +13,16 @@ namespace StaffFrontend.Proxies.AuthorizationProxy
 {
     public class AuthorizationProxyRemote : IAuthorizationProxy
     {
-        private IHttpClientFactory _client { get; }
+        private HttpClient client { get; }
         private IConfigurationSection _config { get; }
-        public AuthorizationProxyRemote(IHttpClientFactory client, IConfiguration config)
+        public AuthorizationProxyRemote(HttpClient client, IConfiguration config)
         {
-            this._client = client;
+            this.client = client;
             this._config = config.GetSection("AuthorizationMicroservice");
         }
 
         public async Task<AuthorizationLoginResult> Login(string username, string password)
         {
-            var client = _client.CreateClient();
-
             string domain = _config.GetValue<string>("domain");
 
             var discoveryServer = await client.GetDiscoveryDocumentAsync(domain);
@@ -78,8 +76,6 @@ namespace StaffFrontend.Proxies.AuthorizationProxy
             };
 
             string url = Utils.CreateUriBuilder(_config.GetSection("UpdatePassword"), values).ToString();
-
-            var client = _client.CreateClient();
 
             client.DefaultRequestHeaders.Accept.ParseAdd("application/json");
 

@@ -61,10 +61,10 @@ namespace StaffFrontend
             if (_env.IsProduction())
             {
                 // in production we dont want to allow fakes
-                services.AddSingleton<IProductProxy, ProductProxyRemote>();
-                services.AddSingleton<ICustomerProxy, CustomerProxyRemote>();
-                services.AddSingleton<IReviewProxy, ReviewProxyRemote>();
-                services.AddSingleton<IAuthorizationProxy, AuthorizationProxyRemote>();
+                services.AddHttpClient<IProductProxy, ProductProxyRemote>();
+                services.AddHttpClient<ICustomerProxy, CustomerProxyRemote>();
+                services.AddHttpClient<IReviewProxy, ReviewProxyRemote>();
+                services.AddHttpClient<IAuthorizationProxy, AuthorizationProxyRemote>();
                 services.AddHttpClient<IRestockProxy, RestockProxyRemote>();
             }
             else
@@ -76,7 +76,7 @@ namespace StaffFrontend
                 }
                 else
                 {
-                    services.AddSingleton<IProductProxy, ProductProxyRemote>();
+                    services.AddHttpClient<IProductProxy, ProductProxyRemote>();
                 }
 
                 if (Configuration.GetValue<bool>("CustomerMicroservice:useFake"))
@@ -85,7 +85,7 @@ namespace StaffFrontend
                 }
                 else
                 {
-                    services.AddSingleton<ICustomerProxy, CustomerProxyRemote>();
+                    services.AddHttpClient<ICustomerProxy, CustomerProxyRemote>();
                 }
 
                 if (Configuration.GetValue<bool>("ReviewMicroservice:useFake"))
@@ -94,7 +94,7 @@ namespace StaffFrontend
                 }
                 else
                 {
-                    services.AddSingleton<IReviewProxy, ReviewProxyRemote>();
+                    services.AddHttpClient<IReviewProxy, ReviewProxyRemote>();
                 }
                 if (Configuration.GetValue<bool>("RestockMicroservice:useFake"))
                 {
@@ -102,11 +102,11 @@ namespace StaffFrontend
                 }
                 else
                 {
-                    services.AddSingleton<IRestockProxy, RestockProxyRemote>();
+                    services.AddHttpClient<IRestockProxy, RestockProxyRemote>();
                 }
                 
                 //Authorization Proxy doesnt have fake
-                services.AddSingleton<IAuthorizationProxy, AuthorizationProxyRemote>();
+                services.AddHttpClient<IAuthorizationProxy, AuthorizationProxyRemote>();
             }
         }
 
