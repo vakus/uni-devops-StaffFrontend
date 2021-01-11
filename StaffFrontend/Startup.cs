@@ -57,57 +57,44 @@ namespace StaffFrontend
                 options.MaxAge = TimeSpan.FromDays(360);
             });
 
-
-            if (_env.IsProduction())
+            if (shouldRegisterFake("ProductMicroservice"))
             {
-                // in production we dont want to allow fakes
-                services.AddHttpClient<IProductProxy, ProductProxyRemote>();
-                services.AddHttpClient<ICustomerProxy, CustomerProxyRemote>();
-                services.AddHttpClient<IReviewProxy, ReviewProxyRemote>();
-                services.AddHttpClient<IAuthorizationProxy, AuthorizationProxyRemote>();
-                services.AddHttpClient<IRestockProxy, RestockProxyRemote>();
+                services.AddSingleton<IProductProxy, ProductProxyLocal>();
             }
             else
             {
-                //anywhere else fakes are ok
-                if (Configuration.GetValue<bool>("ProductMicroservice:useFake"))
-                {
-                    services.AddSingleton<IProductProxy, ProductProxyLocal>();
-                }
-                else
-                {
-                    services.AddHttpClient<IProductProxy, ProductProxyRemote>();
-                }
-
-                if (Configuration.GetValue<bool>("CustomerMicroservice:useFake"))
-                {
-                    services.AddSingleton<ICustomerProxy, CustomerProxyLocal>();
-                }
-                else
-                {
-                    services.AddHttpClient<ICustomerProxy, CustomerProxyRemote>();
-                }
-
-                if (Configuration.GetValue<bool>("ReviewMicroservice:useFake"))
-                {
-                    services.AddSingleton<IReviewProxy, ReviewProxyLocal>();
-                }
-                else
-                {
-                    services.AddHttpClient<IReviewProxy, ReviewProxyRemote>();
-                }
-                if (Configuration.GetValue<bool>("RestockMicroservice:useFake"))
-                {
-                    services.AddSingleton<IRestockProxy, RestockProxyLocal>();
-                }
-                else
-                {
-                    services.AddHttpClient<IRestockProxy, RestockProxyRemote>();
-                }
-                
-                //Authorization Proxy doesnt have fake
-                services.AddHttpClient<IAuthorizationProxy, AuthorizationProxyRemote>();
+                services.AddHttpClient<IProductProxy, ProductProxyRemote>();
             }
+
+            if (shouldRegisterFake("CustomerMicroservice:useFake"))
+            {
+                services.AddSingleton<ICustomerProxy, CustomerProxyLocal>();
+            }
+            else
+            {
+                services.AddHttpClient<ICustomerProxy, CustomerProxyRemote>();
+            }
+
+            if (shouldRegisterFake("ReviewMicroservice:useFake"))
+            {
+                services.AddSingleton<IReviewProxy, ReviewProxyLocal>();
+            }
+            else
+            {
+                services.AddHttpClient<IReviewProxy, ReviewProxyRemote>();
+            }
+            if (shouldRegisterFake("RestockMicroservice:useFake"))
+            {
+                services.AddSingleton<IRestockProxy, RestockProxyLocal>();
+            }
+            else
+            {
+                services.AddHttpClient<IRestockProxy, RestockProxyRemote>();
+            }
+
+
+            //Authorization Proxy doesnt have fake
+            services.AddHttpClient<IAuthorizationProxy, AuthorizationProxyRemote>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -143,6 +130,11 @@ namespace StaffFrontend
             client.DefaultRequestHeaders.Accept.ParseAdd("application/json");
             //any website is good as any
             client.GetAsync("https://google.com");
+        }
+
+        private bool shouldRegisterFake(string name)
+        {
+            return (_env.IsProduction() ? false : Configuration.GetValue<bool>(name + ":useFake"));
         }
     }
 }
