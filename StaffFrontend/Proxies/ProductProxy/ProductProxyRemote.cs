@@ -95,7 +95,21 @@ namespace StaffFrontend.Proxies.ProductProxy
             }
             else
             {
-                return await response.Content.ReadAsAsync<List<Product>>();
+                //TODO: remove filtering once its implemented in remote service
+                List<Product> products = await response.Content.ReadAsAsync<List<Product>>();
+                if (!String.IsNullOrEmpty(name))
+                {
+                    products.RemoveAll(p => !p.Name.Contains(name));
+                }
+                if (minprice.HasValue)
+                {
+                    products.RemoveAll(p => p.Price < minprice.Value);
+                }
+                if (maxprice.HasValue)
+                {
+                    products.RemoveAll(p => p.Price > maxprice.Value);
+                }
+                return products;
             }
         }
 

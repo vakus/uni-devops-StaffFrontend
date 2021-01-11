@@ -25,7 +25,7 @@ namespace StaffFrontend.Controllers
         }
         [HttpGet("/products")]
         // GET: /products
-        public async Task<ActionResult> Index(string name, bool? visible, decimal? minprice, decimal? maxprice)
+        public async Task<ActionResult> Index(string name, bool? visible, decimal? minprice, decimal? maxprice, string sortby)
         {
             List<Product> products;
             try
@@ -36,6 +36,27 @@ namespace StaffFrontend.Controllers
             {
                 products = new List<Product>();
                 ModelState.AddModelError("", "Unable to load data from remote service. Please try again.");
+            }
+
+            //sort items
+            if (!String.IsNullOrEmpty(sortby))
+            {
+                if (sortby == "ID")
+                {
+                    return View(products.OrderBy(o => o.ID).ToList());
+                }
+                else if (sortby == "Name")
+                {
+                    return View(products.OrderBy(o => o.Name).ToList());
+                }
+                else if (sortby == "Price")
+                {
+                    return View(products.OrderBy(o => o.Price).ToList());
+                }
+                else if (sortby == "Stock Level")
+                {
+                    return View(products.OrderBy(o => o.Supply).ToList());
+                }
             }
             return View(products);
         }
