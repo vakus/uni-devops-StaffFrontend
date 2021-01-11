@@ -41,7 +41,7 @@ namespace StaffFrontend.Test.Controllers
 
             var productController = new ProductController(productMock.Object, reviewMock.Object);
 
-            var result = await productController.Index(null, null, null, null);
+            var result = await productController.Index(null, null, null, null, null);
 
             Assert.IsNotNull(result);
 
@@ -56,7 +56,7 @@ namespace StaffFrontend.Test.Controllers
 
             var productController = new ProductController(productMock.Object, reviewMock.Object);
 
-            var result = await productController.Index("Lorem Ipsum", null, null, null);
+            var result = await productController.Index("Lorem Ipsum", null, null, null, null);
 
             Assert.IsNotNull(result);
 
@@ -71,7 +71,7 @@ namespace StaffFrontend.Test.Controllers
 
             var productController = new ProductController(productMock.Object, reviewMock.Object);
 
-            var result = await productController.Index(null, true, null, null);
+            var result = await productController.Index(null, true, null, null, null);
 
             Assert.IsNotNull(result);
 
@@ -86,7 +86,7 @@ namespace StaffFrontend.Test.Controllers
 
             var productController = new ProductController(productMock.Object, reviewMock.Object);
 
-            var result = await productController.Index(null, null, 10, null);
+            var result = await productController.Index(null, null, 10, null, null);
 
             Assert.IsNotNull(result);
 
@@ -101,7 +101,7 @@ namespace StaffFrontend.Test.Controllers
 
             var productController = new ProductController(productMock.Object, reviewMock.Object);
 
-            var result = await productController.Index(null, null, null, 10);
+            var result = await productController.Index(null, null, null, 10, null);
 
             Assert.IsNotNull(result);
 
