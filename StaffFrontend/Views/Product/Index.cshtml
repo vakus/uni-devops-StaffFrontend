@@ -12,16 +12,25 @@
 <hr />
 <form method="GET">
     <dl class="row">
-        <dt class="col-sm-6">
-            <input class="form-control" type="text" name="name" placeholder="Product Name"/>
+        <dt class="col-sm-4">
+            <input class="form-control" type="text" name="name" placeholder="Product Name" />
         </dt>
         <dt class="col-sm-2">
-            <input class="form-control" type="number" name="minprice" placeholder="Min Price"/>
+            <input class="form-control" type="number" name="minprice" placeholder="Min Price" />
         </dt>
         <dt class="col-sm-2">
-            <input class="form-control" type="number" name="maxprice" placeholder="Max Price"/>
+            <input class="form-control" type="number" name="maxprice" placeholder="Max Price" />
         </dt>
-        <dt class="col-sm-2">
+        <dt>
+            <select class="form-control" name="sortby">
+                <option selected>Sort By</option>
+                <option>ID</option>
+                <option>Name</option>
+                <option>Price</option>
+                <option>Stock Level</option>
+            </select>
+        </dt>
+        <dt class="col-sm-1">
             <input class="btn btn-primary" type="submit" value="Set Filter" />
         </dt>
     </dl>
@@ -35,6 +44,9 @@
             <th>
                 @Html.DisplayNameFor(model => model.Price)
             </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Supply)
+            </th>
             <th></th>
         </tr>
     </thead>
@@ -47,6 +59,9 @@
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.Price)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Supply)
                 </td>
                 <td>
                     <a href="/products/edit/@item.ID">Edit</a> |
