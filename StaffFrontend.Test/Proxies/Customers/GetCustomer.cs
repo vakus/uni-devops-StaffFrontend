@@ -13,21 +13,12 @@ namespace StaffFrontend.test.Proxies.Customers
     [TestClass]
     public class GetCustomer
     {
-        private List<Customer> customers;
         private ICustomerProxy cpl;
 
         [TestInitialize]
         public void initTest()
         {
-            customers = new List<Customer>() {
-                new Customer() { id = 1, firstname = "John", surname = "Smith", address = "0 Manufacturers Circle", contact = "999-250-6512", canPurchase = false, isDeleted=false },
-                new Customer() { id = 2, firstname = "Bethany", surname = "Hulkes", address = "0 Annamark Pass", contact = "893-699-2769", canPurchase = true, isDeleted=false },
-                new Customer() { id = 3, firstname = "Brigid", surname = "Streak", address = "2 Ruskin Crossing", contact = "295-119-1574", canPurchase = true, isDeleted=false },
-                new Customer() { id = 4, firstname = "Dottie", surname = "Kristoffersen", address = "696 Kedzie Circle", contact = "426-882-2642", canPurchase = false, isDeleted=false },
-                new Customer() { id = 5, firstname = "Denni", surname = "Eccersley", address = "7 Grim Point", contact = "589-699-8186", canPurchase = true, isDeleted=false }
-            };
-
-            cpl = new CustomerProxyLocal(customers);
+            cpl = new CustomerProxyLocal(TestData.GetCustomers());
         }
 
 
@@ -35,9 +26,16 @@ namespace StaffFrontend.test.Proxies.Customers
         public async Task CustomerProxy_GetCustomer_ValidID()
         {
             //check data
-            foreach(Customer customer in customers)
+            foreach(Customer customer in TestData.GetCustomers())
             {
-                Assert.AreEqual(customers.First(p => p.id == customer.id), await cpl.GetCustomer(customer.id));
+
+                Assert.AreEqual(customer.id, TestData.GetCustomers().First(p => p.id == customer.id).id);
+                Assert.AreEqual(customer.firstname, TestData.GetCustomers().First(p => p.id == customer.id).firstname);
+                Assert.AreEqual(customer.surname, TestData.GetCustomers().First(p => p.id == customer.id).surname);
+                Assert.AreEqual(customer.address, TestData.GetCustomers().First(p => p.id == customer.id).address);
+                Assert.AreEqual(customer.contact, TestData.GetCustomers().First(p => p.id == customer.id).contact);
+                Assert.AreEqual(customer.canPurchase, TestData.GetCustomers().First(p => p.id == customer.id).canPurchase);
+                Assert.AreEqual(customer.isDeleted, TestData.GetCustomers().First(p => p.id == customer.id).isDeleted);
             }
         }
 

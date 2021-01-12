@@ -1,13 +1,16 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using StaffFrontend.Models;
 using StaffFrontend.Proxies.ReviewProxy;
+using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace StaffFrontend.test.Proxies.Reviews
 {
     [TestClass]
-    public class DeletePII
+    public class DeleteByProductId
     {
         private ReviewProxyLocal cpl;
 
@@ -15,23 +18,17 @@ namespace StaffFrontend.test.Proxies.Reviews
 
         public void initTest()
         {
+
             cpl = new ReviewProxyLocal(TestData.GetReviews());
         }
 
         [TestMethod]
         public async Task Valid()
         {
-            List<int> ids = new List<int>() { 1, 2, 3};
-            foreach(int id in ids)
+            await cpl.DeleteByProductId(1);
+            foreach(Review review in (await cpl.GetReviews(1, null)))
             {
-                await cpl.DeletePII(id);
-                foreach (Review review in (await cpl.GetReviews(null, id)))
-                {
-                    if (review.userId == id)
-                    {
-                        Assert.AreEqual("", review.userName);
-                    }
-                }
+                Assert.IsTrue(review.productId != 1);
             }
         }
     }

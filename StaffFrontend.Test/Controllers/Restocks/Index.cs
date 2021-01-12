@@ -17,9 +17,6 @@ namespace StaffFrontend.test.Controllers.Restocks
     [TestClass]
     public class Index
     {
-
-        private List<Supplier> suppliers;
-
         private Mock<IRestockProxy> mockRestock;
 
         private RestockController controller;
@@ -27,14 +24,6 @@ namespace StaffFrontend.test.Controllers.Restocks
         [TestInitialize]
         public void initialize()
         {
-            suppliers = new List<Supplier>()
-            {
-                new Supplier(){
-                    supplierID=1,
-                    supplierName="test",
-                    webaddress="example.com"
-                }
-            };
 
             mockRestock = new Mock<IRestockProxy>(MockBehavior.Strict);
 
@@ -44,14 +33,22 @@ namespace StaffFrontend.test.Controllers.Restocks
         [TestMethod]
         public async Task Index_Parameter_Null()
         {
-            mockRestock.Setup(s => s.GetSuppliers()).ReturnsAsync(suppliers);
+            mockRestock.Setup(s => s.GetSuppliers()).ReturnsAsync(TestData.GetSuppliers());
 
             var response = await controller.Index();
             Assert.IsNotNull(response);
             var responseOk = response as ViewResult;
             Assert.IsNotNull(responseOk);
             Assert.IsNull(responseOk.StatusCode);
-            Assert.IsTrue(suppliers.SequenceEqual((IEnumerable<Supplier>)responseOk.Model));
+
+            var model = (List<Supplier>)responseOk.Model;
+
+            for(int x = 0; x < model.Count; x++)
+            {
+                Assert.AreEqual(TestData.GetSuppliers()[x].supplierID, model[x].supplierID);
+                Assert.AreEqual(TestData.GetSuppliers()[x].supplierName, model[x].supplierName);
+                Assert.AreEqual(TestData.GetSuppliers()[x].webaddress, model[x].webaddress);
+            }
 
             mockRestock.Verify();
             mockRestock.Verify(s => s.GetSuppliers(), Times.Once);

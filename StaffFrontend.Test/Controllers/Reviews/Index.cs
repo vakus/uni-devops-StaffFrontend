@@ -15,7 +15,6 @@ namespace StaffFrontend.test.Controllers.Reviews
     [TestClass]
     public class Index
     {
-        private List<Review> reviews;
 
         private Mock<IReviewProxy> mockReview;
 
@@ -24,61 +23,6 @@ namespace StaffFrontend.test.Controllers.Reviews
         [TestInitialize]
         public void initialize()
         {
-
-            reviews = new List<Review>()
-            {
-                new Review()
-                {
-                    userId = 1,
-                    userName = "John",
-                    reviewId = 1,
-                    reviewContent = "good",
-                    reviewRating = 4,
-                    productId = 1,
-                    hidden = false,
-                },
-                new Review()
-                {
-                    userId = 1,
-                    userName = "John",
-                    reviewId = 2,
-                    reviewContent = "follow me on twitter",
-                    reviewRating = 4,
-                    productId = 3,
-                    hidden = true,
-                },
-                new Review()
-                {
-                    userId = 1,
-                    userName = "John",
-                    reviewId = 3,
-                    reviewContent = "good",
-                    reviewRating = 5,
-                    productId = 2,
-                    hidden = false,
-                },
-                new Review()
-                {
-                    userId = 2,
-                    userName = "Bethany",
-                    reviewId = 4,
-                    reviewContent = "decent",
-                    reviewRating = 3,
-                    productId = 1,
-                    hidden = false,
-                },
-                new Review()
-                {
-                    userId = 3,
-                    userName = "Brigid",
-                    reviewId = 5,
-                    reviewContent = "",
-                    reviewRating = 5,
-                    productId = 1,
-                    hidden = true,
-                }
-            };
-
             mockReview = new Mock<IReviewProxy>(MockBehavior.Strict);
 
             controller = new ReviewController(mockReview.Object);
@@ -87,7 +31,7 @@ namespace StaffFrontend.test.Controllers.Reviews
         [TestMethod]
         public async Task Index_Parameter_Null()
         {
-            mockReview.Setup(s => s.GetReviews(1, null)).ReturnsAsync(reviews.FindAll(p => p.productId == 1));
+            mockReview.Setup(s => s.GetReviews(1, null)).ReturnsAsync(TestData.GetReviews().FindAll(p => p.productId == 1));
 
             var response = await controller.Index(1, null);
             Assert.IsNotNull(response);

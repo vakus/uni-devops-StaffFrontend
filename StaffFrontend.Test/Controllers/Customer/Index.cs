@@ -17,8 +17,6 @@ namespace StaffFrontend.test.Controllers.Customer
     public class Index
     {
 
-        private List<Models.Customers.Customer> customers;
-
         private Mock<ICustomerProxy> mockCustomer;
         private Mock<IReviewProxy> mockReview;
 
@@ -27,14 +25,6 @@ namespace StaffFrontend.test.Controllers.Customer
         [TestInitialize]
         public void initialize()
         {
-            customers = new List<Models.Customers.Customer>() {
-                new Models.Customers.Customer() { id = 1, firstname = "John", surname = "Smith", address = "0 Manufacturers Circle", contact = "999-250-6512", canPurchase = false, isDeleted=false},
-                new Models.Customers.Customer() { id = 2, firstname = "Bethany", surname = "Hulkes", address = "0 Annamark Pass", contact = "893-699-2769", canPurchase = true, isDeleted=false },
-                new Models.Customers.Customer() { id = 3, firstname = "Brigid", surname = "Streak", address = "2 Ruskin Crossing", contact = "295-119-1574", canPurchase = true, isDeleted=false },
-                new Models.Customers.Customer() { id = 4, firstname = "Dottie", surname = "Kristoffersen", address = "696 Kedzie Circle", contact = "426-882-2642", canPurchase = false, isDeleted=false },
-                new Models.Customers.Customer() { id = 5, firstname = "Denni", surname = "Eccersley", address = "7 Grim Point", contact = "589-699-8186", canPurchase = true, isDeleted=true }
-            };
-
             mockCustomer = new Mock<ICustomerProxy>(MockBehavior.Strict);
             mockReview = new Mock<IReviewProxy>(MockBehavior.Strict);
 
@@ -44,7 +34,7 @@ namespace StaffFrontend.test.Controllers.Customer
         [TestMethod]
         public async Task Index_Parameter_Null()
         {
-            mockCustomer.Setup(s => s.GetCustomers(true)).ReturnsAsync(customers.Where(c => !c.isDeleted).ToList());
+            mockCustomer.Setup(s => s.GetCustomers(true)).ReturnsAsync(TestData.GetCustomers().Where(c => !c.isDeleted).ToList());
 
             var response = await controller.Index(null);
             Assert.IsNotNull(response);
@@ -65,7 +55,7 @@ namespace StaffFrontend.test.Controllers.Customer
         [TestMethod]
         public async Task Index_Parameter_True()
         {
-            mockCustomer.Setup(s => s.GetCustomers(true)).ReturnsAsync(customers.Where(c => !c.isDeleted).ToList());
+            mockCustomer.Setup(s => s.GetCustomers(true)).ReturnsAsync(TestData.GetCustomers().Where(c => !c.isDeleted).ToList());
 
             var response = await controller.Index(true);
             Assert.IsNotNull(response);
@@ -86,7 +76,7 @@ namespace StaffFrontend.test.Controllers.Customer
         [TestMethod]
         public async Task Index_Parameter_False()
         {
-            mockCustomer.Setup(s => s.GetCustomers(false)).ReturnsAsync(customers.Where(c => c.isDeleted).ToList());
+            mockCustomer.Setup(s => s.GetCustomers(false)).ReturnsAsync(TestData.GetCustomers().Where(c => c.isDeleted).ToList());
 
             var response = await controller.Index(false);
             Assert.IsNotNull(response);

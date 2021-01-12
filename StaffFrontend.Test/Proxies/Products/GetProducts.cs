@@ -11,27 +11,30 @@ namespace StaffFrontend.test.Proxies.Products
     [TestClass]
     public class GetProducts
     {
-        private List<Product> products;
         private IProductProxy cpl;
 
         [TestInitialize]
         public void initTest()
         {
-            products = new List<Product>() {
-                new Product() { ID = 1, Name = "Lorem Ipsum", Description = "Lorem Ipsum", Price = 5.99m, Available = false, Supply = 2 },
-                new Product() { ID = 2, Name = "Duck", Description = "Sometimes makes quack sound", Price = 99.99m, Available = true, Supply = 20 },
-                new Product() { ID = 3, Name = "IPhone 13 pro max ultra plus 6G no screen edition", Description = "New Revolutionary IPhone. This year we managed to remove screen. Weights only 69g.", Price = 1399.99m, Available = true, Supply = 13 }
-            };
-
-            cpl = new ProductProxyLocal(products);
+            cpl = new ProductProxyLocal(TestData.GetProducts());
         }
 
         [TestMethod]
         public async Task ProductProxy_GetProducts()
         {
-            Assert.IsTrue(products.SequenceEqual(await cpl.GetProducts(null, null, null, null)));
+            var model = await cpl.GetProducts(null, null, null, null);
+            for (int x = 0; x < model.Count; x++)
+            {
+                Assert.AreEqual(TestData.GetProducts()[x].ID, model[x].ID);
+                Assert.AreEqual(TestData.GetProducts()[x].Name, model[x].Name);
+                Assert.AreEqual(TestData.GetProducts()[x].Description, model[x].Description);
+                Assert.AreEqual(TestData.GetProducts()[x].Supply, model[x].Supply);
+                Assert.AreEqual(TestData.GetProducts()[x].Price, model[x].Price);
+                Assert.AreEqual(TestData.GetProducts()[x].Available, model[x].Available);
+            }
         }
 
+        //[Ignore]
         [TestMethod]
         public async Task ProductProxy_GetProducts_Name()
         {
@@ -39,14 +42,24 @@ namespace StaffFrontend.test.Proxies.Products
             foreach(string key in keywords)
             {
                 List<Product> p = new List<Product>();
-                foreach (Product product in products)
+                foreach (Product product in TestData.GetProducts())
                 {
                     if (product.Name.Contains(key))
                     {
                         p.Add(product);
                     }
                 }
-                Assert.IsTrue(p.SequenceEqual(await cpl.GetProducts(key, null, null, null)));
+                var model = await cpl.GetProducts(key, null, null, null);
+                var testData = TestData.GetProducts().Where(s => s.Name.Contains(key)).ToList();
+                for (int x = 0; x < model.Count; x++)
+                {
+                    Assert.AreEqual(testData[x].ID, model[x].ID);
+                    Assert.AreEqual(testData[x].Name, model[x].Name);
+                    Assert.AreEqual(testData[x].Description, model[x].Description);
+                    Assert.AreEqual(testData[x].Supply, model[x].Supply);
+                    Assert.AreEqual(testData[x].Price, model[x].Price);
+                    Assert.AreEqual(testData[x].Available, model[x].Available);
+                }
             }
         }
 
@@ -54,53 +67,95 @@ namespace StaffFrontend.test.Proxies.Products
         public async Task ProductProxy_GetProducts_Visible()
         {
             List<Product> p = new List<Product>();
-            foreach (Product product in products)
+            foreach (Product product in TestData.GetProducts())
             {
                 if (!product.Available)
                 {
                     p.Add(product);
                 }
             }
-            Assert.IsTrue(p.SequenceEqual(await cpl.GetProducts(null, false, null, null)));
+            var model = await cpl.GetProducts(null, false, null, null);
+            var testData = TestData.GetProducts().Where(s => !s.Available).ToList();
+            for (int x = 0; x < model.Count; x++)
+            {
+                Assert.AreEqual(testData[x].ID, model[x].ID);
+                Assert.AreEqual(testData[x].Name, model[x].Name);
+                Assert.AreEqual(testData[x].Description, model[x].Description);
+                Assert.AreEqual(testData[x].Supply, model[x].Supply);
+                Assert.AreEqual(testData[x].Price, model[x].Price);
+                Assert.AreEqual(testData[x].Available, model[x].Available);
+            }
 
 
             p = new List<Product>();
-            foreach (Product product in products)
+            foreach (Product product in TestData.GetProducts())
             {
                 if (product.Available)
                 {
                     p.Add(product);
                 }
             }
-            Assert.IsTrue(p.SequenceEqual(await cpl.GetProducts(null, true, null, null)));
+
+
+            model = await cpl.GetProducts(null, true, null, null);
+            testData = TestData.GetProducts().Where(s => s.Available).ToList();
+            for (int x = 0; x < model.Count; x++)
+            {
+                Assert.AreEqual(testData[x].ID, model[x].ID);
+                Assert.AreEqual(testData[x].Name, model[x].Name);
+                Assert.AreEqual(testData[x].Description, model[x].Description);
+                Assert.AreEqual(testData[x].Supply, model[x].Supply);
+                Assert.AreEqual(testData[x].Price, model[x].Price);
+                Assert.AreEqual(testData[x].Available, model[x].Available);
+            }
         }
 
         [TestMethod]
         public async Task ProductProxy_GetProducts_MinPrice()
         {
             List<Product> p = new List<Product>();
-            foreach (Product product in products)
+            foreach (Product product in TestData.GetProducts())
             {
                 if (product.Price > 30.00m)
                 {
                     p.Add(product);
                 }
             }
-            Assert.IsTrue(p.SequenceEqual(await cpl.GetProducts(null, null, 30, null)));
+            var model = await cpl.GetProducts(null, null, 30.00m, null);
+            var testData = TestData.GetProducts().Where(s => s.Price > 30.00m).ToList();
+            for (int x = 0; x < model.Count; x++)
+            {
+                Assert.AreEqual(testData[x].ID, model[x].ID);
+                Assert.AreEqual(testData[x].Name, model[x].Name);
+                Assert.AreEqual(testData[x].Description, model[x].Description);
+                Assert.AreEqual(testData[x].Supply, model[x].Supply);
+                Assert.AreEqual(testData[x].Price, model[x].Price);
+                Assert.AreEqual(testData[x].Available, model[x].Available);
+            }
         }
 
         [TestMethod]
         public async Task ProductProxy_GetProducts_MaxPrice()
         {
             List<Product> p = new List<Product>();
-            foreach (Product product in products)
+            foreach (Product product in TestData.GetProducts())
             {
                 if (product.Price < 50.00m)
                 {
                     p.Add(product);
                 }
             }
-            Assert.IsTrue(p.SequenceEqual(await cpl.GetProducts(null, null, null, 50)));
+            var model = await cpl.GetProducts(null, true, null, 50.00m);
+            var testData = TestData.GetProducts().Where(s => s.Price < 50.00m).ToList();
+            for (int x = 0; x < model.Count; x++)
+            {
+                Assert.AreEqual(testData[x].ID, model[x].ID);
+                Assert.AreEqual(testData[x].Name, model[x].Name);
+                Assert.AreEqual(testData[x].Description, model[x].Description);
+                Assert.AreEqual(testData[x].Supply, model[x].Supply);
+                Assert.AreEqual(testData[x].Price, model[x].Price);
+                Assert.AreEqual(testData[x].Available, model[x].Available);
+            }
         }
     }
 }
