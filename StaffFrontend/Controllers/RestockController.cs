@@ -25,7 +25,16 @@ namespace StaffFrontend.Controllers
         [HttpGet("/restock/")]
         public async Task<IActionResult> Index()
         {
-            return View(await restockProxy.GetSuppliers());
+            List<Supplier> suppliers = new List<Supplier>();
+            try
+            {
+                suppliers = await restockProxy.GetSuppliers();
+            }
+            catch(SystemException)
+            {
+                ModelState.AddModelError("", "Unable to load data from remote service. Please try again.");
+            }
+            return View(suppliers);
         }
 
         [HttpGet("/restock/orders")]
