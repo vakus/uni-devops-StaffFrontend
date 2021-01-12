@@ -69,14 +69,22 @@ namespace StaffFrontend.Controllers
         [HttpGet("/reviews/hide/{reviewid}")]
         public async Task<ActionResult> Hide(int reviewid, [FromQuery] string url)
         {
-            await _review.HideReview(reviewid);
+            try
+            {
+                await _review.HideReview(reviewid);
+            }
+            catch (SystemException){}
             return LocalRedirect(url);
         }
 
         [HttpGet("/reviews/unhide/{reviewid}")]
         public async Task<ActionResult> Unhide(int reviewid, [FromQuery] string url)
         {
-            await _review.UnhideReview(reviewid);
+            try
+            {
+                await _review.UnhideReview(reviewid);
+            }
+            catch (SystemException) { }
             return LocalRedirect(url);
         }
     }

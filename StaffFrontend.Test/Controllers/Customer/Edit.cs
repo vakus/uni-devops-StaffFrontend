@@ -3,6 +3,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using StaffFrontend.Controllers;
 using StaffFrontend.Proxies;
+using StaffFrontend.Proxies.CustomerProxy;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -13,9 +14,6 @@ namespace StaffFrontend.test.Controllers.Customer
     [TestClass]
     public class Edit
     {
-
-        private List<Models.Customers.Customer> customers;
-
         private Mock<ICustomerProxy> mockCustomer;
         private Mock<IReviewProxy> mockReview;
 
@@ -24,14 +22,6 @@ namespace StaffFrontend.test.Controllers.Customer
         [TestInitialize]
         public void initialize()
         {
-            customers = new List<Models.Customers.Customer>() {
-                new Models.Customers.Customer() { id = 1, firstname = "John", surname = "Smith", address = "0 Manufacturers Circle", contact = "999-250-6512", canPurchase = false, isDeleted=false},
-                new Models.Customers.Customer() { id = 2, firstname = "Bethany", surname = "Hulkes", address = "0 Annamark Pass", contact = "893-699-2769", canPurchase = true, isDeleted=false },
-                new Models.Customers.Customer() { id = 3, firstname = "Brigid", surname = "Streak", address = "2 Ruskin Crossing", contact = "295-119-1574", canPurchase = true, isDeleted=false },
-                new Models.Customers.Customer() { id = 4, firstname = "Dottie", surname = "Kristoffersen", address = "696 Kedzie Circle", contact = "426-882-2642", canPurchase = false, isDeleted=false },
-                new Models.Customers.Customer() { id = 5, firstname = "Denni", surname = "Eccersley", address = "7 Grim Point", contact = "589-699-8186", canPurchase = true, isDeleted=false }
-            };
-
             mockCustomer = new Mock<ICustomerProxy>(MockBehavior.Strict);
             mockReview = new Mock<IReviewProxy>(MockBehavior.Strict);
 
@@ -41,16 +31,24 @@ namespace StaffFrontend.test.Controllers.Customer
         [TestMethod]
         public async Task Pre_Edit_Parameters_Valid()
         {
-            foreach(Models.Customers.Customer customer in customers)
+            foreach(Models.Customers.Customer customer in TestData.GetCustomers())
             {
-                mockCustomer.Setup(s => s.GetCustomer(customer.id)).ReturnsAsync(customers.Find(c => c.id == customer.id));
+                mockCustomer.Setup(s => s.GetCustomer(customer.id)).ReturnsAsync(TestData.GetCustomers().Find(c => c.id == customer.id));
 
                 var response = await controller.Edit(customer.id);
                 Assert.IsNotNull(response);
                 var responseOk = response as ViewResult;
                 Assert.IsNotNull(responseOk);
                 Assert.IsNull(responseOk.StatusCode);
-                Assert.AreEqual(customer, responseOk.Model);
+                var model = (Models.Customers.Customer)responseOk.Model;
+
+                Assert.AreEqual(customer.id, model.id);
+                Assert.AreEqual(customer.firstname, model.firstname);
+                Assert.AreEqual(customer.surname, model.surname);
+                Assert.AreEqual(customer.address, model.address);
+                Assert.AreEqual(customer.contact, model.contact);
+                Assert.AreEqual(customer.canPurchase, model.canPurchase);
+                Assert.AreEqual(customer.isDeleted, model.isDeleted);
 
                 mockCustomer.Verify();
                 mockReview.Verify();
@@ -64,7 +62,7 @@ namespace StaffFrontend.test.Controllers.Customer
             List<int> ids = new List<int> { 0, -5, 20, 420, 69, -1337};
             foreach (int id in ids)
             {
-                mockCustomer.Setup(s => s.GetCustomer(id)).ReturnsAsync(customers.Find(c => c.id == id));
+                mockCustomer.Setup(s => s.GetCustomer(id)).ReturnsAsync(TestData.GetCustomers().Find(c => c.id == id));
 
                 var response = await controller.Edit(id);
                 Assert.IsNotNull(response);
@@ -81,7 +79,7 @@ namespace StaffFrontend.test.Controllers.Customer
         [TestMethod]
         public async Task Pre_Edit_Parameters_Valid_Throws()
         {
-            foreach (Models.Customers.Customer customer in customers)
+            foreach (Models.Customers.Customer customer in TestData.GetCustomers())
             {
                 mockCustomer.Setup(s => s.GetCustomer(customer.id)).ThrowsAsync(new SystemException("Could not receive data from remote service"));
 
@@ -122,7 +120,7 @@ namespace StaffFrontend.test.Controllers.Customer
         [TestMethod]
         public async Task Post_Edit_Parameters_Valid()
         {
-            Models.Customers.Customer customer = customers[2];
+            Models.Customers.Customer customer = TestData.GetCustomers()[2];
             customer.address = "1 Annamark Pass";
 
             mockCustomer.Setup(s => s.UpdateCustomer(customer)).Returns(Task.Run(() => { }));
@@ -141,7 +139,7 @@ namespace StaffFrontend.test.Controllers.Customer
         [TestMethod]
         public async Task Post_Edit_Parameters_Invalid()
         {
-            Models.Customers.Customer customer = customers[2];
+            Models.Customers.Customer customer = TestData.GetCustomers()[2];
             customer.id = 20;
             customer.address = "1 Annamark Pass";
 
@@ -161,7 +159,7 @@ namespace StaffFrontend.test.Controllers.Customer
         [TestMethod]
         public async Task Post_Edit_Parameters_Valid_Throws()
         {
-            Models.Customers.Customer customer = customers[2];
+            Models.Customers.Customer customer = TestData.GetCustomers()[2];
             customer.address = "1 Annamark Pass";
 
             mockCustomer.Setup(s => s.UpdateCustomer(customer)).ThrowsAsync(new SystemException("Could not receive data from remote service"));
@@ -180,7 +178,7 @@ namespace StaffFrontend.test.Controllers.Customer
         [TestMethod]
         public async Task Post_Edit_Parameters_Invalid_Throws()
         {
-            Models.Customers.Customer customer = customers[2];
+            Models.Customers.Customer customer = TestData.GetCustomers()[2];
             customer.id = 20;
             customer.address = "1 Annamark Pass";
 

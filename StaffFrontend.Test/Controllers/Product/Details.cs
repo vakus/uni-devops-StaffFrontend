@@ -4,6 +4,7 @@ using Moq;
 using StaffFrontend.Controllers;
 using StaffFrontend.Models;
 using StaffFrontend.Proxies;
+using StaffFrontend.Proxies.ProductProxy;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -14,10 +15,6 @@ namespace StaffFrontend.test.Controllers.Product
     [TestClass]
     public class Details
     {
-
-        private List<Models.Product.Product> products;
-        private List<Review> reviews;
-
         private Mock<IProductProxy> mockCustomer;
         private Mock<IReviewProxy> mockReview;
 
@@ -26,68 +23,6 @@ namespace StaffFrontend.test.Controllers.Product
         [TestInitialize]
         public void initialize()
         {
-            products = new List<Models.Product.Product>() {
-
-            new Models.Product.Product() { ID = 1, Name = "Lorem Ipsum", Description = "Lorem Ipsum", Price = 5.99m, Available = false, Supply = 2 },
-            new Models.Product.Product() { ID = 2, Name = "Duck", Description = "Sometimes makes quack sound", Price = 99.99m, Available = true, Supply = 20 },
-            new Models.Product.Product() { ID = 3, Name = "IPhone 13 pro max ultra plus 6G no screen edition", Description = "New Revolutionary IPhone. This year we managed to remove screen. Weights only 69g.", Price = 1399.99m, Available = true, Supply = 13 }
-        };
-
-
-            reviews = new List<Review>()
-            {
-                new Review()
-                {
-                    userId = 1,
-                    userName = "John",
-                    reviewId = 1,
-                    reviewContent = "good",
-                    reviewRating = 4,
-                    productId = 1,
-                    hidden = false,
-                },
-                new Review()
-                {
-                    userId = 1,
-                    userName = "John",
-                    reviewId = 2,
-                    reviewContent = "follow me on twitter",
-                    reviewRating = 4,
-                    productId = 3,
-                    hidden = true,
-                },
-                new Review()
-                {
-                    userId = 1,
-                    userName = "John",
-                    reviewId = 3,
-                    reviewContent = "good",
-                    reviewRating = 5,
-                    productId = 2,
-                    hidden = false,
-                },
-                new Review()
-                {
-                    userId = 2,
-                    userName = "Bethany",
-                    reviewId = 4,
-                    reviewContent = "decent",
-                    reviewRating = 3,
-                    productId = 1,
-                    hidden = false,
-                },
-                new Review()
-                {
-                    userId = 3,
-                    userName = "Brigid",
-                    reviewId = 4,
-                    reviewContent = "",
-                    reviewRating = 5,
-                    productId = 1,
-                    hidden = true,
-                }
-            };
-
             mockCustomer = new Mock<IProductProxy>(MockBehavior.Strict);
             mockReview = new Mock<IReviewProxy>(MockBehavior.Strict);
 
@@ -97,10 +32,10 @@ namespace StaffFrontend.test.Controllers.Product
         [TestMethod]
         public async Task Details_Parameters_Valid()
         {
-            foreach (Models.Product.Product product in products)
+            foreach (Models.Product.Product product in TestData.GetProducts())
             {
-                mockCustomer.Setup(s => s.GetProduct(product.ID)).ReturnsAsync(products.Find(c => c.ID == product.ID));
-                mockReview.Setup(s => s.GetReviews(product.ID, null)).ReturnsAsync(reviews.FindAll(r => r.userId == product.ID));
+                mockCustomer.Setup(s => s.GetProduct(product.ID)).ReturnsAsync(TestData.GetProducts().Find(c => c.ID == product.ID));
+                mockReview.Setup(s => s.GetReviews(product.ID, null)).ReturnsAsync(TestData.GetReviews().FindAll(r => r.userId == product.ID));
 
                 var response = await controller.Details(product.ID);
                 Assert.IsNotNull(response);
@@ -108,8 +43,15 @@ namespace StaffFrontend.test.Controllers.Product
                 Assert.IsNotNull(responseOk);
                 Assert.IsNull(responseOk.StatusCode);
                 var model = (Models.Product.ProductDetailsDTO)responseOk.Model;
-                Assert.AreEqual(product, model.product);
-                foreach(Review review in model.reviews)
+
+                Assert.AreEqual(product.ID, model.product.ID);
+                Assert.AreEqual(product.Name, model.product.Name);
+                Assert.AreEqual(product.Description, model.product.Description);
+                Assert.AreEqual(product.Supply, model.product.Supply);
+                Assert.AreEqual(product.Price, model.product.Price);
+                Assert.AreEqual(product.Available, model.product.Available);
+
+                foreach (Review review in model.reviews)
                 {
                     Assert.AreEqual(product.ID, review.userId);
                 }
@@ -127,8 +69,8 @@ namespace StaffFrontend.test.Controllers.Product
             List<int> ids = new List<int> { 0, -5, 20, 420, 69, -1337 };
             foreach (int id in ids)
             {
-                mockCustomer.Setup(s => s.GetProduct(id)).ReturnsAsync(products.Find(c => c.ID == id));
-                mockReview.Setup(s => s.GetReviews(id, null)).ReturnsAsync(reviews.FindAll(r => r.userId == id));
+                mockCustomer.Setup(s => s.GetProduct(id)).ReturnsAsync(TestData.GetProducts().Find(c => c.ID == id));
+                mockReview.Setup(s => s.GetReviews(id, null)).ReturnsAsync(TestData.GetReviews().FindAll(r => r.userId == id));
 
                 var response = await controller.Details(id);
                 Assert.IsNotNull(response);
@@ -145,7 +87,7 @@ namespace StaffFrontend.test.Controllers.Product
         [TestMethod]
         public async Task Details_Parameters_Valid_Throws()
         {
-            foreach (Models.Product.Product product in products)
+            foreach (Models.Product.Product product in TestData.GetProducts())
             {
                 mockCustomer.Setup(s => s.GetProduct(product.ID)).ThrowsAsync(new SystemException("Could not receive data from remote service"));
                 mockReview.Setup(s => s.GetReviews(product.ID, null)).ThrowsAsync(new SystemException("Could not receive data from remote service"));

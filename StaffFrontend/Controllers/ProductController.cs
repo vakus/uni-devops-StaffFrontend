@@ -8,6 +8,7 @@ using StaffFrontend.Proxies;
 using StaffFrontend.Models;
 using Microsoft.AspNetCore.Authorization;
 using StaffFrontend.Models.Product;
+using StaffFrontend.Proxies.ProductProxy;
 
 namespace StaffFrontend.Controllers
 {

@@ -30,9 +30,14 @@ namespace StaffFrontend.Proxies.CustomerProxy
 
         public Task DeleteCustomer(int customerid)
         {
-            return Task.Run(() =>
+            return Task.Run(async () =>
             {
-                Customer customer = GetCustomer(customerid).Result;
+                Customer customer = await GetCustomer(customerid);
+
+                if(customer == null)
+                {
+                    return;
+                }
 
                 customer.surname = "REDACTED";
                 customer.firstname = "REDACTED";
@@ -41,7 +46,8 @@ namespace StaffFrontend.Proxies.CustomerProxy
                 customer.canPurchase = false;
                 customer.isDeleted = true;
 
-                UpdateCustomer(customer);
+                customers.RemoveAll(cust => cust.id == customer.id);
+                customers.Add(customer);
             });
         }
 

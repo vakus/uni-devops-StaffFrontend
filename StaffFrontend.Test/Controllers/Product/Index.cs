@@ -4,6 +4,7 @@ using Moq;
 using StaffFrontend.Controllers;
 using StaffFrontend.Models;
 using StaffFrontend.Proxies;
+using StaffFrontend.Proxies.ProductProxy;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,10 +16,6 @@ namespace StaffFrontend.test.Controllers.Product
     [TestClass]
     public class Index
     {
-
-        private List<Models.Product.Product> products;
-        private List<Review> reviews;
-
         private Mock<IProductProxy> mockCustomer;
         private Mock<IReviewProxy> mockReview;
 
@@ -27,68 +24,6 @@ namespace StaffFrontend.test.Controllers.Product
         [TestInitialize]
         public void initialize()
         {
-            products = new List<Models.Product.Product>() {
-
-            new Models.Product.Product() { ID = 1, Name = "Lorem Ipsum", Description = "Lorem Ipsum", Price = 5.99m, Available = false, Supply = 2 },
-            new Models.Product.Product() { ID = 2, Name = "Duck", Description = "Sometimes makes quack sound", Price = 99.99m, Available = true, Supply = 20 },
-            new Models.Product.Product() { ID = 3, Name = "IPhone 13 pro max ultra plus 6G no screen edition", Description = "New Revolutionary IPhone. This year we managed to remove screen. Weights only 69g.", Price = 1399.99m, Available = true, Supply = 13 }
-        };
-
-
-            reviews = new List<Review>()
-            {
-                new Review()
-                {
-                    userId = 1,
-                    userName = "John",
-                    reviewId = 1,
-                    reviewContent = "good",
-                    reviewRating = 4,
-                    productId = 1,
-                    hidden = false,
-                },
-                new Review()
-                {
-                    userId = 1,
-                    userName = "John",
-                    reviewId = 2,
-                    reviewContent = "follow me on twitter",
-                    reviewRating = 4,
-                    productId = 3,
-                    hidden = true,
-                },
-                new Review()
-                {
-                    userId = 1,
-                    userName = "John",
-                    reviewId = 3,
-                    reviewContent = "good",
-                    reviewRating = 5,
-                    productId = 2,
-                    hidden = false,
-                },
-                new Review()
-                {
-                    userId = 2,
-                    userName = "Bethany",
-                    reviewId = 4,
-                    reviewContent = "decent",
-                    reviewRating = 3,
-                    productId = 1,
-                    hidden = false,
-                },
-                new Review()
-                {
-                    userId = 3,
-                    userName = "Brigid",
-                    reviewId = 4,
-                    reviewContent = "",
-                    reviewRating = 5,
-                    productId = 1,
-                    hidden = true,
-                }
-            };
-
             mockCustomer = new Mock<IProductProxy>(MockBehavior.Strict);
             mockReview = new Mock<IReviewProxy>(MockBehavior.Strict);
 
@@ -98,14 +33,23 @@ namespace StaffFrontend.test.Controllers.Product
         [TestMethod]
         public async Task Index_Parameter_Null()
         {
-            mockCustomer.Setup(s => s.GetProducts(null, null, null, null)).ReturnsAsync(products);
+            mockCustomer.Setup(s => s.GetProducts(null, null, null, null)).ReturnsAsync(TestData.GetProducts());
 
             var response = await controller.Index(null, null, null, null, null);
             Assert.IsNotNull(response);
             var responseOk = response as ViewResult;
             Assert.IsNotNull(responseOk);
             Assert.IsNull(responseOk.StatusCode);
-            Assert.IsTrue(products.SequenceEqual((IEnumerable<Models.Product.Product>)responseOk.Model));
+            var model = (List<Models.Product.Product>)responseOk.Model;
+            for (int x = 0; x < model.Count; x++)
+            {
+                Assert.AreEqual(TestData.GetProducts()[x].ID, model[x].ID);
+                Assert.AreEqual(TestData.GetProducts()[x].Name, model[x].Name);
+                Assert.AreEqual(TestData.GetProducts()[x].Description, model[x].Description);
+                Assert.AreEqual(TestData.GetProducts()[x].Supply, model[x].Supply);
+                Assert.AreEqual(TestData.GetProducts()[x].Price, model[x].Price);
+                Assert.AreEqual(TestData.GetProducts()[x].Available, model[x].Available);
+            }
 
             mockCustomer.Verify();
             mockReview.Verify();
@@ -116,7 +60,7 @@ namespace StaffFrontend.test.Controllers.Product
         [TestMethod]
         public async Task Index_Parameter_minPrice()
         {
-            mockCustomer.Setup(s => s.GetProducts(null, null, 20, null)).ReturnsAsync(products.FindAll(p => p.Price > 20));
+            mockCustomer.Setup(s => s.GetProducts(null, null, 20, null)).ReturnsAsync(TestData.GetProducts().FindAll(p => p.Price > 20));
 
             var response = await controller.Index(null, null, 20, null, null);
             Assert.IsNotNull(response);
@@ -124,7 +68,7 @@ namespace StaffFrontend.test.Controllers.Product
             Assert.IsNotNull(responseOk);
             Assert.IsNull(responseOk.StatusCode);
             var model = (IEnumerable<Models.Product.Product>)responseOk.Model;
-            foreach(Models.Product.Product product in model)
+            foreach (Models.Product.Product product in model)
             {
                 Assert.IsTrue(product.Price > 20);
             }
@@ -138,7 +82,7 @@ namespace StaffFrontend.test.Controllers.Product
         [TestMethod]
         public async Task Index_Parameter_maxPrice()
         {
-            mockCustomer.Setup(s => s.GetProducts(null, null, null, 20)).ReturnsAsync(products.FindAll(p => p.Price < 20));
+            mockCustomer.Setup(s => s.GetProducts(null, null, null, 20)).ReturnsAsync(TestData.GetProducts().FindAll(p => p.Price < 20));
 
             var response = await controller.Index(null, null, null, 20, null);
             Assert.IsNotNull(response);
