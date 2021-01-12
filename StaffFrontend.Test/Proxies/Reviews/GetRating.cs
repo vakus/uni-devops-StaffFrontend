@@ -10,8 +10,7 @@ using System.Threading.Tasks;
 namespace StaffFrontend.test.Proxies.Reviews
 {
     [TestClass]
-    public
-    class GetRating
+    public class GetRating
     {
 
         private List<Review> reviews;
