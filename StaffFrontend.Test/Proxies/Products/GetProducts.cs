@@ -25,11 +25,82 @@ namespace StaffFrontend.test.Proxies.Products
 
             cpl = new ProductProxyLocal(products);
         }
+
         [TestMethod]
-        public async Task CustomerProxy_GetCustomers()
+        public async Task ProductProxy_GetProducts()
         {
-            //check data
             Assert.IsTrue(products.SequenceEqual(await cpl.GetProducts(null, null, null, null)));
+        }
+
+        [TestMethod]
+        public async Task ProductProxy_GetProducts_Name()
+        {
+            List<string> keywords = new List<string>() { "Duck", "Lorem", "IPhone" };
+            foreach(string key in keywords)
+            {
+                List<Product> p = new List<Product>();
+                foreach (Product product in products)
+                {
+                    if (product.Name.Contains(key))
+                    {
+                        p.Add(product);
+                    }
+                }
+                Assert.IsTrue(p.SequenceEqual(await cpl.GetProducts(key, null, null, null)));
+            }
+        }
+
+        [TestMethod]
+        public async Task ProductProxy_GetProducts_Visible()
+        {
+            List<Product> p = new List<Product>();
+            foreach (Product product in products)
+            {
+                if (!product.Available)
+                {
+                    p.Add(product);
+                }
+            }
+            Assert.IsTrue(p.SequenceEqual(await cpl.GetProducts(null, false, null, null)));
+
+
+            p = new List<Product>();
+            foreach (Product product in products)
+            {
+                if (product.Available)
+                {
+                    p.Add(product);
+                }
+            }
+            Assert.IsTrue(p.SequenceEqual(await cpl.GetProducts(null, true, null, null)));
+        }
+
+        [TestMethod]
+        public async Task ProductProxy_GetProducts_MinPrice()
+        {
+            List<Product> p = new List<Product>();
+            foreach (Product product in products)
+            {
+                if (product.Price > 30.00m)
+                {
+                    p.Add(product);
+                }
+            }
+            Assert.IsTrue(p.SequenceEqual(await cpl.GetProducts(null, null, 30, null)));
+        }
+
+        [TestMethod]
+        public async Task ProductProxy_GetProducts_MaxPrice()
+        {
+            List<Product> p = new List<Product>();
+            foreach (Product product in products)
+            {
+                if (product.Price < 50.00m)
+                {
+                    p.Add(product);
+                }
+            }
+            Assert.IsTrue(p.SequenceEqual(await cpl.GetProducts(null, null, null, 50)));
         }
     }
 }
