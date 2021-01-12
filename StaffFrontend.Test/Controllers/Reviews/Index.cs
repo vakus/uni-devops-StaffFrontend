@@ -87,46 +87,6 @@ namespace StaffFrontend.test.Controllers.Reviews
         [TestMethod]
         public async Task Index_Parameter_Null()
         {
-            mockReview.Setup(s => s.GetReviews(1, null)).ReturnsAsync(reviews);
-
-            var response = await controller.Index(1, null);
-            Assert.IsNotNull(response);
-            var responseOk = response as ViewResult;
-            Assert.IsNotNull(responseOk);
-            Assert.IsNull(responseOk.StatusCode);
-            Assert.IsTrue(reviews.SequenceEqual((IEnumerable<Review>)responseOk.Model));
-
-            mockReview.Verify();
-            
-            mockReview.Verify(s => s.GetReviews(1, null), Times.Once);
-        }
-
-
-        [TestMethod]
-        public async Task Index_Parameter_minPrice()
-        {
-            mockReview.Setup(s => s.GetReviews(1, null)).ReturnsAsync(reviews.FindAll(p => p.productId == 1));
-
-            var response = await controller.Index(1, null);
-            Assert.IsNotNull(response);
-            var responseOk = response as ViewResult;
-            Assert.IsNotNull(responseOk);
-            Assert.IsNull(responseOk.StatusCode);
-            var model = (IEnumerable<Review>)responseOk.Model;
-            foreach(Review product in model)
-            {
-                Assert.IsTrue(product.productId == 1);
-            }
-
-            mockReview.Verify();
-            
-            mockReview.Verify(s => s.GetReviews(1, null), Times.Once);
-        }
-
-
-        [TestMethod]
-        public async Task Index_Parameter_maxPrice()
-        {
             mockReview.Setup(s => s.GetReviews(1, null)).ReturnsAsync(reviews.FindAll(p => p.productId == 1));
 
             var response = await controller.Index(1, null);
