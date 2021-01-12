@@ -65,7 +65,7 @@ namespace StaffFrontend.Controllers
 
             try
             {
-                cddto.Reviews = await _review.GetReviews(null, cddto.Customer.id);
+                cddto.Reviews = await _review.GetReviews(null, userid);
             }
             catch (SystemException)
             {

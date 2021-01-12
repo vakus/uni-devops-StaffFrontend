@@ -185,10 +185,18 @@ namespace StaffFrontend.Controllers
         // POST: products/delete/5
         [HttpPost("/products/delete/{itemid}")]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> DeleteConfirmed(int itemid)
+        public async Task<ActionResult> Delete(int itemid, IFormCollection collection)
         {
-            await _product.DeleteProduct(itemid);
-            await _review.DeleteByProductId(itemid);
+            try
+            {
+                await _product.DeleteProduct(itemid);
+                await _review.DeleteByProductId(itemid);
+            }
+            catch (SystemException)
+            {
+                ModelState.AddModelError("", "Unable to load data from remote service. Please try again.");
+                return View(new Product());
+            }
             return RedirectToAction(nameof(Index));
         }
     }
