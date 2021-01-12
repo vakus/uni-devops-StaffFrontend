@@ -12,7 +12,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace StaffFrontend.test.Controllers.Restock
+namespace StaffFrontend.test.Controllers.Restocks
 {
     [TestClass]
     public class Index
