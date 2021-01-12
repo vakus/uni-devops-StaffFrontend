@@ -20,6 +20,7 @@ namespace StaffFrontend.test.Proxies.Products
             cpl = new ProductProxyLocal(TestData.GetProducts());
         }
 
+        [Ignore]
         [TestMethod]
         public async Task ProductProxy_UpdateProduct()
         {
