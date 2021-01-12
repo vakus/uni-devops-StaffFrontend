@@ -211,7 +211,7 @@ namespace StaffFrontend.Test.Controllers
 
             var productController = new ProductController(productMock.Object, reviewMock.Object);
 
-            var result = await productController.DeleteConfirmed(products[0].ID);
+            var result = await productController.Delete(products[0].ID);
 
             Assert.IsNotNull(result);
 
