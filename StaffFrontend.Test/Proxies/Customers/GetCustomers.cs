@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 namespace StaffFrontend.test.Proxies.Customers
 {
     [TestClass]
-    public class GetCustomers
+    public class GetProducts
     {
         private List<Customer> customers;
         private ICustomerProxy cpl;

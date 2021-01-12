@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
 
-namespace StaffFrontend.Proxies
+namespace StaffFrontend.Proxies.ProductProxy
 {
 
     public interface IProductProxy

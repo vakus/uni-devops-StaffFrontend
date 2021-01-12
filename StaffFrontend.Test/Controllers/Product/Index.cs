@@ -4,6 +4,7 @@ using Moq;
 using StaffFrontend.Controllers;
 using StaffFrontend.Models;
 using StaffFrontend.Proxies;
+using StaffFrontend.Proxies.ProductProxy;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -28,11 +29,10 @@ namespace StaffFrontend.test.Controllers.Product
         public void initialize()
         {
             products = new List<Models.Product.Product>() {
-
-            new Models.Product.Product() { ID = 1, Name = "Lorem Ipsum", Description = "Lorem Ipsum", Price = 5.99m, Available = false, Supply = 2 },
-            new Models.Product.Product() { ID = 2, Name = "Duck", Description = "Sometimes makes quack sound", Price = 99.99m, Available = true, Supply = 20 },
-            new Models.Product.Product() { ID = 3, Name = "IPhone 13 pro max ultra plus 6G no screen edition", Description = "New Revolutionary IPhone. This year we managed to remove screen. Weights only 69g.", Price = 1399.99m, Available = true, Supply = 13 }
-        };
+                new Models.Product.Product() { ID = 1, Name = "Lorem Ipsum", Description = "Lorem Ipsum", Price = 5.99m, Available = false, Supply = 2 },
+                new Models.Product.Product() { ID = 2, Name = "Duck", Description = "Sometimes makes quack sound", Price = 99.99m, Available = true, Supply = 20 },
+                new Models.Product.Product() { ID = 3, Name = "IPhone 13 pro max ultra plus 6G no screen edition", Description = "New Revolutionary IPhone. This year we managed to remove screen. Weights only 69g.", Price = 1399.99m, Available = true, Supply = 13 }
+            };
 
 
             reviews = new List<Review>()
@@ -124,7 +124,7 @@ namespace StaffFrontend.test.Controllers.Product
             Assert.IsNotNull(responseOk);
             Assert.IsNull(responseOk.StatusCode);
             var model = (IEnumerable<Models.Product.Product>)responseOk.Model;
-            foreach(Models.Product.Product product in model)
+            foreach (Models.Product.Product product in model)
             {
                 Assert.IsTrue(product.Price > 20);
             }

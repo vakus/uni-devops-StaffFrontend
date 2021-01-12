@@ -5,6 +5,7 @@ using Moq;
 using StaffFrontend.Controllers;
 using StaffFrontend.Models;
 using StaffFrontend.Proxies;
+using StaffFrontend.Proxies.ProductProxy;
 using System;
 using System.Collections.Generic;
 using System.Text;
