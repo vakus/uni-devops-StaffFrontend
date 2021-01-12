@@ -8,7 +8,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web;
 
-namespace StaffFrontend.Proxies
+namespace StaffFrontend.Proxies.CustomerProxy
 {
     public interface ICustomerProxy
     {

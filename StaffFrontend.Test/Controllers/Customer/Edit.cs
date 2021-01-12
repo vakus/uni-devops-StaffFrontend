@@ -3,6 +3,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using StaffFrontend.Controllers;
 using StaffFrontend.Proxies;
+using StaffFrontend.Proxies.CustomerProxy;
 using System;
 using System.Collections.Generic;
 using System.Text;
