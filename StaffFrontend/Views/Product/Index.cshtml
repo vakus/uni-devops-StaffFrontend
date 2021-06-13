@@ -5,11 +5,36 @@
 }
 
 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-<h1>View</h1>
-
+<h1>Products</h1>
 <p>
     <a href="/products/new">Create New</a>
 </p>
+<hr />
+<form method="GET">
+    <dl class="row">
+        <dt class="col-sm-4">
+            <input class="form-control" type="text" name="name" placeholder="Product Name" />
+        </dt>
+        <dt class="col-sm-2">
+            <input class="form-control" type="number" name="minprice" placeholder="Min Price" />
+        </dt>
+        <dt class="col-sm-2">
+            <input class="form-control" type="number" name="maxprice" placeholder="Max Price" />
+        </dt>
+        <dt>
+            <select class="form-control" name="sortby">
+                <option selected>Sort By</option>
+                <option>ID</option>
+                <option>Name</option>
+                <option>Price</option>
+                <option>Stock Level</option>
+            </select>
+        </dt>
+        <dt class="col-sm-1">
+            <input class="btn btn-primary" type="submit" value="Set Filter" />
+        </dt>
+    </dl>
+</form>
 <table class="table table-dark">
     <thead>
         <tr>
@@ -19,13 +44,16 @@
             <th>
                 @Html.DisplayNameFor(model => model.Price)
             </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Supply)
+            </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
         @foreach (var item in Model)
         {
-            <tr onclick="window.location='/products/view/@item.ID'" style="cursor: pointer">
+            <tr>
                 <td>
                     @Html.DisplayFor(modelItem => item.Name)
                 </td>
@@ -33,21 +61,12 @@
                     @Html.DisplayFor(modelItem => item.Price)
                 </td>
                 <td>
-                    @{
-                        /* ofcourse this doesnt work its a microsoft product */
-                        /* @Html.ActionLink("Edit", "Edit", new { id=item.id }) |
-                        @Html.ActionLink("Details", "view", "products", new { id=item.id }) |
-                        @Html.ActionLink("Delete", "Delete", new { id=item.id })
-                        <a href="/products/edit/@item.id">Edit</a> |
-                        <a href="/products/view/@item.id">View</a> |
-                        <a href="/products/delete/@item.id">Delete</a>
-                        */
-                    }
-
-
-                    <input type="button" value="Edit" class="btn btn-primary" onclick="event.stopPropagation(); window.location = '/products/edit/@item.ID'" />
-                    <input type="button" value="View" class="btn btn-primary" onclick="event.stopPropagation(); window.location='/products/view/@item.ID'" />
-                    <input type="button" value="Delete" class="btn btn-danger" onclick="event.stopPropagation(); window.location='/products/delete/@item.ID'" />
+                    @Html.DisplayFor(modelItem => item.Supply)
+                </td>
+                <td>
+                    <a href="/products/edit/@item.ID">Edit</a> |
+                    <a href="/products/view/@item.ID">View</a> |
+                    <a href="/products/delete/@item.ID">Delete</a>
                 </td>
             </tr>
         }

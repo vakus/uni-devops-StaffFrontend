@@ -10,12 +10,12 @@ namespace StaffFrontend.Proxies.RestockProxy
 {
     public class RestockProxyRemote : IRestockProxy
     {
-        private readonly IHttpClientFactory _clientFactory;
+        private readonly HttpClient client;
         private readonly IConfigurationSection _config;
 
-        public RestockProxyRemote(IHttpClientFactory clientFactory, IConfiguration config)
+        public RestockProxyRemote(HttpClient client, IConfiguration config)
         {
-            _clientFactory = clientFactory;
+            this.client = client;
             _config = config.GetSection("RestockMicroservice");
         }
 
@@ -27,8 +27,6 @@ namespace StaffFrontend.Proxies.RestockProxy
                 { "account-name", accountName },
                 { "card-number", CardNumber }
             };
-
-            var client = _clientFactory.CreateClient();
 
             var response = await Utils.Request(client, _config.GetSection("ApproveRestock"), values);
 
@@ -49,8 +47,6 @@ namespace StaffFrontend.Proxies.RestockProxy
                 { "product-quantity", quantity }
             };
 
-            var client = _clientFactory.CreateClient();
-
             var response = await Utils.Request(client, _config.GetSection("CreateRestock"), values);
 
             if (!response.IsSuccessStatusCode)
@@ -70,8 +66,6 @@ namespace StaffFrontend.Proxies.RestockProxy
                 { "approved", approved }
             };
 
-            var client = _clientFactory.CreateClient();
-
             var response = await Utils.Request(client, _config.GetSection("GetRestocks"), values);
 
             if (!response.IsSuccessStatusCode)
@@ -87,8 +81,6 @@ namespace StaffFrontend.Proxies.RestockProxy
 
         public async Task<List<Supplier>> GetSuppliers()
         {
-            var client = _clientFactory.CreateClient();
-
             var response = await Utils.Request(client, _config.GetSection("GetSuppliers"), new Dictionary<string, object>());
 
             if (!response.IsSuccessStatusCode)
@@ -109,8 +101,6 @@ namespace StaffFrontend.Proxies.RestockProxy
                 { "supplier-id", id }
             };
 
-            var client = _clientFactory.CreateClient();
-
             var response = await Utils.Request(client, _config.GetSection("GetSuppliersProducts"), values);
 
             if (!response.IsSuccessStatusCode)
@@ -130,8 +120,6 @@ namespace StaffFrontend.Proxies.RestockProxy
             {
                 { "restock-id", restockid }
             };
-
-            var client = _clientFactory.CreateClient();
 
             var response = await Utils.Request(client, _config.GetSection("RejectRestock"), values);
 
